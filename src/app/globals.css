@@ -45,39 +45,39 @@ body {
     --sidebar-ring: 354 100% 60%; /* Accent #ff3347 */
   }
   .dark {
-    /* Dark Theme Variables (updated based on image) */
-    --background: 240 10% 3.9%; /* Very Dark Blue/Gray */
-    --foreground: 0 0% 98%; /* Light Gray/White */
-    --card: 240 6% 10%; /* Slightly lighter dark */
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 354 100% 60%; /* Keeping existing Red Accent */
+    /* Refined Dark Theme Variables */
+    --background: 224 71% 4%; /* Dark Blue */
+    --foreground: 210 40% 98%; /* Almost White */
+    --card: 224 71% 9%; /* Slightly lighter dark blue for cards */
+    --card-foreground: 210 40% 98%;
+    --popover: 224 71% 4%; /* Dark Blue */
+    --popover-foreground: 210 40% 98%;
+    --primary: 354 100% 60%; /* Red Accent */
     --primary-foreground: 0 0% 98%;
-    --secondary: 240 4% 12%; /* Darker Gray for secondary elements */
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 4% 12%;
-    --muted-foreground: 0 0% 63.9%; /* Lighter gray for muted text */
-    --accent: 240 4% 12%;
-    --accent-foreground: 0 0% 98%;
+    --secondary: 215 28% 17%; /* Dark Slate Blue */
+    --secondary-foreground: 210 40% 98%;
+    --muted: 215 28% 17%;
+    --muted-foreground: 215 20% 65%; /* Lighter Gray */
+    --accent: 215 28% 17%;
+    --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 4% 15%; /* Darker border */
-    --input: 240 4% 15%; /* Darker input background */
-    --ring: 354 100% 60%; /* Accent #ff3347 */
-    --chart-1: 354 100% 60%; /* Accent #ff3347 */
+    --border: 215 28% 17%; /* Dark Slate Blue */
+    --input: 215 28% 17%; /* Dark Slate Blue */
+    --ring: 354 100% 60%; /* Red Accent */
+    --chart-1: 354 100% 60%; /* Red Accent */
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --sidebar-background: 240 10% 3.9%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 354 100% 60%; /* Accent #ff3347 */
+    --sidebar-background: 224 71% 4%; /* Dark Blue */
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 354 100% 60%; /* Red Accent */
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4% 12%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 4% 15%;
-    --sidebar-ring: 354 100% 60%; /* Accent #ff3347 */
+    --sidebar-accent: 215 28% 17%; /* Dark Slate Blue */
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 215 28% 17%; /* Dark Slate Blue */
+    --sidebar-ring: 354 100% 60%; /* Red Accent */
   }
 }
 
@@ -112,4 +112,18 @@ body {
 /* Add font-sans utility class */
 .font-sans {
   font-family: var(--font-geist-sans), sans-serif;
+}
+
+/* Glassmorphism utility */
+.glass {
+    @apply bg-card/60 backdrop-blur-lg border border-card/10 shadow-lg;
+}
+
+/* Apply glass effect to Card components in dark mode */
+.dark .card-glass {
+    @apply glass;
+}
+/* Keep default card styles for light mode or non-glass cards */
+.card-glass {
+    @apply rounded-lg border bg-card text-card-foreground shadow-sm;
 }

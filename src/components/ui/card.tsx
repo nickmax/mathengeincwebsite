@@ -8,8 +8,9 @@ const Card = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
+    // Apply the base class for glassmorphism effect
     className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      "card-glass", // Use the class defined in globals.css
       className
     )}
     {...props}
