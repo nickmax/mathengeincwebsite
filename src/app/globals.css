@@ -206,3 +206,24 @@ body {
   background: #ff1f3f; /* Slightly darker solid red on hover */
   box-shadow: 0 0 20px hsla(var(--primary) / 0.5);
 }
+
+/* Animation for Trusted By section */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    /* Move one full set of logos to the left */
+    transform: translateX(-100%);
+  }
+}
+
+.animate-scroll {
+  /* Adjust the duration (40s) for speed */
+  animation: scroll 40s linear infinite;
+}
+
+/* Pause animation on hover */
+.group:hover .animate-scroll {
+  animation-play-state: paused;
+}
