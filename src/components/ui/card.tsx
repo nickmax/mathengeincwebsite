@@ -52,7 +52,8 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p // Changed div to p
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    // Apply font-sans class for consistency
+    className={cn("text-sm text-muted-foreground font-sans", className)}
     {...props}
   />
 ))

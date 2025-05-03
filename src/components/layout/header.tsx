@@ -19,7 +19,8 @@ export function Header() {
         <Link href="/" className="mr-6 flex items-center space-x-2">
           {/* Placeholder for logo if needed */}
           {/* <Command className="h-6 w-6" /> */}
-          <span className="font-bold inline-block">Mathenge Inc</span>
+          {/* Apply font-sans to brand name */}
+          <span className="font-bold inline-block font-sans">Mathenge Inc</span>
         </Link>
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
           {navItems.map((item) => (
@@ -44,10 +45,11 @@ export function Header() {
                 <span className="sr-only">Toggle Menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+            <SheetContent side="right" className="w-[300px] sm:w-[400px] bg-background/95 backdrop-blur">
               <nav className="flex flex-col gap-4 mt-8">
                  <Link href="/" className="mb-4 flex items-center space-x-2">
-                  <span className="font-bold text-lg">Mathenge Inc</span>
+                    {/* Apply font-sans to brand name in mobile menu */}
+                  <span className="font-bold text-lg font-sans">Mathenge Inc</span>
                  </Link>
                 {navItems.map((item) => (
                   <Link
