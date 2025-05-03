@@ -147,19 +147,22 @@ body {
 
 .glass-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  /* Added subtle primary color shadow on hover */
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 8px hsla(var(--primary) / 0.4);
 }
 .light .glass-card:hover {
-  box-shadow: 0 12px 40px rgba(100, 100, 100, 0.25); /* Lighter hover shadow */
+  /* Added subtle primary color shadow on hover for light mode */
+  box-shadow: 0 12px 40px rgba(100, 100, 100, 0.25), 0 0 8px hsla(var(--primary) / 0.3);
 }
 
-/* Optional: Glowing border on hover */
+/* Glowing border on hover */
 .glass-card-glow:hover {
-   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px hsl(var(--primary));
+   /* Enhanced glow effect */
+   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 15px 2px hsla(var(--primary) / 0.5);
 }
 .light .glass-card-glow:hover {
-   /* Adjust light mode glow shadow if needed */
-   box-shadow: 0 12px 40px rgba(100, 100, 100, 0.25), 0 0 0 1px hsl(var(--primary));
+   /* Enhanced light mode glow shadow */
+   box-shadow: 0 12px 40px rgba(100, 100, 100, 0.25), 0 0 15px 2px hsla(var(--primary) / 0.4);
 }
 
 
@@ -202,12 +205,14 @@ body {
 /* Gradient for Primary Button (applied via Tailwind class) */
 .btn-primary-gradient {
   background: linear-gradient(135deg, hsl(var(--primary)) 0%, #ff5e6b 100%);
-  box-shadow: 0 0 12px hsla(var(--primary) / 0.3);
+  /* Updated shadow with primary color */
+  box-shadow: 0 4px 12px hsla(var(--primary) / 0.3);
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 .btn-primary-gradient:hover {
   background: #ff1f3f; /* Slightly darker solid red on hover */
-  box-shadow: 0 0 20px hsla(var(--primary) / 0.5);
+  /* Updated hover shadow with primary color */
+  box-shadow: 0 6px 20px hsla(var(--primary) / 0.5);
 }
 
 /* Animation for Trusted By section */

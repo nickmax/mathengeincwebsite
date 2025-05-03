@@ -13,9 +13,9 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90", // Keep destructive default for now
         outline: // Crimson Frost Secondary/Outline Button - Glassy
-          "border border-primary bg-transparent text-primary hover:bg-primary/10 hover:shadow-[0_0_12px_hsla(var(--primary)/0.4)] backdrop-blur-sm", // Glass effect with red border/glow
+          "border border-primary bg-transparent text-primary hover:bg-primary/10 hover:shadow-[0_0_12px_hsla(var(--primary)/0.4)] backdrop-blur-sm", // Glass effect with red border/glow on hover
         secondary: // Similar to outline, potentially different base glass color if needed
-           "border border-primary bg-transparent text-primary hover:bg-primary/10 hover:shadow-[0_0_12px_hsla(var(--primary)/0.4)] backdrop-blur-sm", // Reusing outline style
+           "border border-primary bg-transparent text-primary hover:bg-primary/10 hover:shadow-[0_0_12px_hsla(var(--primary)/0.4)] backdrop-blur-sm", // Reusing outline style with red hover shadow
         ghost: "hover:bg-accent hover:text-accent-foreground", // Standard ghost
         link: "text-primary underline-offset-4 hover:underline", // Standard link
       },
