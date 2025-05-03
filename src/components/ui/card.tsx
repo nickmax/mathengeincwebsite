@@ -8,9 +8,12 @@ const Card = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    // Apply the base class for glassmorphism effect
+    // Apply the glass effect class globally defined in globals.css
+    // This class now applies the Crimson Frost glassmorphism
     className={cn(
-      "card-glass", // Use the class defined in globals.css
+      "card", // This should now pick up the @layer components override
+      // If the override isn't working, use "card-glass-enhanced" directly:
+      // "card-glass-enhanced",
       className
     )}
     {...props}
@@ -24,21 +27,21 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6", className)}
+    className={cn("flex flex-col space-y-1.5 p-6", className)} // Keep padding default unless overridden by glass-card
     {...props}
   />
 ))
 CardHeader.displayName = "CardHeader"
 
 const CardTitle = React.forwardRef<
-  HTMLParagraphElement, // Changed element type to p for semantic correctness
-  React.HTMLAttributes<HTMLHeadingElement> // Keep original prop type for compatibility
+  HTMLParagraphElement, // Keep as p
+  React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
-  // Apply font-sans class
+  // Apply bold tracking-wide as defined in globals.css base styles for headings
   <p
     ref={ref}
     className={cn(
-      "text-2xl font-semibold leading-none tracking-tight font-sans", // Added font-sans
+      "text-2xl font-bold tracking-wide leading-none", // Use base heading styles
       className
     )}
     {...props}
@@ -47,13 +50,13 @@ const CardTitle = React.forwardRef<
 CardTitle.displayName = "CardTitle"
 
 const CardDescription = React.forwardRef<
-  HTMLParagraphElement, // Changed element type to p
-  React.HTMLAttributes<HTMLParagraphElement> // Keep original prop type
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p // Changed div to p
+  <p
     ref={ref}
-    // Apply font-sans class for consistency
-    className={cn("text-sm text-muted-foreground font-sans", className)}
+    // Apply default body font styles (Inter normal) + muted color
+    className={cn("text-sm text-muted-foreground font-normal", className)}
     {...props}
   />
 ))
@@ -63,7 +66,7 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
+  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} /> // Keep padding default
 ))
 CardContent.displayName = "CardContent"
 
@@ -73,7 +76,7 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center p-6 pt-0", className)}
+    className={cn("flex items-center p-6 pt-0", className)} // Keep padding default
     {...props}
   />
 ))

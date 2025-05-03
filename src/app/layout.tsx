@@ -1,19 +1,14 @@
 import type {Metadata} from 'next';
-import { Geist, Geist_Mono } from 'next/font/google'; // Correct import
+import { Inter } from 'next/font/google'; // Changed from Geist to Inter
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Toaster } from "@/components/ui/toaster"
 
-// Correctly configure the fonts
-const geistSans = Geist({ // Use Geist font loader
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({ // Use Geist_Mono font loader
-  variable: '--font-geist-mono',
+// Configure Inter font
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
 });
 
@@ -28,13 +23,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // Add 'dark' class to html for dark theme
-    // Ensure font variables are passed correctly
-    <html lang="en" className={cn('dark', geistSans.variable, geistMono.variable)}>
+    // Use Inter font variable
+    <html lang="en" className={cn('dark', inter.variable)}>
       <body
         className={cn(
-          'min-h-screen bg-background font-mono antialiased', // Set default font to mono
-          // Font variables are now on <html>, no need to repeat here
+          'min-h-screen bg-background font-sans antialiased', // Set default font to sans (Inter)
+          // Font variable is now on <html>
         )}
       >
         <div className="relative flex min-h-screen flex-col">

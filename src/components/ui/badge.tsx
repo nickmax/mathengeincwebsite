@@ -15,6 +15,8 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
+        neon: // Added Neon variant using the CSS class
+          "neon-badge", // Applies the styles defined in globals.css
       },
     },
     defaultVariants: {

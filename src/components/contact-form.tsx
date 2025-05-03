@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { cn } from "@/lib/utils"; // Import cn
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -31,6 +32,12 @@ const formSchema = z.object({
     message: "Message must be at least 10 characters.",
   }),
 });
+
+// Basic input style for Crimson Frost (adjust if needed)
+const inputStyle = cn(
+    "bg-background/70 border-white/20 focus:border-primary focus:ring-primary/50", // Slightly transparent bg, subtle border, primary focus
+    "rounded-[10px]" // Consistent rounded corners
+);
 
 export function ContactForm() {
   const { toast } = useToast();
@@ -46,7 +53,6 @@ export function ContactForm() {
     },
   });
 
-  // TODO: Implement actual form submission logic (e.g., send to an API endpoint)
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
     console.log("Form submitted:", values);
@@ -56,13 +62,12 @@ export function ContactForm() {
 
     setIsSubmitting(false);
 
-    // Display success message
     toast({
       title: "Message Sent!",
       description: "Thank you for contacting us. We'll be in touch soon.",
+      // variant: "success" // Optional: Add a success variant if defined
     });
 
-    // Reset form
     form.reset();
   }
 
@@ -74,9 +79,9 @@ export function ContactForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel className="text-foreground/80">Name</FormLabel>
               <FormControl>
-                <Input placeholder="Your Name" {...field} disabled={isSubmitting} />
+                <Input placeholder="Your Name" {...field} disabled={isSubmitting} className={inputStyle}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -87,9 +92,9 @@ export function ContactForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel className="text-foreground/80">Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="your.email@example.com" {...field} disabled={isSubmitting} />
+                <Input type="email" placeholder="your.email@example.com" {...field} disabled={isSubmitting} className={inputStyle}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -100,9 +105,9 @@ export function ContactForm() {
           name="subject"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Subject (Optional)</FormLabel>
+              <FormLabel className="text-foreground/80">Subject (Optional)</FormLabel>
               <FormControl>
-                <Input placeholder="Inquiry Subject" {...field} disabled={isSubmitting} />
+                <Input placeholder="Inquiry Subject" {...field} disabled={isSubmitting} className={inputStyle} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -113,11 +118,11 @@ export function ContactForm() {
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Message</FormLabel>
+              <FormLabel className="text-foreground/80">Message</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Tell us how we can help..."
-                  className="resize-none"
+                  className={cn("resize-none", inputStyle)} // Apply style to textarea
                   rows={5}
                   {...field}
                   disabled={isSubmitting}
@@ -127,7 +132,8 @@ export function ContactForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
+        {/* Use primary button style */}
+        <Button type="submit" className="w-full font-semibold" disabled={isSubmitting}>
           {isSubmitting ? "Sending..." : "Send Message"}
         </Button>
       </form>

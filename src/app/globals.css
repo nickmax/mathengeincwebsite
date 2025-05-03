@@ -2,82 +2,92 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Inter font import (replace Geist) - Ensure this font is installed or linked */
+/* Assuming Inter font is available via next/font or globally */
+
 body {
-  /* Apply monospace font as requested */
-  font-family: var(--font-geist-mono), monospace;
+  /* Apply Inter font */
+  font-family: var(--font-inter), sans-serif;
 }
 
 @layer base {
   :root {
-    /* Light Theme (kept for potential future use, but dark is default) */
-    --background: 0 0% 100%; /* White */
-    --foreground: 0 0% 3.9%; /* Default dark */
-    --card: 0 0% 100%; /* White */
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%; /* White */
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 354 100% 60%; /* Accent #ff3347 */
-    --primary-foreground: 0 0% 98%; /* Light for contrast */
-    --secondary: 0 0% 96.1%; /* Light gray */
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%; /* Light gray */
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%; /* Light gray */
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%; /* Default red */
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%; /* Light gray */
-    --input: 0 0% 89.8%; /* Light gray */
-    --ring: 354 100% 60%; /* Accent #ff3347 */
-    --chart-1: 354 100% 60%; /* Accent #ff3347 */
+    /* Crimson Frost - Light Theme (derived from spec) */
+    --background: 0 0% 100%; /* #FFFFFF */
+    --foreground: 0 0% 7%; /* #111111 */
+    --card: 0 0% 100%; /* Base for light cards before glass */
+    --card-foreground: 0 0% 7%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 7%;
+    --primary: 354 100% 60%; /* #FF3347 */
+    --primary-foreground: 0 0% 95%; /* #F2F2F2 - Adjusted for contrast */
+    --secondary: 218 29% 97%; /* #F5F7FA */
+    --secondary-foreground: 0 0% 7%; /* #111111 */
+    --muted: 218 29% 97%; /* #F5F7FA */
+    --muted-foreground: 0 0% 40%; /* #666666 */
+    --accent: 218 29% 97%; /* #F5F7FA */
+    --accent-foreground: 0 0% 7%; /* #111111 */
+    --destructive: 0 84.2% 60.2%; /* Default Red */
+    --destructive-foreground: 0 0% 98%; /* Default Light */
+    --border: 220 13% 92%; /* #EAECEF */
+    --input: 220 13% 92%; /* #EAECEF */
+    --ring: 354 100% 60%; /* #FF3347 */
+    --chart-1: 354 100% 60%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%; /* Light background for sidebar */
-    --sidebar-foreground: 0 0% 9%;
-    --sidebar-primary: 354 100% 60%; /* Accent #ff3347 */
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 0 0% 96.1%; /* Light gray */
-    --sidebar-accent-foreground: 0 0% 9%;
-    --sidebar-border: 0 0% 89.8%; /* Light gray */
-    --sidebar-ring: 354 100% 60%; /* Accent #ff3347 */
+    --radius: 0.5rem; /* Default, can be overridden */
+
+    /* Sidebar (Keep consistent or adjust as needed) */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 7%;
+    --sidebar-primary: 354 100% 60%;
+    --sidebar-primary-foreground: 0 0% 95%;
+    --sidebar-accent: 218 29% 97%;
+    --sidebar-accent-foreground: 0 0% 7%;
+    --sidebar-border: 220 13% 92%;
+    --sidebar-ring: 354 100% 60%;
   }
+
   .dark {
-    /* Refined Dark Theme Variables */
-    --background: 224 71% 4%; /* Dark Blue */
-    --foreground: 210 40% 98%; /* Almost White */
-    --card: 224 71% 9%; /* Slightly lighter dark blue for cards */
-    --card-foreground: 210 40% 98%;
-    --popover: 224 71% 4%; /* Dark Blue */
-    --popover-foreground: 210 40% 98%;
-    --primary: 354 100% 60%; /* Red Accent */
-    --primary-foreground: 0 0% 98%;
-    --secondary: 215 28% 17%; /* Dark Slate Blue */
-    --secondary-foreground: 210 40% 98%;
-    --muted: 215 28% 17%;
-    --muted-foreground: 215 20% 65%; /* Lighter Gray */
-    --accent: 215 28% 17%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
+    /* Crimson Frost - Dark Theme */
+    --background: 0 0% 5%; /* #0D0D0D */
+    --foreground: 0 0% 95%; /* #F2F2F2 */
+    /* Card uses glass effect, base color less relevant unless effect fails */
+    --card: 0 0% 10%; /* #1A1A1A - Fallback/Base */
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 5%; /* #0D0D0D */
+    --popover-foreground: 0 0% 95%;
+    --primary: 354 100% 60%; /* #FF3347 */
+    --primary-foreground: 0 0% 98%; /* Keeping light for contrast on red */
+    --secondary: 0 0% 10%; /* #1A1A1A */
+    --secondary-foreground: 0 0% 95%;
+    --muted: 0 0% 10%; /* #1A1A1A */
+    --muted-foreground: 0 0% 60%; /* #999999 */
+    --accent: 0 0% 10%; /* #1A1A1A */
+    --accent-foreground: 0 0% 95%;
+    --destructive: 0 62.8% 30.6%; /* Darker Red */
     --destructive-foreground: 0 0% 98%;
-    --border: 215 28% 17%; /* Dark Slate Blue */
-    --input: 215 28% 17%; /* Dark Slate Blue */
-    --ring: 354 100% 60%; /* Red Accent */
-    --chart-1: 354 100% 60%; /* Red Accent */
+    --border: 0 0% 15%; /* Slightly lighter than secondary for subtle borders */
+    --input: 0 0% 10%; /* #1A1A1A */
+    --ring: 354 100% 60%; /* #FF3347 */
+    --chart-1: 354 100% 60%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --sidebar-background: 224 71% 4%; /* Dark Blue */
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 354 100% 60%; /* Red Accent */
+    --radius: 1.25rem; /* 20px */
+
+    /* Sidebar (Dark Mode) */
+    --sidebar-background: 0 0% 5%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 354 100% 60%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 215 28% 17%; /* Dark Slate Blue */
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 215 28% 17%; /* Dark Slate Blue */
-    --sidebar-ring: 354 100% 60%; /* Red Accent */
+    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 354 100% 60%;
   }
 }
 
@@ -87,12 +97,15 @@ body {
   }
   body {
     @apply bg-background text-foreground;
-    /* Keep Geist Mono as primary, fallback to generic monospace */
-    font-family: var(--font-geist-mono), monospace;
+    font-family: var(--font-inter), sans-serif; /* Apply Inter */
   }
-  /* Use Geist Sans for headings for better readability */
+  /* Headers: Bold, slightly spaced out */
   h1, h2, h3, h4, h5, h6 {
-     @apply font-semibold tracking-tight font-sans; /* Apply sans-serif font */
+     @apply font-bold tracking-wide; /* Changed from semibold, added tracking */
+  }
+   /* Body: Light weight (Adjust if Inter doesn't have 'light' or use normal) */
+  p, span, div, li, td, th /* Apply to common text elements */ {
+    @apply font-normal; /* Use normal if light isn't suitable */
   }
   h1 {
     @apply text-4xl lg:text-5xl;
@@ -103,27 +116,90 @@ body {
   h3 {
     @apply text-2xl;
   }
-  /* Keep paragraphs with the body's monospace font */
   p {
     @apply leading-7;
   }
 }
 
-/* Add font-sans utility class */
-.font-sans {
-  font-family: var(--font-geist-sans), sans-serif;
+/* Crimson Frost Glassmorphism */
+.glass-card {
+  background: rgba(255, 255, 255, 0.08); /* Default for dark mode */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius); /* Use theme radius */
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  @apply text-card-foreground; /* Ensure text color is correct */
 }
 
-/* Glassmorphism utility */
-.glass {
-    @apply bg-card/60 backdrop-blur-lg border border-card/10 shadow-lg;
+.light .glass-card {
+  background: rgba(245, 247, 250, 0.7); /* Light mode glass base */
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px rgba(100, 100, 100, 0.15);
 }
 
-/* Apply glass effect to Card components in dark mode */
-.dark .card-glass {
-    @apply glass;
+.glass-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
 }
-/* Keep default card styles for light mode or non-glass cards */
-.card-glass {
-    @apply rounded-lg border bg-card text-card-foreground shadow-sm;
+.light .glass-card:hover {
+  box-shadow: 0 12px 40px rgba(100, 100, 100, 0.25);
+}
+
+/* Optional: Glowing border on hover */
+.glass-card-glow:hover {
+   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px hsl(var(--primary));
+}
+.light .glass-card-glow:hover {
+   box-shadow: 0 12px 40px rgba(100, 100, 100, 0.25), 0 0 0 1px hsl(var(--primary));
+}
+
+
+/* Neon Badge Style */
+.neon-badge {
+  background: hsla(var(--primary) / 0.15);
+  color: hsl(var(--primary));
+  border: 1px solid hsl(var(--primary));
+  text-shadow: 0 0 6px hsla(var(--primary) / 0.44); /* Adjusted alpha */
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold; /* Match ShadCN Badge */
+}
+
+/* Apply glass effect to ShadCN Card component */
+.card-glass-enhanced {
+    @apply glass-card; /* Apply the custom glass style */
+}
+
+/* Ensure default card exists for fallback or non-glass cards */
+.card-default {
+    @apply rounded-[var(--radius)] border bg-card text-card-foreground shadow-sm;
+}
+
+/* Make all cards use the glass effect by default */
+/* Remove this if you want to selectively apply glass */
+@layer components {
+    .card {
+        @apply card-glass-enhanced;
+    }
+}
+
+/* Specific Font classes if needed */
+.font-inter {
+  font-family: var(--font-inter), sans-serif;
+}
+/* Uppercase tracking-wide for special text */
+.text-neon-label {
+    @apply uppercase tracking-widest;
+}
+
+/* Gradient for Primary Button (applied via Tailwind class) */
+.btn-primary-gradient {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, #ff5e6b 100%);
+  box-shadow: 0 0 12px hsla(var(--primary) / 0.3);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-primary-gradient:hover {
+  background: #ff1f3f; /* Slightly darker solid red on hover */
+  box-shadow: 0 0 20px hsla(var(--primary) / 0.5);
 }
