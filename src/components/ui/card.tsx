@@ -30,13 +30,14 @@ const CardHeader = React.forwardRef<
 CardHeader.displayName = "CardHeader"
 
 const CardTitle = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
+  HTMLParagraphElement, // Changed element type to p for semantic correctness
+  React.HTMLAttributes<HTMLHeadingElement> // Keep original prop type for compatibility
 >(({ className, ...props }, ref) => (
-  <div
+  // Apply font-sans class
+  <p
     ref={ref}
     className={cn(
-      "text-2xl font-semibold leading-none tracking-tight",
+      "text-2xl font-semibold leading-none tracking-tight font-sans", // Added font-sans
       className
     )}
     {...props}
@@ -45,10 +46,10 @@ const CardTitle = React.forwardRef<
 CardTitle.displayName = "CardTitle"
 
 const CardDescription = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
+  HTMLParagraphElement, // Changed element type to p
+  React.HTMLAttributes<HTMLParagraphElement> // Keep original prop type
 >(({ className, ...props }, ref) => (
-  <div
+  <p // Changed div to p
     ref={ref}
     className={cn("text-sm text-muted-foreground", className)}
     {...props}

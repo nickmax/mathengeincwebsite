@@ -30,19 +30,23 @@ const testimonials = [
 
 export function TestimonialsSection() {
   return (
-    <section id="testimonials" className="w-full py-12 md:py-24 lg:py-32 bg-secondary">
+    // Use background instead of secondary for better separation in dark mode
+    <section id="testimonials" className="w-full py-12 md:py-24 lg:py-32 bg-background">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">What Our Clients Say</h2>
+          {/* Apply font-sans to heading */}
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-sans">What Our Clients Say</h2>
           <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
             Hear from businesses that have partnered with Mathenge Inc and achieved remarkable results.
           </p>
         </div>
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((testimonial) => (
+            // Cards will use card background defined in theme
             <Card key={testimonial.name} className="flex flex-col justify-between">
               <CardContent className="p-6 space-y-4">
-                <blockquote className="text-lg font-semibold leading-snug">
+                 {/* Apply font-sans to blockquote for consistency */}
+                <blockquote className="text-lg font-semibold leading-snug font-sans">
                   “{testimonial.quote}”
                 </blockquote>
                 <div className="flex items-center space-x-4">
@@ -51,7 +55,8 @@ export function TestimonialsSection() {
                     <AvatarFallback>{testimonial.initials}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-semibold">{testimonial.name}</p>
+                     {/* Apply font-sans to name */}
+                    <p className="font-semibold font-sans">{testimonial.name}</p>
                     <p className="text-sm text-muted-foreground">{testimonial.company}</p>
                   </div>
                 </div>

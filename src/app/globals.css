@@ -3,11 +3,13 @@
 @tailwind utilities;
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  /* Apply monospace font as requested */
+  font-family: var(--font-geist-mono), monospace;
 }
 
 @layer base {
   :root {
+    /* Light Theme (kept for potential future use, but dark is default) */
     --background: 0 0% 100%; /* White */
     --foreground: 0 0% 3.9%; /* Default dark */
     --card: 0 0% 100%; /* White */
@@ -43,38 +45,38 @@ body {
     --sidebar-ring: 354 100% 60%; /* Accent #ff3347 */
   }
   .dark {
-    /* Define dark mode variables if needed, keeping light for now based on request */
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
+    /* Dark Theme Variables (updated based on image) */
+    --background: 240 10% 3.9%; /* Very Dark Blue/Gray */
+    --foreground: 0 0% 98%; /* Light Gray/White */
+    --card: 240 6% 10%; /* Slightly lighter dark */
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
+    --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 354 100% 60%; /* Accent #ff3347 */
+    --primary: 354 100% 60%; /* Keeping existing Red Accent */
     --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 14.9%;
+    --secondary: 240 4% 12%; /* Darker Gray for secondary elements */
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
+    --muted: 240 4% 12%;
+    --muted-foreground: 0 0% 63.9%; /* Lighter gray for muted text */
+    --accent: 240 4% 12%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
+    --border: 240 4% 15%; /* Darker border */
+    --input: 240 4% 15%; /* Darker input background */
     --ring: 354 100% 60%; /* Accent #ff3347 */
     --chart-1: 354 100% 60%; /* Accent #ff3347 */
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --sidebar-background: 0 0% 3.9%;
+    --sidebar-background: 240 10% 3.9%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 354 100% 60%; /* Accent #ff3347 */
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 0 0% 14.9%;
+    --sidebar-accent: 240 4% 12%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 14.9%;
+    --sidebar-border: 240 4% 15%;
     --sidebar-ring: 354 100% 60%; /* Accent #ff3347 */
   }
 }
@@ -85,11 +87,12 @@ body {
   }
   body {
     @apply bg-background text-foreground;
-    /* Apply clean, modern typography - Geist Sans is already included */
-    font-family: var(--font-geist-sans), Arial, sans-serif;
+    /* Keep Geist Mono as primary, fallback to generic monospace */
+    font-family: var(--font-geist-mono), monospace;
   }
+  /* Use Geist Sans for headings for better readability */
   h1, h2, h3, h4, h5, h6 {
-     @apply font-semibold tracking-tight;
+     @apply font-semibold tracking-tight font-sans; /* Apply sans-serif font */
   }
   h1 {
     @apply text-4xl lg:text-5xl;
@@ -100,7 +103,13 @@ body {
   h3 {
     @apply text-2xl;
   }
+  /* Keep paragraphs with the body's monospace font */
   p {
     @apply leading-7;
   }
+}
+
+/* Add font-sans utility class */
+.font-sans {
+  font-family: var(--font-geist-sans), sans-serif;
 }
