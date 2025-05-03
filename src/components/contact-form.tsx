@@ -1,8 +1,10 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,9 +19,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
-import { cn } from "@/lib/utils"; // Import cn
+import { cn } from "@/lib/utils";
+import { sendContactEmail } from "@/actions/send-contact-email"; // Import the server action
 
+// Schema must match the one used in the server action
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
@@ -33,6 +36,8 @@ const formSchema = z.object({
   }),
 });
 
+export type ContactFormValues = z.infer<typeof formSchema>;
+
 // Basic input style for Crimson Frost (adjust if needed)
 const inputStyle = cn(
     "bg-background/70 border-white/20 focus:border-primary focus:ring-primary/50", // Slightly transparent bg, subtle border, primary focus
@@ -43,7 +48,7 @@ export function ContactForm() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<ContactFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
@@ -53,22 +58,33 @@ export function ContactForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: ContactFormValues) {
     setIsSubmitting(true);
     console.log("Form submitted:", values);
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      const result = await sendContactEmail(values);
 
-    setIsSubmitting(false);
-
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for contacting us. We'll be in touch soon.",
-      // variant: "success" // Optional: Add a success variant if defined
-    });
-
-    form.reset();
+      if (result.success) {
+        toast({
+          title: "Message Sent!",
+          description: result.message || "Thank you for contacting us. We'll be in touch soon.",
+          // variant: "success" // Optional: Add a success variant if defined
+        });
+        form.reset();
+      } else {
+        throw new Error(result.message || "An unknown error occurred.");
+      }
+    } catch (error: any) {
+      console.error("Submission error:", error);
+      toast({
+        title: "Submission Failed",
+        description: error.message || "Could not send message. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -133,7 +149,7 @@ export function ContactForm() {
           )}
         />
         {/* Use primary button style */}
-        <Button type="submit" className="w-full font-semibold" disabled={isSubmitting}>
+        <Button type="submit" className="w-full font-semibold btn-primary-gradient" disabled={isSubmitting}>
           {isSubmitting ? "Sending..." : "Send Message"}
         </Button>
       </form>
