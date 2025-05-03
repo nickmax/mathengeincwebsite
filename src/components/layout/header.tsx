@@ -1,8 +1,13 @@
+"use client";
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Switch } from "@/components/ui/switch"
+import { useTheme } from 'next-themes'
+import { useEffect, useState } from 'react';
 
 export function Header() {
   const navItems = [
@@ -13,6 +18,19 @@ export function Header() {
     { label: 'Testimonials', href: '/#testimonials' },
     { label: 'Contact', href: '/#contact' },
   ];
+
+  const { setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const toggleTheme = () => {
+    if (mounted) {
+      setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+    }
+  };
 
   return (
     // Apply glass effect with slight transparency
@@ -38,6 +56,15 @@ export function Header() {
           ))}
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-4">
+            {/* Dark Mode Toggle - Conditionally render only on client-side */}
+            {mounted && (
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-muted-foreground">
+                  {resolvedTheme === 'dark' ? 'Light' : 'Dark'}
+                </span>
+                <Switch checked={resolvedTheme === 'dark'} onCheckedChange={toggleTheme} />
+              </div>
+            )}
            {/* Optional CTA button */}
            {/* <Button>Get Started</Button> */}
         </div>
@@ -68,6 +95,15 @@ export function Header() {
                     {item.label}
                   </Link>
                 ))}
+                  {/* Dark Mode Toggle for Mobile - Conditionally render only on client-side */}
+                  {mounted && (
+                    <div className="flex items-center space-x-2 mt-4">
+                      <span className="text-sm text-muted-foreground">
+                        {resolvedTheme === 'dark' ? 'Light' : 'Dark'}
+                      </span>
+                      <Switch checked={resolvedTheme === 'dark'} onCheckedChange={toggleTheme} />
+                    </div>
+                  )}
               </nav>
             </SheetContent>
           </Sheet>
