@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -27,7 +28,8 @@ export function Header() {
   }, []);
 
   const toggleTheme = () => {
-    // No need to check mounted here as the button won't render until mounted
+    // Check mounted here for safety, although button rendering is conditional
+    if (!mounted) return;
     setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
   };
 
@@ -53,7 +55,7 @@ export function Header() {
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-4">
             {/* Dark Mode Toggle Button - Conditionally render only on client-side */}
-            {mounted && (
+            {mounted ? ( // Check if mounted
               <Button
                 variant="ghost"
                 size="icon"
@@ -67,12 +69,15 @@ export function Header() {
                   <Moon className="h-5 w-5" /> // Moon icon for dark mode
                 )}
               </Button>
+            ) : (
+                 // Render a placeholder or nothing before mount to prevent hydration mismatch
+                 <div className="h-10 w-10" /> // Placeholder with same size as button
             )}
            {/* Optional CTA button */}
            {/* <Button>Get Started</Button> */}
         </div>
         {/* Mobile Menu - Conditionally render the entire Sheet component only on client-side */}
-        {mounted && (
+        {mounted && ( // Correctly conditional rendering based on mount status
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden text-foreground hover:text-primary">
@@ -97,8 +102,9 @@ export function Header() {
                     {item.label}
                   </Link>
                 ))}
-                  {/* Dark Mode Toggle for Mobile */}
-                  <Button
+                  {/* Dark Mode Toggle for Mobile - Also check mounted status */}
+                  {mounted ? ( // Check if mounted
+                    <Button
                         variant="ghost"
                         onClick={toggleTheme}
                         aria-label="Toggle theme"
@@ -111,6 +117,10 @@ export function Header() {
                         )}
                         <span>Toggle Theme</span>
                     </Button>
+                   ) : (
+                        // Placeholder for mobile toggle
+                        <div className="h-11 mt-4 px-2 py-1" /> // Placeholder matching button size/spacing
+                   )}
               </nav>
             </SheetContent>
           </Sheet>
