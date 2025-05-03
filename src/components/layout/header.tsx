@@ -72,50 +72,50 @@ export function Header() {
            {/* Optional CTA button */}
            {/* <Button>Get Started</Button> */}
         </div>
-        {/* Mobile Menu */}
-        <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden text-foreground hover:text-primary">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle Menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className={cn(
-                "w-[300px] sm:w-[400px]",
-                "bg-background/90 backdrop-blur-xl border-l border-white/10"
-                )}>
-              <nav className="flex flex-col gap-4 mt-8">
-                 <Link href="/" className="mb-4 flex items-center space-x-2">
-                  <span className="font-bold text-xl">Mathenge Inc</span>
-                 </Link>
-                {navItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="block px-2 py-1 text-lg hover:bg-accent rounded-md text-foreground"
-                   >
-                    {item.label}
+        {/* Mobile Menu - Conditionally render only on client-side */}
+        {mounted && (
+          <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden text-foreground hover:text-primary">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className={cn(
+                  "w-[300px] sm:w-[400px]",
+                  "bg-background/90 backdrop-blur-xl border-l border-white/10"
+                  )}>
+                <nav className="flex flex-col gap-4 mt-8">
+                  <Link href="/" className="mb-4 flex items-center space-x-2">
+                    <span className="font-bold text-xl">Mathenge Inc</span>
                   </Link>
-                ))}
-                  {/* Dark Mode Toggle for Mobile - Conditionally render only on client-side */}
-                  {mounted && (
-                     <Button
-                        variant="ghost"
-                        onClick={toggleTheme}
-                        aria-label="Toggle theme"
-                        className="flex items-center justify-start space-x-2 mt-4 text-foreground hover:text-primary hover:bg-primary/10 px-2 py-1 text-lg rounded-md" // Style similar to nav links
-                     >
-                        {resolvedTheme === 'dark' ? (
-                        <Sun className="h-5 w-5" />
-                        ) : (
-                        <Moon className="h-5 w-5" />
-                        )}
-                        <span>Toggle Theme</span>
-                    </Button>
-                  )}
-              </nav>
-            </SheetContent>
-          </Sheet>
+                  {navItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="block px-2 py-1 text-lg hover:bg-accent rounded-md text-foreground"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                    {/* Dark Mode Toggle for Mobile */}
+                    <Button
+                          variant="ghost"
+                          onClick={toggleTheme}
+                          aria-label="Toggle theme"
+                          className="flex items-center justify-start space-x-2 mt-4 text-foreground hover:text-primary hover:bg-primary/10 px-2 py-1 text-lg rounded-md" // Style similar to nav links
+                      >
+                          {resolvedTheme === 'dark' ? (
+                          <Sun className="h-5 w-5" />
+                          ) : (
+                          <Moon className="h-5 w-5" />
+                          )}
+                          <span>Toggle Theme</span>
+                      </Button>
+                </nav>
+              </SheetContent>
+            </Sheet>
+        )}
       </div>
     </header>
   );
