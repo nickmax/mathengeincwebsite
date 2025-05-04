@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,7 +15,7 @@ const contactInfo = {
     phoneDisplay: "+254 114 744 256",
     phoneRaw: "254114744256", // For WhatsApp link
     address: "123 Business Rd, Suite 100, City, State 12345", // Placeholder address
-    instagram: "https://instagram.com/mathengeinc",
+    instagram: "https://instagram.com/mathenge.inc", // Updated Instagram link
     tiktok: "https://tiktok.com/@mathengeinc",
 };
 
