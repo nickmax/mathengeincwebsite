@@ -34,8 +34,8 @@ export function ScrollHighlightCard({
       child.props.className, // Keep original classes
       'transition-all duration-500 ease-out', // Add transition for smooth effect
       isVisible
-        ? 'scroll-highlighted shadow-primary/40 scale-105' // Highlight style when visible
-        : 'opacity-70 scale-100', // Dimmed style when not visible
+        ? 'scroll-highlighted' // Apply the theme-aware highlight style
+        : 'opacity-80 scale-100', // Adjusted opacity for better contrast when not highlighted
       className // Allow overriding from props
     ),
     ...props // Spread any other props

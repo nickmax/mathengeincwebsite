@@ -169,7 +169,12 @@ body {
 
 /* Scroll Highlight Style */
 .scroll-highlighted {
-  @apply border-primary ring-2 ring-primary/50 opacity-100 shadow-xl shadow-primary/25 scale-105; /* Highlighted styles */
+  @apply border-primary ring-2 ring-primary/50 opacity-100 shadow-xl shadow-primary/25 scale-105; /* Default Highlighted styles for dark mode */
+}
+
+/* Add specific light mode styles for scroll highlight */
+.light .scroll-highlighted {
+  @apply border-primary ring-2 ring-primary/50 opacity-100 shadow-xl shadow-primary/40 scale-105; /* Increased shadow opacity for light mode */
 }
 
 
