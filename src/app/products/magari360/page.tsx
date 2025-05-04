@@ -1,12 +1,13 @@
+
 import type { Metadata } from 'next';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { TestimonialsSection } from "@/components/sections/testimonials-section"; // Optional: Reuse if needed
-import { CheckCircle, Cog, LayoutDashboard, Palette, Users } from "lucide-react"; // Example icons
-import { ScrollHighlightCard } from '@/components/scroll-highlight-card'; // Import the wrapper
+import { TestimonialsSection } from "@/components/sections/testimonials-section";
+import { CheckCircle, Cog, LayoutDashboard, Palette, Users } from "lucide-react";
+import { ScrollHighlightCard } from '@/components/scroll-highlight-card';
 
 // Specific metadata for the Magari360 page
 export const metadata: Metadata = {
@@ -37,7 +38,7 @@ const features = [
   {
     title: "Analytics Dashboard",
     description: "Know what’s working. See sales insights instantly.",
-    icon: Cog, // Using Cog as a placeholder for analytics/settings
+    icon: Cog,
     screenshotHint: "analytics dashboard charts",
   },
 ];
@@ -48,26 +49,21 @@ export default function Magari360Page() {
     <>
       {/* 1. Hero Section */}
       <section id="hero" className="w-full py-24 md:py-32 lg:py-40 xl:py-56 relative overflow-hidden bg-background">
-        {/* Optional Background Visual */}
-        {/* <Image src="https://picsum.photos/1920/1080?grayscale" layout="fill" objectFit="cover" alt="Abstract background" className="absolute inset-0 -z-10 opacity-10 blur-sm" data-ai-hint="abstract futuristic background" /> */}
          <div className={cn(
              "absolute inset-0 -z-10",
-             "bg-background/80 backdrop-blur-xl" // Glassy overlay effect
+             "bg-background/80 backdrop-blur-xl"
              )}></div>
 
         <div className="container px-4 md:px-6 text-center relative z-10">
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl xl:text-7xl/none mb-4 relative inline-block">
             Magari360
-            {/* Glowing underline */}
             <span className="absolute bottom-0 left-0 w-full h-1 bg-primary shadow-[0_2px_15px_hsl(var(--primary))] animate-pulse"></span>
           </h1>
           <p className="max-w-[700px] mx-auto text-muted-foreground md:text-xl font-normal mb-8">
             Transform the way you sell cars online with a fully customizable AutoCommerce platform.
           </p>
-          {/* Use demo placeholder link */}
-          <Button asChild size="lg" className="font-semibold btn-primary-gradient">
-            <Link href="#demo">View Live Demo →</Link>
-          </Button>
+          {/* Ensure no extra whitespace/comments between Button and Link */}
+          <Button asChild size="lg" className="font-semibold btn-primary-gradient"><Link href="#demo">View Live Demo →</Link></Button>
         </div>
       </section>
 
@@ -83,11 +79,9 @@ export default function Magari360Page() {
               <p className="text-foreground font-semibold italic">
                  “From inventory control to lead generation — everything is designed around you.”
               </p>
-              <Button asChild variant="outline" className="font-semibold">
-                <Link href="#features">Explore Features</Link>
-              </Button>
+              {/* Ensure no extra whitespace/comments between Button and Link */}
+              <Button asChild variant="outline" className="font-semibold"><Link href="#features">Explore Features</Link></Button>
             </div>
-            {/* Animated Screenshot Placeholder with Scroll Highlight */}
             <ScrollHighlightCard threshold={0.3}>
                 <div className="relative aspect-video rounded-[var(--radius)] overflow-hidden glass-card border border-primary/20 shadow-lg shadow-primary/10">
                    <Image
@@ -98,7 +92,6 @@ export default function Magari360Page() {
                      className="object-cover w-full h-full"
                      data-ai-hint="software dashboard interface screenshot"
                    />
-                   {/* Optional: Add subtle animation/glow */}
                 </div>
             </ScrollHighlightCard>
           </div>
@@ -117,19 +110,17 @@ export default function Magari360Page() {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {features.map((feature) => (
               <ScrollHighlightCard key={feature.title} threshold={0.3}>
-                <Card className={cn("flex flex-col glass-card-glow h-full")}> {/* Ensure full height */}
+                <Card className={cn("flex flex-col glass-card-glow h-full")}>
                   <CardHeader className="items-center text-center pb-4">
-                    {/* Icon */}
                     <div className="mb-4 p-3 bg-primary/10 rounded-full inline-flex border border-primary/30">
                       <feature.icon className="h-7 w-7 text-primary" />
                     </div>
                     <CardTitle className="text-lg">{feature.title}</CardTitle>
                   </CardHeader>
                   <CardContent className="flex-1 flex flex-col justify-between items-center text-center">
-                    {/* Screenshot Placeholder */}
                     <div className="relative w-full aspect-video mb-4 rounded-md overflow-hidden border border-white/10">
                       <Image
-                        src={`https://picsum.photos/400/225?random=${Math.random()}`} // Random image for demo
+                        src={`https://picsum.photos/400/225?random=${Math.random()}`}
                         alt={`${feature.title} Screenshot`}
                         width={400}
                         height={225}
@@ -152,7 +143,6 @@ export default function Magari360Page() {
       <section id="customizability" className="w-full py-16 md:py-24 lg:py-32 bg-background">
         <div className="container px-4 md:px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Placeholder for interactive elements/visuals */}
             <ScrollHighlightCard threshold={0.3}>
                <div className="relative aspect-square rounded-[var(--radius)] overflow-hidden glass-card border border-primary/20 shadow-lg shadow-primary/10 flex items-center justify-center">
                  <Palette className="h-24 w-24 text-primary opacity-50" />
@@ -185,21 +175,19 @@ export default function Magari360Page() {
        <section id="demo" className="w-full py-20 md:py-28 lg:py-36 relative bg-background">
            <div className={cn(
              "absolute inset-0 -z-10",
-             "bg-background/70 backdrop-blur-md" // Glassy overlay
+             "bg-background/70 backdrop-blur-md"
              )}></div>
            <div className="container px-4 md:px-6 text-center relative z-10">
                <h2 className="text-3xl font-bold tracking-wide sm:text-4xl mb-4">Want to See It in Action?</h2>
                <p className="max-w-[600px] mx-auto text-muted-foreground md:text-lg font-normal mb-8">
                    Click below to explore our interactive demo — no signup needed. Experience the ease of Magari360 firsthand.
                </p>
-               {/* Update link when demo is available */}
-               <Button asChild size="lg" className="font-semibold btn-primary-gradient shadow-[0_0_24px_hsl(var(--primary)/0.6)]">
-                   <Link href="#" target="_blank" rel="noopener noreferrer">Launch Demo →</Link>
-               </Button>
+               {/* Ensure no extra whitespace/comments between Button and Link */}
+               <Button asChild size="lg" className="font-semibold btn-primary-gradient shadow-[0_0_24px_hsl(var(--primary)/0.6)]"><Link href="#" target="_blank" rel="noopener noreferrer">Launch Demo →</Link></Button>
            </div>
        </section>
 
-      {/* Optional: 6. Testimonials Section - Reuse the existing component */}
+      {/* Optional: 6. Testimonials Section */}
       {/* <TestimonialsSection /> */}
 
       {/* 7. Final CTA */}
@@ -208,18 +196,16 @@ export default function Magari360Page() {
           <ScrollHighlightCard threshold={0.5}>
             <div className={cn(
                 "glass-card text-center relative overflow-hidden p-8 md:p-12",
-                "border-primary/40" // Enhanced border/glow - highlight handles main effect
+                "border-primary/40"
                 )}>
-                {/* Animated border pulse effect */}
                 <div className="absolute inset-0 border-2 border-primary rounded-[var(--radius)] animate-pulse opacity-30 pointer-events-none"></div>
 
               <h3 className="text-2xl font-bold tracking-wide mb-4 sm:text-3xl">Ready to Elevate Your Dealership?</h3>
               <p className="max-w-2xl mx-auto text-muted-foreground mb-8 font-normal">
                 Your customers are already online. Isn’t it time your showroom was too? Take control of your online presence with Magari360.
               </p>
-              <Button asChild size="lg" className="font-semibold btn-primary-gradient">
-                <Link href="/#contact">Let’s Get Started</Link>
-              </Button>
+              {/* Ensure no extra whitespace/comments between Button and Link */}
+              <Button asChild size="lg" className="font-semibold btn-primary-gradient"><Link href="/#contact">Let’s Get Started</Link></Button>
             </div>
           </ScrollHighlightCard>
         </div>

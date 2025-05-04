@@ -3,42 +3,34 @@
 
 import { useEffect, useRef, type RefObject } from 'react';
 
-// Throttle function to limit the rate at which a function can fire.
-function throttle<T extends (...args: any[]) => void>(func: T, limit: number): T {
-  let lastFunc: ReturnType<typeof setTimeout> | undefined;
-  let lastRan: number;
+// Simplified throttle function
+function throttle<T extends (...args: any[]) => void>(func: T, limit: number): (...args: Parameters<T>) => void {
+  let inThrottle: boolean;
   return function(this: ThisParameterType<T>, ...args: Parameters<T>) {
     const context = this;
-    if (!lastRan) {
+    if (!inThrottle) {
       func.apply(context, args);
-      lastRan = Date.now();
-    } else {
-      if (lastFunc) clearTimeout(lastFunc);
-      lastFunc = setTimeout(function() {
-        if ((Date.now() - lastRan) >= limit) {
-          func.apply(context, args);
-          lastRan = Date.now();
-        }
-      }, limit - (Date.now() - lastRan));
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
     }
-  } as T;
+  };
 }
 
 
 export function useScrollHighlight(
   containerRef: RefObject<HTMLElement>,
-  cardSelector: string = '.card', // Selector for the cards within the container
+  cardSelector: string = '.card',
   highlightClassName: string = 'scroll-highlighted',
-  throttleLimit: number = 100 // Throttle scroll handler calls to every 100ms
+  throttleLimit: number = 100
 ) {
   const highlightedElementRef = useRef<Element | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    if (!container || typeof window === 'undefined') return; // Guard against missing container or server-side execution
 
     const handleScroll = () => {
-      const cards = Array.from(container.querySelectorAll(cardSelector));
+      const cards = Array.from(container.querySelectorAll<HTMLElement>(cardSelector)); // Use HTMLElement for getBoundingClientRect
       if (!cards.length) return;
 
       const viewportCenterY = window.scrollY + window.innerHeight / 2;
@@ -50,7 +42,6 @@ export function useScrollHighlight(
         const cardCenterY = window.scrollY + rect.top + rect.height / 2;
         const distance = Math.abs(viewportCenterY - cardCenterY);
 
-        // Basic check: if the card is at least partially in view
         const isPartiallyVisible = rect.top < window.innerHeight && rect.bottom > 0;
 
         if (isPartiallyVisible && distance < minDistance) {
@@ -59,40 +50,36 @@ export function useScrollHighlight(
         }
       });
 
-      // If the highlighted element hasn't changed, do nothing
       if (highlightedElementRef.current === closestCard) {
         return;
       }
 
-      // Remove highlight from the previously highlighted element
       if (highlightedElementRef.current) {
         highlightedElementRef.current.classList.remove(highlightClassName);
       }
 
-      // Add highlight to the new closest card
       if (closestCard) {
         closestCard.classList.add(highlightClassName);
         highlightedElementRef.current = closestCard;
       } else {
-        highlightedElementRef.current = null; // No card is highlighted
+        highlightedElementRef.current = null;
       }
     };
 
     const throttledScrollHandler = throttle(handleScroll, throttleLimit);
 
-    // Initial call to highlight on load
+    // Initial call
     throttledScrollHandler();
 
-    window.addEventListener('scroll', throttledScrollHandler);
-    window.addEventListener('resize', throttledScrollHandler); // Also handle resize
+    window.addEventListener('scroll', throttledScrollHandler, { passive: true }); // Use passive listener for better scroll performance
+    window.addEventListener('resize', throttledScrollHandler);
 
     return () => {
       window.removeEventListener('scroll', throttledScrollHandler);
       window.removeEventListener('resize', throttledScrollHandler);
-      // Clean up: remove highlight from the last element when unmounting
       if (highlightedElementRef.current) {
         highlightedElementRef.current.classList.remove(highlightClassName);
       }
     };
-  }, [containerRef, cardSelector, highlightClassName, throttleLimit]); // Re-run effect if refs or class names change
+  }, [containerRef, cardSelector, highlightClassName, throttleLimit]);
 }

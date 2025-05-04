@@ -1,12 +1,15 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge"; // Import Badge
+import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Link from "next/link"; // Import Link
-import { ScrollHighlightCard } from '@/components/scroll-highlight-card'; // Import the wrapper
+import Link from "next/link";
+import { ScrollHighlightCard } from '@/components/scroll-highlight-card';
+import { useMemo } from "react";
 
-const pricingPlans = [
+// Define pricingPlans array outside the component if it's static
+const staticPricingPlans = [
   {
     title: "Basic",
     price: "$49",
@@ -16,10 +19,10 @@ const pricingPlans = [
       "Core Feature 1",
       "Core Feature 2",
       "Limited Support",
-      "Basic Analytics", // Added feature
+      "Basic Analytics",
     ],
     cta: "Get Started",
-    link: "#contact", // Link to contact
+    link: "/#contact",
   },
   {
     title: "Pro",
@@ -31,11 +34,11 @@ const pricingPlans = [
       "Advanced Feature A",
       "Advanced Feature B",
       "Priority Support",
-      "Enhanced Analytics", // Added feature
+      "Enhanced Analytics",
     ],
     cta: "Choose Pro",
-    popular: true, // Mark as popular for neon badge
-    link: "#contact", // Link to contact
+    popular: true,
+    link: "/#contact",
   },
   {
     title: "Enterprise",
@@ -47,72 +50,63 @@ const pricingPlans = [
       "Dedicated Account Manager",
       "Custom Integrations",
       "24/7 Premium Support",
-      "Bespoke Development", // Added feature
+      "Bespoke Development",
     ],
     cta: "Contact Sales",
-    link: "#contact", // Link to contact
+    link: "/#contact",
   },
 ];
 
 export function PricingSection() {
+    // Memoize the pricing plans data
+    const pricingPlans = useMemo(() => staticPricingPlans, []);
+
   return (
-    // Use primary background
     <section id="pricing" className="w-full py-16 md:py-24 lg:py-32 bg-background">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-14">
-           {/* Heading: Bold, tracking-wide */}
           <h2 className="text-3xl font-bold tracking-wide sm:text-5xl">Our Pricing Plans</h2>
-           {/* Subtext: Muted color, normal weight */}
           <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed font-normal">
             Choose the plan that best fits your needs. Simple, transparent pricing.
           </p>
         </div>
-        {/* Glass cards with optional glow and conditional primary border */}
         <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {pricingPlans.map((plan) => (
             <ScrollHighlightCard key={plan.title} threshold={0.3}>
               <Card className={cn(
-                  "flex flex-col h-full", // Ensure full height for consistent grid layout
-                  "glass-card-glow", // Keep glow effect on hover if desired
-                  plan.popular ? 'border-primary' : 'border-white/10' // Keep popular highlight border if needed, scroll highlight adds another layer
+                  "flex flex-col h-full",
+                  "glass-card-glow",
+                  plan.popular ? 'border-primary' : 'border-white/10'
                    )}>
-                <CardHeader className="pb-4 items-center text-center"> {/* Center align header */}
+                <CardHeader className="pb-4 items-center text-center">
                   {plan.popular && (
-                    // Use Neon Badge for popular plan
                     <Badge variant="neon" className="mb-3">Most Popular</Badge>
                   )}
-                   {/* Title: Bold, tracking-wide */}
                   <CardTitle className="text-2xl">{plan.title}</CardTitle>
-                   {/* Description: Muted, normal */}
                   <CardDescription className="pt-2 font-normal">{plan.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-1 flex flex-col justify-between">
-                  <div className="mb-8"> {/* Increased spacing */}
-                     {/* Price: Bold, large */}
+                  <div className="mb-8">
                     <div className="text-4xl font-bold text-center mb-4 text-foreground">
                       {plan.price}
                       {plan.frequency && <span className="text-lg font-normal text-muted-foreground">{plan.frequency}</span>}
                     </div>
-                     {/* Features: Muted, normal */}
                     <ul className="space-y-3 text-sm text-muted-foreground font-normal">
                       {plan.features.map((feature) => (
                         <li key={feature} className="flex items-center">
-                          <Check className="h-4 w-4 mr-2 text-primary flex-shrink-0" />
+                          <Check aria-hidden="true" className="h-4 w-4 mr-2 text-primary flex-shrink-0" />
                           {feature}
                         </li>
                       ))}
                     </ul>
                   </div>
-                   {/* Button: Primary gradient for popular, outline (glassy) otherwise */}
-                  <Button
-                    className="w-full mt-auto font-semibold"
-                    variant={plan.popular ? 'default' : 'outline'} // 'default' uses the gradient
+                  {/* Ensure no extra whitespace/comments between Button and Link */}
+                   <Button
+                    className={cn("w-full mt-auto font-semibold", plan.popular && "btn-primary-gradient")}
+                    variant={plan.popular ? 'default' : 'outline'}
                     asChild
-                    >
-                      <Link href={plan.link}>{plan.cta}</Link>
-                  </Button>
+                    ><Link href={plan.link}>{plan.cta}</Link></Button>
                 </CardContent>
-                 {/* No separate CardFooter needed */}
               </Card>
             </ScrollHighlightCard>
           ))}

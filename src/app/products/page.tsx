@@ -1,10 +1,11 @@
+
 import type { Metadata } from 'next';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { Car } from "lucide-react"; // Icon for Magari360
-import { ScrollHighlightCard } from '@/components/scroll-highlight-card'; // Import the wrapper
+import { Car } from "lucide-react";
+import { ScrollHighlightCard } from '@/components/scroll-highlight-card';
 
 // Specific metadata for the Products page
 export const metadata: Metadata = {
@@ -25,19 +26,17 @@ export default function ProductsPage() {
         </div>
 
         {/* Grid for Product Cards */}
-        {/* Centering the grid content when there's only one item */}
         <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center">
 
           {/* Magari360 Product Card */}
            <ScrollHighlightCard threshold={0.3}>
              <Card className={cn(
-                  "flex flex-col text-center items-center h-full", // Ensure full height
-                  "glass-card-glow" // Apply glow effect
-                  // Removed md:col-start-2 to allow normal grid flow if more items are added
+                  "flex flex-col text-center items-center h-full",
+                  "glass-card-glow"
                 )}>
               <CardHeader className="pb-4 items-center">
                 <div className="mb-5 p-3 bg-primary/10 rounded-full inline-flex border border-primary/30">
-                  <Car className="h-8 w-8 text-primary" /> {/* Magari360 Icon */}
+                  <Car className="h-8 w-8 text-primary" />
                 </div>
                 <CardTitle className="text-xl">Magari360</CardTitle>
                 <CardDescription className="text-center font-normal text-sm pt-1">
@@ -50,23 +49,13 @@ export default function ProductsPage() {
                 </p>
               </CardContent>
               <CardFooter className="w-full">
-                <Button asChild variant="outline" className="w-full font-semibold">
-                   <Link href="/products/magari360">Learn More</Link>
-                </Button>
+                {/* Ensure no extra whitespace/comments between Button and Link */}
+                <Button asChild variant="outline" className="w-full font-semibold"><Link href="/products/magari360">Learn More</Link></Button>
               </CardFooter>
              </Card>
            </ScrollHighlightCard>
 
-          {/* Add more product cards here as needed */}
-          {/* Example Placeholder:
-          <ScrollHighlightCard threshold={0.3}>
-            <Card className={cn("flex flex-col text-center items-center glass-card-glow h-full")}>
-               <CardHeader>...</CardHeader>
-               <CardContent>...</CardContent>
-               <CardFooter>...</CardFooter>
-            </Card>
-          </ScrollHighlightCard>
-          */}
+          {/* Add more product cards here */}
 
         </div>
       </div>
