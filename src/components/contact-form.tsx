@@ -20,7 +20,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { sendContactEmail } from "@/actions/send-contact-email";
+// Import the new action
+import { generateWhatsAppLink } from "@/actions/generate-whatsapp-link";
 
 // Schema remains the same
 const formSchema = z.object({
@@ -55,29 +56,33 @@ export function ContactForm() {
     defaultValues: defaultFormValues, // Use memoized default values
   });
 
-  // Use useCallback for onSubmit if it relies on external props/state that don't change often
-  // Here, it depends on form, toast, setIsSubmitting which are stable or managed internally
+  // Update onSubmit to generate and open WhatsApp link
   async function onSubmit(values: ContactFormValues) {
     setIsSubmitting(true);
-    // console.log("Form submitted:", values); // Keep for debugging if needed
 
     try {
-      const result = await sendContactEmail(values);
+      // Call the server action to generate the link
+      const result = await generateWhatsAppLink(values);
 
-      if (result.success) {
+      if (result.success && result.link) {
         toast({
-          title: "Message Sent!",
-          description: result.message || "Thank you for contacting us. We'll be in touch soon.",
+          title: "Ready to Send!",
+          description: "Opening WhatsApp to send your message...",
         });
-        form.reset(); // Reset form fields to default values
+
+        // Open the WhatsApp link in a new tab
+        window.open(result.link, '_blank', 'noopener,noreferrer');
+
+        form.reset(); // Reset form fields after successful generation
       } else {
-        throw new Error(result.message || "An unknown error occurred.");
+        // Throw error if link generation failed on the server
+        throw new Error(result.message || "Could not prepare WhatsApp message.");
       }
     } catch (error: any) {
       console.error("Submission error:", error);
       toast({
         title: "Submission Failed",
-        description: error.message || "Could not send message. Please try again.",
+        description: error.message || "Could not prepare WhatsApp message. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -148,7 +153,7 @@ export function ContactForm() {
           )}
         />
         <Button type="submit" className="w-full font-semibold btn-primary-gradient" disabled={isSubmitting}>
-          {isSubmitting ? "Sending..." : "Send Message"}
+          {isSubmitting ? "Preparing..." : "Send via WhatsApp"}
         </Button>
       </form>
     </Form>
