@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from 'next/link';
@@ -8,6 +7,7 @@ import { Menu, Moon, Sun } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
+import { Logo } from '@/components/logo'; // Import the Logo component
 
 export function Header() {
   const navItems = [
@@ -38,8 +38,11 @@ export function Header() {
         "bg-background/80 backdrop-blur-lg"
     )}>
       <div className="container flex h-16 items-center">
-        <Link href="/" className="mr-6 flex items-center space-x-2">
-          <span className="font-bold inline-block text-lg">Mathenge Inc</span>
+        <Link href="/" className="mr-6 flex items-center space-x-2" aria-label="Mathenge Inc. Home">
+          {/* Use the Logo component */}
+          <Logo className="h-7" />
+          {/* Remove the text span */}
+          {/* <span className="font-bold inline-block text-lg">Mathenge Inc</span> */}
         </Link>
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
           {navItems.map((item) => (
@@ -86,8 +89,11 @@ export function Header() {
                 "bg-background/90 backdrop-blur-xl border-l border-white/10"
                 )}>
               <nav className="flex flex-col gap-4 mt-8">
-                <Link href="/" className="mb-4 flex items-center space-x-2">
-                  <span className="font-bold text-xl">Mathenge Inc</span>
+                <Link href="/" className="mb-4 flex items-center space-x-2" aria-label="Mathenge Inc. Home">
+                   {/* Use the Logo component in mobile menu too */}
+                   <Logo className="h-8" />
+                   {/* Remove the text span */}
+                  {/* <span className="font-bold text-xl">Mathenge Inc</span> */}
                 </Link>
                 {navItems.map((item) => (
                   <Link
