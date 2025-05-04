@@ -4,7 +4,7 @@
 import type { FC } from 'react';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Square, Circle, Triangle, Star } from 'lucide-react'; // Example icons
+// Removed unused icon imports: Square, Circle, Triangle, Star
 import { cn } from '@/lib/utils';
 
 interface OddOneOutRoundProps {
@@ -49,7 +49,7 @@ export const OddOneOutRound: FC<OddOneOutRoundProps> = ({ roundData, onComplete 
     const isCorrect = option.isOdd;
     setTimeout(() => {
        onComplete(isCorrect);
-    }, 800); // Delay before moving to next round
+    }, 300); // Reduced delay from 800ms to 300ms
   };
 
   return (

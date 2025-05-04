@@ -81,7 +81,8 @@ export default function QuickThinkerPage() {
     const newScore = gameState.score + (isCorrect ? 1 : 0);
     const newTotalTime = gameState.totalTimeMs + timeTaken;
 
-    setTimeout(() => { // Simulate transition delay
+    // Reduce delay for faster transition
+    setTimeout(() => {
        if (nextRound < gameState.totalRounds) {
         setGameState((prev) => ({
           ...prev,
@@ -103,7 +104,7 @@ export default function QuickThinkerPage() {
         }));
         setIsLoading(false);
       }
-    }, 500); // Delay to show loader/transition
+    }, 200); // Reduced delay from 500ms to 200ms
 
   }, [gameState]);
 

@@ -34,91 +34,36 @@ const generateOddOneOut = (): GameRound => {
   };
 };
 
-// 2. Speed Math (Placeholder)
-const generateSpeedMath = (): GameRound => {
-  // Placeholder - Implement actual math generation logic
-   const num1 = Math.floor(Math.random() * 10) + 1;
-   const num2 = Math.floor(Math.random() * 5) + 1;
-   const num3 = Math.floor(Math.random() * 5) + 1;
-   const correctAnswer = num1 + (num2 * num3);
-   const equation = `${num1} + (${num2} × ${num3})`;
-   // Generate distractors
-   const options = Array.from({ length: 3 }, () => correctAnswer + Math.floor(Math.random() * 10) - 5)
-                      .filter(opt => opt !== correctAnswer) // Ensure distractors are different
-                      .concat(correctAnswer) // Add correct answer
-                      .slice(0, 4); // Take first 4 unique options
-    // Shuffle options
-    options.sort(() => Math.random() - 0.5);
-
-  return {
-    type: 'speed-math',
-    data: { equation: equation, options: options, title: "Quick Math!" }, // Pass options here
-    correctAnswer: correctAnswer,
-    options: options, // Ensure options array is included
-    timeLimitMs: 10000, // Example time limit
-  };
-};
-
-// ... Add generation functions for other round types (ColorCatch, MemoryFlash, etc.) ...
-// const generateColorCatch = (): GameRound => { ... };
-// const generateMemoryFlash = (): GameRound => { ... };
-// etc.
-
-
 // --- Main Generation Function ---
 
 export const generateGameRounds = (numberOfRounds: number): GameRound[] => {
+  // Currently, only 'odd-one-out' is implemented
   const availableRoundTypes: ChallengeType[] = [
     'odd-one-out',
-    // 'speed-math', // Uncomment when implemented
-    // 'color-catch',
-    // 'memory-flash',
-    // 'pattern-tap',
-    // 'quick-logic',
-    // 'final-reflex',
+    // Add other implemented round types here when ready
   ];
 
   const rounds: GameRound[] = [];
 
-  // Ensure we don't request more rounds than available types if we want unique types per game
-  const numToGenerate = Math.min(numberOfRounds, availableRoundTypes.length);
+  // If only one type is available, just generate that type
+  const typeToGenerate = availableRoundTypes.length > 0 ? availableRoundTypes[0] : 'odd-one-out'; // Fallback
 
-  // Simple strategy: pick random types, ensuring variety if possible
-  const selectedTypes: ChallengeType[] = [];
-  while (selectedTypes.length < numToGenerate) {
-      const randomType = getRandomElement(availableRoundTypes);
-      if (!selectedTypes.includes(randomType)) { // Prefer unique types for short games
-          selectedTypes.push(randomType);
-      } else if (selectedTypes.length >= availableRoundTypes.length) {
-          // If we've used all unique types and still need more rounds, allow repeats
-          selectedTypes.push(randomType);
-      }
-       // Safety break if something goes wrong
-       if (selectedTypes.length > numberOfRounds * 2) break;
-  }
-
-
-  for (let i = 0; i < numToGenerate; i++) {
-     const type = selectedTypes[i]; // Use the selected types
-    switch (type) {
+  for (let i = 0; i < numberOfRounds; i++) {
+    // For now, we only generate 'odd-one-out' rounds as it's the only implemented one.
+    // If more types were available and implemented, we could use getRandomElement(availableRoundTypes)
+    switch (typeToGenerate) {
       case 'odd-one-out':
         rounds.push(generateOddOneOut());
         break;
-      case 'speed-math':
-         // rounds.push(generateSpeedMath()); // Uncomment when implemented
-         // For now, add another odd-one-out as placeholder if speed-math selected
-         rounds.push(generateOddOneOut());
-        break;
-      // Add cases for other implemented types
-      // case 'color-catch': rounds.push(generateColorCatch()); break;
+      // Add cases for other implemented types here
       default:
-         // Fallback to odd-one-out if type generation fails
-         console.warn(`Round type "${type}" not implemented, using fallback.`);
+         console.warn(`Round type "${typeToGenerate}" not implemented or available, using fallback.`);
          rounds.push(generateOddOneOut());
          break;
     }
   }
 
-   // Shuffle the final list of rounds for variety each game
+   // Shuffle the final list of rounds (if multiple types were generated)
+   // With only one type, shuffling doesn't change much but is harmless.
    return rounds.sort(() => Math.random() - 0.5);
 };
