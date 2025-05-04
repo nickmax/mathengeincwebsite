@@ -25,10 +25,11 @@ export function Footer() {
       setShowEasterEgg(true);
       console.log('Easter egg revealed!'); // Debugging
     }
-    // Reset counter after a short delay if not revealed yet
-    setTimeout(() => {
-        if (clickCount < 4) setClickCount(0); // Only reset if not revealed
-    }, 1500);
+    // Reset counter after a short delay if not revealed yet or if already shown
+     setTimeout(() => {
+        // Reset always after timeout if not exactly 5, or if already shown
+        if (clickCount < 4 || showEasterEgg) setClickCount(0);
+     }, 1500);
   };
 
 
@@ -41,25 +42,25 @@ export function Footer() {
           ©{' '}
            <span
              onClick={handleYearClick}
-             className="cursor-pointer select-none hover:text-primary transition-colors"
+             className="cursor-pointer select-none hover:text-primary transition-colors font-medium" // Made slightly bolder
              title="What could this be?"
             >
                 {currentYear || ''}
             </span>
-           {' '}Mathenge Inc. All rights reserved.
+           {' '}Mathenge Inc. All rights reserved. (Click the year 5 times!)
         </p>
         {/* Easter Egg Link - Initially hidden */}
          {showEasterEgg && (
             <Link
                 href="/easter-egg/dino" // Link to the dino game page
                 className={cn(
-                    "absolute bottom-1 right-1 md:bottom-auto md:right-4", // Position discreetly
-                    "text-xs text-primary/50 hover:text-primary transition-all duration-500",
+                    "absolute bottom-2 right-2 md:bottom-auto md:right-4 p-1 rounded", // Position discreetly, add padding
+                    "text-xs font-semibold text-primary hover:text-primary/80 hover:bg-primary/10 transition-all duration-500",
                     "opacity-100 fade-in" // Ensure it's visible and fades in
                  )}
                  style={{ animation: 'fadeIn 0.5s ease-out' }} // Simple fade-in animation
             >
-                [Runner]
+                Play a Game?
             </Link>
          )}
 

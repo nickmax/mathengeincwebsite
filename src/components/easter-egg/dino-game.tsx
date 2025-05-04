@@ -62,6 +62,7 @@ export function DinoGame() {
   }, [score, highScore]);
 
   const resetGame = useCallback(() => {
+    console.log("Resetting game...");
     playerY.current = GROUND_Y;
     playerVelocityY.current = 0;
     obstacles.current = [];
@@ -71,52 +72,79 @@ export function DinoGame() {
     setIsRunning(false); // Wait for user input to start
     nextObstacleTime.current = Date.now() + Math.random() * (OBSTACLE_INTERVAL_MAX - OBSTACLE_INTERVAL_MIN) + OBSTACLE_INTERVAL_MIN;
     lastTime.current = 0; // Reset time for game loop delta
+
+    // Clear any existing intervals/frames
     if (scoreIntervalId.current) clearInterval(scoreIntervalId.current);
     if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
-    animationFrameId.current = null; // Ensure animation frame is cleared
-    // Request the first frame to draw initial state if needed, or wait for start
+    animationFrameId.current = null;
+
+    // Clear visual obstacles
+    if (gameContainerRef.current) {
+        const obstacleElements = gameContainerRef.current.querySelectorAll('.obstacle');
+        obstacleElements.forEach(el => el.remove());
+    }
+     // Reset player visual position
+     if (playerRef.current) {
+        playerRef.current.style.bottom = `0px`; // Back to ground visually
+     }
+
+    console.log("Game reset complete.");
   }, []);
 
 
   const jump = useCallback(() => {
-    if (playerY.current === GROUND_Y && isRunning) {
+    if (playerY.current === GROUND_Y && isRunning && !isGameOver) {
+       console.log("Jump initiated");
       playerVelocityY.current = -JUMP_FORCE;
+    } else {
+       console.log("Jump ignored - not on ground or not running/game over", playerY.current, isRunning, isGameOver);
     }
-  }, [isRunning]);
+  }, [isRunning, isGameOver]); // Added isGameOver dependency
 
   const startGame = useCallback(() => {
-    if (!isRunning && isGameOver) {
-        resetGame(); // Reset if game was over
-        // Don't start immediately, wait for space/tap after reset message
+    console.log("Start game attempt:", { isRunning, isGameOver });
+    if (isGameOver) {
+        resetGame(); // Reset first if game was over
+        // resetGame sets isRunning to false, so the next condition will trigger on the *next* press/tap
+        return; // Don't start immediately after reset, require another interaction
     }
-    if (!isRunning && !isGameOver) {
+    if (!isRunning) {
+      console.log("Starting game now...");
       setIsRunning(true);
+      setIsGameOver(false); // Explicitly set game over to false
       lastTime.current = performance.now(); // Initialize time for the first frame
       if (scoreIntervalId.current) clearInterval(scoreIntervalId.current); // Clear existing interval if any
       scoreIntervalId.current = setInterval(() => {
-          setScore((s) => s + 1);
+          // Only increment score if the game is actually running
+           if (animationFrameId.current !== null) {
+                setScore((s) => s + 1);
+           }
       }, 100); // Increment score every 100ms
       gameLoop(performance.now()); // Start the game loop
-    } else if(isGameOver) {
-        // If game is over, first press/tap resets, second one starts
-        resetGame();
     }
   }, [isRunning, isGameOver, resetGame]); // Added resetGame dependency
 
 
   const handleInput = useCallback((event: KeyboardEvent | TouchEvent) => {
     let isJumpKey = false;
+    let eventType = 'unknown';
     if (event instanceof KeyboardEvent) {
       isJumpKey = event.code === 'Space';
+      eventType = 'keydown';
     } else if (event instanceof TouchEvent) {
       isJumpKey = true; // Any tap is jump
+      eventType = 'touchstart';
     }
+    console.log(`Input detected: ${eventType}, isJumpKey: ${isJumpKey}`);
+
 
     if (isJumpKey) {
       event.preventDefault(); // Prevent space scrolling / default tap behavior
       if (!isRunning || isGameOver) {
+        console.log("Input -> Starting/Resetting Game");
         startGame();
       } else {
+         console.log("Input -> Jumping");
         jump();
       }
     }
@@ -128,24 +156,37 @@ export function DinoGame() {
     const handleKeyDown = (event: KeyboardEvent) => handleInput(event);
     window.addEventListener('keydown', handleKeyDown);
 
-    // Touch listener
+    // Touch listener - Attach to the game container for better control on mobile
+    const gameEl = gameContainerRef.current;
     const handleTouchStart = (event: TouchEvent) => handleInput(event);
-    document.addEventListener('touchstart', handleTouchStart); // Listen on document for mobile taps
+    if (gameEl) {
+      gameEl.addEventListener('touchstart', handleTouchStart, { passive: false }); // Need passive: false to allow preventDefault
+    }
+
 
     // Cleanup listeners
     return () => {
+      console.log("Cleaning up listeners and game state");
       window.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('touchstart', handleTouchStart);
+       if (gameEl) {
+          gameEl.removeEventListener('touchstart', handleTouchStart);
+       }
       if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
       if (scoreIntervalId.current) clearInterval(scoreIntervalId.current);
+      animationFrameId.current = null; // Ensure clear on unmount
+      scoreIntervalId.current = null; // Ensure clear on unmount
     };
   }, [handleInput]); // Re-attach if handleInput changes
 
 
   const gameLoop = useCallback((currentTime: number) => {
+     // Important: Check isRunning and isGameOver at the start of each loop iteration
     if (!isRunning || isGameOver) {
+       console.log("Game loop stopped.", { isRunning, isGameOver });
        if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
        animationFrameId.current = null; // Clear ref when loop stops
+       if (scoreIntervalId.current) clearInterval(scoreIntervalId.current); // Also stop score when loop stops
+       scoreIntervalId.current = null;
        return;
     }
 
@@ -157,7 +198,7 @@ export function DinoGame() {
     playerVelocityY.current += GRAVITY * deltaTime;
     playerY.current += playerVelocityY.current * deltaTime;
 
-    if (playerY.current > GROUND_Y) {
+    if (playerY.current >= GROUND_Y) { // Use >= for safety
       playerY.current = GROUND_Y;
       playerVelocityY.current = 0;
     }
@@ -174,16 +215,21 @@ export function DinoGame() {
       obstacles.current.push({
         id: currentTime, // Use timestamp as unique ID
         x: GAME_WIDTH,
-        y: GAME_HEIGHT - OBSTACLE_HEIGHT,
+        y: GROUND_Y, // Obstacles start on the ground
         width: newWidth,
         height: OBSTACLE_HEIGHT,
       });
-      nextObstacleTime.current = currentTime + Math.random() * (OBSTACLE_INTERVAL_MAX - OBSTACLE_INTERVAL_MIN) + OBSTACLE_INTERVAL_MIN / (gameSpeed.current / INITIAL_GAME_SPEED); // Spawn faster as speed increases
+      // Spawn faster as speed increases, ensure interval doesn't get too small
+      const speedFactor = Math.max(0.5, gameSpeed.current / INITIAL_GAME_SPEED); // Cap minimum interval reduction
+      const intervalRange = OBSTACLE_INTERVAL_MAX - OBSTACLE_INTERVAL_MIN;
+      const nextInterval = (Math.random() * intervalRange + OBSTACLE_INTERVAL_MIN) / speedFactor;
+      nextObstacleTime.current = currentTime + nextInterval;
+      console.log("Spawned obstacle, next in:", nextInterval.toFixed(0) + "ms");
     }
 
     // --- Collision Detection ---
     const playerRect = {
-      x: PLAYER_SIZE, // Assuming player is at a fixed x position conceptually
+      x: PLAYER_SIZE, // Player's fixed X position
       y: playerY.current,
       width: PLAYER_SIZE,
       height: PLAYER_SIZE,
@@ -205,15 +251,21 @@ export function DinoGame() {
             playerRect.y < obstacleRect.y + obstacleRect.height &&
             playerRect.y + playerRect.height > obstacleRect.y
         ) {
+            console.log("Collision detected!");
             setIsGameOver(true);
-            setIsRunning(false);
-             if (scoreIntervalId.current) clearInterval(scoreIntervalId.current);
-            // Update High Score potentially
+            setIsRunning(false); // Stop the game immediately
+             if (scoreIntervalId.current) clearInterval(scoreIntervalId.current); // Stop score interval
+             scoreIntervalId.current = null;
+
+             // Update High Score potentially (already handled by useEffect, but good to be explicit)
              if (score > highScore) {
                 setHighScore(score);
                 localStorage.setItem('crimsonRunnerHighScore', score.toString());
              }
-            return; // Stop the loop on game over
+             // Cancel the *next* frame request explicitly here
+             if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
+             animationFrameId.current = null;
+            return; // Stop the loop execution immediately on game over
         }
     }
 
@@ -223,58 +275,61 @@ export function DinoGame() {
     // --- Render ---
     // Update player position visually
     if (playerRef.current) {
-      playerRef.current.style.bottom = `${GAME_HEIGHT - playerY.current - PLAYER_SIZE}px`;
+      playerRef.current.style.transform = `translateY(${GROUND_Y - playerY.current}px)`;
     }
 
      // Update obstacles visually (more direct manipulation for performance)
     if (gameContainerRef.current) {
-        const obstacleElements = gameContainerRef.current.querySelectorAll('.obstacle');
-        // Basic sync - remove elements not in obstacles.current, update existing ones
+        const obstacleElements = Array.from(gameContainerRef.current.querySelectorAll('.obstacle')) as HTMLElement[];
         const currentIds = new Set(obstacles.current.map(o => o.id.toString()));
+        const existingElementsMap = new Map(obstacleElements.map(el => [el.dataset.id, el]));
 
+        // Remove elements not in current obstacles
         obstacleElements.forEach(el => {
-            const htmlEl = el as HTMLElement;
-            if (!currentIds.has(htmlEl.dataset.id!)) {
-                htmlEl.remove();
-            } else {
-                const obstacleData = obstacles.current.find(o => o.id.toString() === htmlEl.dataset.id);
-                 if (obstacleData) {
-                    htmlEl.style.left = `${obstacleData.x}px`;
-                    // Width/Height are set once on creation
-                 }
+            if (!currentIds.has(el.dataset.id!)) {
+                el.remove();
             }
         });
 
-        // Add new elements
+        // Update existing and add new elements
         obstacles.current.forEach(obstacle => {
-             if (!gameContainerRef.current?.querySelector(`[data-id="${obstacle.id}"]`)) {
-                 const newEl = document.createElement('div');
-                 newEl.className = 'obstacle absolute bottom-0 bg-muted-foreground'; // Style as obstacle
-                 newEl.style.left = `${obstacle.x}px`;
-                 newEl.style.width = `${obstacle.width}px`;
-                 newEl.style.height = `${obstacle.height}px`;
-                 newEl.dataset.id = obstacle.id.toString();
-                 gameContainerRef.current?.appendChild(newEl);
-             }
+            const element = existingElementsMap.get(obstacle.id.toString());
+            if (element) {
+                // Update existing element's position
+                element.style.transform = `translateX(${obstacle.x}px)`;
+            } else {
+                // Add new element
+                const newEl = document.createElement('div');
+                newEl.className = 'obstacle absolute bottom-0 bg-muted-foreground'; // Style as obstacle
+                newEl.style.left = `0px`; // Initial left position (transform handles actual x)
+                newEl.style.transform = `translateX(${obstacle.x}px)`;
+                newEl.style.width = `${obstacle.width}px`;
+                newEl.style.height = `${obstacle.height}px`;
+                newEl.dataset.id = obstacle.id.toString();
+                gameContainerRef.current?.appendChild(newEl);
+            }
         });
-
     }
 
 
     // --- Request Next Frame ---
-    animationFrameId.current = requestAnimationFrame(gameLoop);
+    // Only request if still running and not game over
+     if (isRunning && !isGameOver) {
+        animationFrameId.current = requestAnimationFrame(gameLoop);
+     } else {
+         // Ensure cancellation if state changed mid-loop before this point
+         if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
+         animationFrameId.current = null;
+         console.log("Game state changed mid-loop, stopping frame requests.");
+     }
 
   }, [isRunning, isGameOver, score, highScore]); // Ensure all state dependencies are included
 
-  // Cleanup animation frame on unmount
+  // Initial setup / Reset effect
   useEffect(() => {
-    return () => {
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current);
-      }
-       if (scoreIntervalId.current) clearInterval(scoreIntervalId.current);
-    };
-  }, []);
+    resetGame(); // Reset game state when component mounts
+    console.log("Initial game reset on mount.");
+  }, [resetGame]); // Depend on resetGame
 
 
   return (
@@ -285,19 +340,20 @@ export function DinoGame() {
        </div>
       <div
         ref={gameContainerRef}
-        className="relative border-2 border-primary bg-background overflow-hidden shadow-lg shadow-primary/20"
+        className="relative border-2 border-primary bg-background overflow-hidden shadow-lg shadow-primary/20 touch-manipulation cursor-pointer" // Added touch-manipulation and cursor-pointer
         style={{ width: `${GAME_WIDTH}px`, height: `${GAME_HEIGHT}px` }}
+        // tabIndex={0} // Make it focusable for keyboard events, though window listener is used
       >
         {/* Player */}
         <div
           ref={playerRef}
-          className="absolute bg-primary rounded"
+          className="absolute bg-primary rounded transition-transform duration-50 ease-linear" // Use transform for smoother Y movement
           style={{
             left: `${PLAYER_SIZE}px`, // Fixed horizontal position
-            bottom: `0px`, // Initial position at ground, updated by gameLoop
+            bottom: `0px`, // Initial position at ground visually
             width: `${PLAYER_SIZE}px`,
             height: `${PLAYER_SIZE}px`,
-            transition: 'bottom 0.05s linear', // Smoother visual updates might need adjustment
+            // transform is updated in gameLoop
           }}
         />
 
@@ -306,15 +362,16 @@ export function DinoGame() {
 
         {/* Game Over / Start Message */}
         {(!isRunning || isGameOver) && (
-          <div className="absolute inset-0 flex items-center justify-center bg-background/70 backdrop-blur-sm">
-            <div className="text-center">
+          <div className="absolute inset-0 flex items-center justify-center bg-background/70 backdrop-blur-sm z-10">
+            <div className="text-center p-4 rounded-lg bg-background/80">
               {isGameOver ? (
                 <>
                   <h2 className="text-3xl font-bold text-destructive mb-2">Game Over!</h2>
                   <p className="text-lg text-foreground">Final Score: {score}</p>
-                  <p className="mt-4 text-muted-foreground">Press Spacebar or Tap to Restart</p>
+                  <p className="mt-4 text-muted-foreground animate-pulse">Press Spacebar or Tap to Restart</p>
                 </>
               ) : (
+                 // Initial state before first start
                 <p className="text-xl font-semibold text-foreground animate-pulse">Press Spacebar or Tap to Start</p>
               )}
             </div>
