@@ -18,15 +18,18 @@ export function Footer() {
 
   return (
     // Make footer slightly distinct or transparent, use muted text
-    <footer className="py-6 md:px-8 md:py-0 border-t border-white/10 bg-background/50 backdrop-blur-sm mt-16 relative"> {/* Added relative positioning */}
+    <footer className={cn(
+        "py-6 md:px-8 md:py-0 border-t border-white/10 mt-16",
+        "bg-background/50 backdrop-blur-sm" // Keep subtle glass effect
+     )}>
       <div className="container flex flex-col items-center justify-center gap-4 md:h-24 md:flex-row">
         <p className="text-center text-sm leading-loose text-muted-foreground">
-          {/* Year is no longer clickable for Easter egg */}
+          {/* Year is no longer clickable */}
           ©{' '}
            <span
              className="font-medium px-1" // Basic styling for year
             >
-                {currentYear || ''}
+                {currentYear !== null ? currentYear : '...'} {/* Show ellipsis while loading */}
             </span>
            {' '}Mathenge Inc. All rights reserved.
            {/* Removed explicit Easter Egg hint */}
@@ -38,3 +41,4 @@ export function Footer() {
     </footer>
   );
 }
+

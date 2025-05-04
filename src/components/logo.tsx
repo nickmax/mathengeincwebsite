@@ -1,3 +1,4 @@
+
 import { cn } from '@/lib/utils';
 
 interface LogoProps extends React.SVGProps<SVGSVGElement> {
@@ -12,6 +13,7 @@ export function Logo({ className, ...props }: LogoProps) {
       className={cn('h-8 w-auto text-foreground', className)} // Adjust size as needed, use foreground color
       {...props}
       aria-label="Mathenge Inc. Logo"
+      // Removed onClick, role, tabIndex, and title attributes
     >
       {/* Geometric 'M' Shape - Two interlocking triangles/chevrons */}
       <path
@@ -46,3 +48,4 @@ export function Logo({ className, ...props }: LogoProps) {
     </svg>
   );
 }
+

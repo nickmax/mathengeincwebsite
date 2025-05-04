@@ -6,22 +6,29 @@ import type { Metadata } from 'next'; // Import Metadata type if needed for clie
 
 import { GameStart } from '@/components/quickthinker/game-start';
 import { GameResults } from '@/components/quickthinker/game-results';
-// Import specific round components (only OddOneOut for now)
+// Import specific round components
 import { OddOneOutRound } from '@/components/quickthinker/odd-one-out-round';
+// Import other round components as they are created
+// import { SpeedMathRound } from '@/components/quickthinker/speed-math-round';
+// import { ColorCatchRound } from '@/components/quickthinker/color-catch-round';
+// ... etc.
 
 import type { GameState, RoundResult, GameRound, GameStatus } from '@/types/quickthinker';
 import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 
-// Example round definitions (replace with actual game logic)
-import { generateGameRounds } from '@/lib/quickthinker-rounds'; // We'll create this utility
+// Utility to generate game rounds
+import { generateGameRounds } from '@/lib/quickthinker-rounds';
 
 // Metadata (Consider moving to layout or making this a Server Component if SEO is crucial)
-/* export const metadata: Metadata = {
+// Static metadata for Client Components might not be fully effective for SEO.
+/*
+export const metadata: Metadata = {
   title: 'QuickThinker Test - Challenge Your Mind',
   description: 'Test your logic, memory, and reflexes with the QuickThinker challenge by Mathenge Inc. Fast-paced fun for everyone!',
-  robots: 'noindex, nofollow', // Discourage indexing for the game page itself if desired
-}; */
+};
+*/
+// TODO: Consider Server Component for better metadata handling
 
 const TOTAL_ROUNDS = 5; // Define the total number of rounds
 
@@ -129,12 +136,15 @@ export default function QuickThinkerPage() {
     switch (currentRoundData.type) {
       case 'odd-one-out':
         return <OddOneOutRound roundData={currentRoundData.data} onComplete={handleRoundComplete} />;
-      // Add cases for other round types here
+      // Add cases for other round types here as they are implemented
       // case 'speed-math':
       //   return <SpeedMathRound roundData={currentRoundData.data} onComplete={handleRoundComplete} />;
+      // case 'color-catch':
+      //   return <ColorCatchRound roundData={currentRoundData.data} onComplete={handleRoundComplete} />;
       // ... etc.
       default:
-        return <p className="text-destructive">Error: Unknown round type.</p>;
+         console.error("Unknown round type:", currentRoundData.type);
+        return <p className="text-destructive">Error: Unknown round type encountered.</p>;
     }
   };
 
@@ -143,10 +153,10 @@ export default function QuickThinkerPage() {
         "flex flex-col items-center justify-center min-h-screen p-4",
         "bg-background" // Ensure theme background is applied
         )}>
-      {/* Game Title */}
-       {!['playing', 'finished'].includes(gameState.status) && (
-            <h1 className="text-3xl font-bold tracking-wide mb-8 text-foreground">
-             {/* Title shown on start screen, adjusted in GameStart component */}
+      {/* Game Title - only shown on start */}
+       {gameState.status === 'idle' && (
+            <h1 className="text-4xl font-bold tracking-wide mb-12 text-center text-foreground">
+             QuickThinker Challenge
             </h1>
        )}
 
@@ -154,9 +164,9 @@ export default function QuickThinkerPage() {
         {gameState.status === 'idle' && <GameStart onStartGame={startGame} />}
 
         {gameState.status === 'playing' && (
-             <div className="w-full flex flex-col items-center">
-                {/* Progress Indicator (Optional) */}
-                <div className="w-full max-w-md mb-6">
+             <div className="w-full flex flex-col items-center max-w-2xl"> {/* Constrain width */}
+                {/* Progress Indicator */}
+                <div className="w-full mb-8">
                     <div className="h-2 bg-primary/20 rounded-full overflow-hidden">
                        <div
                         className="h-full bg-primary transition-all duration-500 ease-out"
@@ -167,14 +177,17 @@ export default function QuickThinkerPage() {
                         Round {gameState.currentRound + 1} of {gameState.totalRounds}
                     </p>
                 </div>
-                {renderCurrentRound()}
+                 {/* Centered container for the round content */}
+                 <div className="flex justify-center w-full">
+                   {renderCurrentRound()}
+                 </div>
              </div>
         )}
 
         {gameState.status === 'finished' && <GameResults gameState={gameState} onRestart={restartGame} />}
 
-       {/* Footer Link/Info */}
-       <p className="mt-12 text-muted-foreground text-xs font-normal">
+       {/* Footer Info */}
+       <p className="mt-12 text-muted-foreground text-xs font-normal absolute bottom-4">
            (A QuickThinker game by Mathenge Inc.)
        </p>
     </div>

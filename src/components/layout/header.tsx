@@ -2,22 +2,20 @@
 "use client";
 
 import Link from 'next/link';
-// import { useRouter } from 'next/navigation'; // No longer needed for easter egg nav
+import { useRouter } from 'next/navigation'; // Need router for easter egg nav
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Moon, Sun } from 'lucide-react'; // Removed Egg icon
+import { Menu, Moon, Sun, Egg } from 'lucide-react'; // Added Egg icon
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react'; // Removed useCallback
+import { useEffect, useState, useCallback } from 'react';
 import { Logo } from '@/components/logo';
-/* Removed Tooltip imports as they are no longer needed here
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-*/
+} from "@/components/ui/tooltip"; // Import Tooltip components
 
 export function Header() {
   const navItems = [
@@ -27,12 +25,14 @@ export function Header() {
     { label: 'Pricing', href: '/pricing' },
     { label: 'Testimonials', href: '/#testimonials' },
     { label: 'Contact', href: '/#contact' },
-    { label: 'Play', href: '/quickthinker' }, // Added link to QuickThinker game
+    // Removed 'Play' from main nav, it's now the Easter Egg
   ];
 
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  // Removed state related to easter egg clicks and hint visibility
+  const [easterEggClicks, setEasterEggClicks] = useState(0);
+  const [showEasterEggHint, setShowEasterEggHint] = useState(false);
+  const router = useRouter();
 
   // Ensure component is mounted before rendering theme-dependent UI
   useEffect(() => {
@@ -44,7 +44,23 @@ export function Header() {
     setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
   };
 
-  // Removed Easter egg trigger logic (handleEasterEggClick)
+  // Easter Egg Trigger Logic
+  const handleEasterEggClick = useCallback(() => {
+    const newClickCount = easterEggClicks + 1;
+    setEasterEggClicks(newClickCount);
+
+    if (newClickCount === 1) {
+      setShowEasterEggHint(true);
+      // Hide hint after a few seconds
+      setTimeout(() => setShowEasterEggHint(false), 3000);
+    }
+
+    if (newClickCount >= 5) {
+      router.push('/quickthinker'); // Navigate to the game page
+      setEasterEggClicks(0); // Reset clicks after triggering
+      setShowEasterEggHint(false); // Hide hint immediately
+    }
+  }, [easterEggClicks, router]);
 
   return (
     <header className={cn(
@@ -52,12 +68,13 @@ export function Header() {
         "bg-background/80 backdrop-blur-lg"
     )}>
       <div className="container flex h-16 items-center">
-         {/* Logo is no longer clickable */}
+         {/* Logo is NOT clickable for Easter egg */}
         <div
-            className="mr-6 flex items-center space-x-2"
+            className="mr-6 flex items-center space-x-2 cursor-default" // Make logo non-interactive visually
             aria-label="Mathenge Inc. Home"
         >
           <Logo className="h-7" />
+           {/* Removed hint span from here */}
         </div>
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
           {navItems.map((item) => (
@@ -65,8 +82,8 @@ export function Header() {
               key={item.href}
               href={item.href}
               className={cn(
-                  "transition-colors hover:text-foreground text-muted-foreground",
-                   item.label === 'Play' && "text-primary hover:text-primary/80 font-semibold" // Highlight Play link
+                  "transition-colors hover:text-foreground text-muted-foreground"
+                  // No special styling needed now
                    )}
             >
               {item.label}
@@ -74,7 +91,27 @@ export function Header() {
           ))}
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-2">
-            {/* Removed Easter Egg Trigger Button */}
+            {/* Easter Egg Trigger Button with Tooltip */}
+            {mounted && (
+                <TooltipProvider delayDuration={100}>
+                    <Tooltip open={showEasterEggHint}>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={handleEasterEggClick}
+                                aria-label="Surprise"
+                                className="text-foreground hover:text-primary hover:bg-primary/10"
+                            >
+                                <Egg className="h-5 w-5" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom" align="center">
+                            <p>Click {5 - easterEggClicks} more times for a surprise!</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+            )}
 
             {/* Dark Mode Toggle Button */}
             {mounted ? (
@@ -112,7 +149,7 @@ export function Header() {
                   <nav className="flex flex-col gap-4 mt-8">
                     {/* Mobile logo - not clickable */}
                     <div
-                       className="mb-4 flex items-center space-x-2"
+                       className="mb-4 flex items-center space-x-2 cursor-default" // Make logo non-interactive
                        aria-label="Mathenge Inc. Home"
                      >
                        <Logo className="h-8" />
@@ -122,8 +159,8 @@ export function Header() {
                         key={item.href}
                         href={item.href}
                          className={cn(
-                             "block px-2 py-1 text-lg hover:bg-accent rounded-md text-foreground",
-                             item.label === 'Play' && "text-primary hover:bg-primary/10 font-semibold" // Highlight Play link
+                             "block px-2 py-1 text-lg hover:bg-accent rounded-md text-foreground"
+                             // No special highlight needed
                          )}
                         // Close sheet on link click
                         onClick={() => {
@@ -137,7 +174,23 @@ export function Header() {
                         {item.label}
                       </Link>
                     ))}
-                     {/* Removed Easter Egg trigger from mobile menu */}
+                     {/* Easter Egg trigger also in mobile menu */}
+                      <Button
+                         variant="ghost"
+                         onClick={() => {
+                             handleEasterEggClick();
+                              // Optionally close sheet if not navigating immediately
+                              // const closeButton = document.querySelector('[aria-label="Close"]');
+                              // if (closeButton instanceof HTMLElement) { closeButton.click(); }
+                          }}
+                         className="mt-4 flex items-center justify-start gap-2 px-2 py-1 text-lg hover:bg-primary/10 rounded-md text-primary font-semibold"
+                       >
+                         <Egg className="h-5 w-5" />
+                         <span>Surprise?</span>
+                       </Button>
+                       {showEasterEggHint && (
+                         <p className="text-sm text-primary px-2">Click {5 - easterEggClicks} more times!</p>
+                       )}
                   </nav>
                 </SheetContent>
               </Sheet>
@@ -147,3 +200,4 @@ export function Header() {
     </header>
   );
 }
+
