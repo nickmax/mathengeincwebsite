@@ -112,12 +112,13 @@ export function TicTacToeGame() {
     // Add a small delay for "thinking" effect
     const timeoutId = setTimeout(() => {
       const newSquares = squares.slice();
-      if (newSquares[bestMoveIndex] === null) { // Ensure square is still empty
+      // Double-check if the game is still in PvC and it's O's turn
+      if (gameMode === 'pvc' && !xIsNext && !gameOver && newSquares[bestMoveIndex] === null) {
           newSquares[bestMoveIndex] = 'O';
           setSquares(newSquares);
           setXIsNext(true); // Set back to player's turn (X)
       }
-      setIsComputerTurn(false); // Computer finished turn
+      setIsComputerTurn(false); // Computer finished turn or conditions changed
     }, 500); // 500ms delay
 
     // Cleanup timeout if component unmounts or state changes rapidly
@@ -136,8 +137,8 @@ export function TicTacToeGame() {
 
   // --- Handlers ---
   const handleClick = useCallback((i: number) => {
-     // Check if the game is over, the square is already filled, or if it's the computer's turn in PvC mode
-    if (gameOver || squares[i] || (gameMode === 'pvc' && isComputerTurn)) {
+    // Check if the game is over, the square is already filled, or if it's the computer's turn in PvC mode
+    if (gameOver || squares[i] || (gameMode === 'pvc' && !xIsNext && isComputerTurn)) {
       return; // Ignore click if game over, square filled, or computer is thinking
     }
 
@@ -146,21 +147,21 @@ export function TicTacToeGame() {
     setSquares(newSquares);
 
     const nextPlayerIsX = !xIsNext;
-    setXIsNext(nextPlayerIsX); // Toggle the player turn
+    setXIsNext(nextPlayerIsX); // Toggle the player turn immediately for both modes
 
-    // Check for winner or draw after the move
+    // Recalculate game over state *after* the move
     const currentWinner = calculateWinner(newSquares);
     const boardIsFull = isBoardFull(newSquares);
-    const isGameNowOver = !!currentWinner || boardIsFull; // Recalculate game over state
+    const isGameNowOver = !!currentWinner || boardIsFull;
 
     // Trigger computer move ONLY if PvC mode, it's now O's turn, and the game is NOT over
     if (gameMode === 'pvc' && !nextPlayerIsX && !isGameNowOver) {
-        setIsComputerTurn(true);
+        setIsComputerTurn(true); // Set flag for the useEffect to trigger computerMove
     } else {
         setIsComputerTurn(false); // Ensure computer turn flag is off otherwise (PvP or game is over)
     }
 
-  }, [squares, xIsNext, gameOver, gameMode, isComputerTurn]); // Updated dependencies
+  }, [squares, xIsNext, gameOver, gameMode, isComputerTurn]); // Added isComputerTurn back
 
   const handleReset = useCallback(() => {
     setSquares(Array(9).fill(null));
@@ -173,7 +174,7 @@ export function TicTacToeGame() {
      if (mode !== 'select') {
         setSquares(Array(9).fill(null)); // Reset board when mode changes
         setXIsNext(true);
-        setIsComputerTurn(false);
+        setIsComputerTurn(false); // Reset computer turn flag
         setGameMode(mode);
      }
   };
@@ -182,15 +183,16 @@ export function TicTacToeGame() {
   const renderSquare = (i: number) => {
     const value = squares[i];
     // Disable square if game over, square taken, OR (PvC mode AND computer's turn)
-    const isDisabled = gameOver || squares[i] || (gameMode === 'pvc' && isComputerTurn);
+    const isDisabled = gameOver || !!squares[i] || (gameMode === 'pvc' && !xIsNext && isComputerTurn);
     return (
       <Button
         variant="outline"
         className={cn(
           "aspect-square h-20 w-20 md:h-24 md:w-24 text-4xl font-bold rounded-lg border-primary/30",
-          // Removed specific background class like bg-background/50 to inherit the card's glass effect
+          // Use background/50 or accent for a subtle difference from card background
+          "bg-background/50",
           "hover:bg-primary/10 transition-colors duration-200",
-          "flex items-center justify-center", // Removed glass-card from button itself
+          "flex items-center justify-center",
           value === 'X' ? 'text-primary' : 'text-foreground/80',
           isDisabled ? 'cursor-not-allowed opacity-70' : '',
         )}
@@ -217,8 +219,13 @@ export function TicTacToeGame() {
 
 
   return (
-    // Ensure the main card uses the glass effect and inherits the page background
-    <Card className={cn("glass-card-glow p-4 md:p-6 border border-primary/20 shadow-lg shadow-primary/10 w-full max-w-md")}>
+    // Apply glass effect directly to the Card component
+    <Card className={cn(
+        "glass-card-glow p-4 md:p-6 border border-primary/20 shadow-lg shadow-primary/10 w-full max-w-md"
+        // bg-background/70 ensures it blends with the overall theme bg
+        // backdrop-blur-xl adds the glass effect
+        // Removed explicit background color to inherit from glass-card styles
+        )}>
       <CardContent className="flex flex-col items-center p-0">
 
         {/* Mode Selection */}
@@ -248,10 +255,10 @@ export function TicTacToeGame() {
             <div className="mb-4 text-2xl font-semibold text-foreground tracking-wide h-8">
               {status}
             </div>
-            {/* Apply glass effect to the board container */}
+            {/* Board container styling - subtle background to differentiate */}
             <div className={cn(
                 "grid grid-cols-3 gap-2 md:gap-3 mb-6 p-2 rounded-lg",
-                "bg-background/50 backdrop-blur-sm border border-white/10" // Glass effect for the board area
+                "bg-background/30 border border-white/10" // Slightly different background for the board area itself
                  )}>
                 {renderSquare(0)}
                 {renderSquare(1)}
