@@ -50,8 +50,9 @@ export function Header() {
 
     // Optional: Reset count after a delay if threshold not met
     setTimeout(() => {
+      // Only reset if count is less than 5 and hasn't just triggered navigation
       if (newClickCount < 5) {
-        setLogoClickCount(0);
+           setLogoClickCount(0);
       }
     }, 1500); // Reset after 1.5 seconds of inactivity
 
@@ -68,7 +69,7 @@ export function Header() {
             onClick={handleLogoClick}
             className="mr-6 flex items-center space-x-2 cursor-pointer" // Add cursor-pointer
             aria-label="Mathenge Inc. Home (Click 5 times for a surprise!)" // Update aria-label
-            title="Click me 5 times!" // Add title hint
+            title="Psst... Click me 5 times!" // Add explicit title hint
         >
           <Logo className="h-7" />
         </div>
@@ -116,6 +117,7 @@ export function Header() {
                 "w-[300px] sm:w-[400px]",
                 "bg-background/90 backdrop-blur-xl border-l border-white/10"
                 )}>
+               {/* Add accessible title for the sheet */}
                <SheetTitle className="sr-only">Mobile Navigation Menu</SheetTitle>
               <nav className="flex flex-col gap-4 mt-8">
                 {/* Also make mobile logo clickable */}
@@ -123,7 +125,7 @@ export function Header() {
                    onClick={handleLogoClick}
                    className="mb-4 flex items-center space-x-2 cursor-pointer"
                    aria-label="Mathenge Inc. Home (Click 5 times for a surprise!)"
-                   title="Click me 5 times!"
+                   title="Psst... Click me 5 times!" // Add explicit title hint
                  >
                    <Logo className="h-8" />
                  </div>
@@ -132,6 +134,15 @@ export function Header() {
                     key={item.href}
                     href={item.href}
                     className="block px-2 py-1 text-lg hover:bg-accent rounded-md text-foreground"
+                    // Close sheet on link click
+                    onClick={() => {
+                        // Find the close button and click it programmatically
+                        // This is a common pattern but might need adjustment based on Sheet implementation details
+                        const closeButton = document.querySelector('[aria-label="Close"]');
+                        if (closeButton instanceof HTMLElement) {
+                          closeButton.click();
+                        }
+                     }}
                   >
                     {item.label}
                   </Link>
