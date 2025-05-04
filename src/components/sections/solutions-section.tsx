@@ -1,9 +1,9 @@
 
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"; // Added CardFooter
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Pencil, Palette, CodeXml, CloudCog, SquareTerminal } from "lucide-react"; // Corrected icon import
+import { Pencil, Palette, CodeXml, CloudCog, SquareTerminal, Car } from "lucide-react"; // Added Car icon
 import { cn } from "@/lib/utils";
 import Link from "next/link"; // Import Link
 
@@ -35,7 +35,7 @@ const solutions = [
   {
     title: "Custom Software Development",
     description: "Fully tailored software solutions for unique business needs.",
-    icon: SquareTerminal, // Corrected icon usage
+    icon: SquareTerminal,
     tag: "Tailored Precision",
   },
 ];
@@ -55,15 +55,11 @@ export function SolutionsSection() {
           <h2 className="text-3xl font-bold tracking-wide sm:text-5xl">Our Solutions</h2>
           {/* Subtext: Muted color, normal weight */}
           <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed font-normal">
-             Elevate your digital presence with solutions designed for scale, beauty, and performance. Explore our SaaS offerings too!
+             Elevate your digital presence with solutions designed for scale, beauty, and performance.
           </p>
-          {/* Add a link to the products page */}
-          <Button asChild variant="link" className="text-primary hover:text-primary/80 font-semibold text-lg mt-2">
-            <Link href="/products">Explore Our Products →</Link>
-          </Button>
         </div>
         {/* Use glass cards with glow effect */}
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"> {/* Adjusted grid columns */}
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3"> {/* Adjusted grid columns for 5+1 */}
           {solutions.map((solution) => (
             <Card key={solution.title} className={cn(
                 "flex flex-col text-center items-center",
@@ -91,6 +87,33 @@ export function SolutionsSection() {
                </CardFooter> */}
             </Card>
           ))}
+
+           {/* Magari360 Product Card */}
+           <Card className={cn(
+                "flex flex-col text-center items-center",
+                "glass-card-glow", // Apply glow effect
+                "lg:col-span-1" // Adjust span as needed based on layout preference
+              )}>
+            <CardHeader className="pb-4 items-center">
+              <div className="mb-5 p-3 bg-primary/10 rounded-full inline-flex border border-primary/30">
+                <Car className="h-8 w-8 text-primary" /> {/* Magari360 Icon */}
+              </div>
+              <CardTitle className="text-lg">Magari360</CardTitle>
+              <CardDescription className="text-center font-normal text-sm pt-1">
+                Our Flagship AutoCommerce Platform.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex-1 flex flex-col justify-between">
+              <p className="text-muted-foreground font-normal text-sm mb-6">
+                Launch a sleek online showroom for your car dealership instantly. Effortless setup, powerful features.
+              </p>
+            </CardContent>
+            <CardFooter className="w-full">
+              <Button asChild variant="outline" className="w-full font-semibold">
+                 <Link href="/products/magari360">Explore Magari360</Link>
+              </Button>
+            </CardFooter>
+          </Card>
         </div>
 
         {/* Optional CTA Bar */}

@@ -12,11 +12,11 @@ import { useEffect, useState } from 'react';
 export function Header() {
   const navItems = [
     { label: 'Home', href: '/' },
-    { label: 'Solutions', href: '/#solutions' },
-    { label: 'Products', href: '/products' }, // Changed from Magari360 to Products
+    { label: 'Solutions', href: '/#solutions' }, // Ensured link works from other pages
+    { label: 'Products', href: '/products' },
     { label: 'Pricing', href: '/pricing' },
-    { label: 'Testimonials', href: '/#testimonials' },
-    { label: 'Contact', href: '/#contact' },
+    { label: 'Testimonials', href: '/#testimonials' }, // Ensured link works from other pages
+    { label: 'Contact', href: '/#contact' },       // Ensured link works from other pages
   ];
 
   const { setTheme, resolvedTheme } = useTheme();

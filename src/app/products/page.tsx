@@ -1,4 +1,5 @@
 
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -17,12 +18,14 @@ export default function ProductsPage() {
         </div>
 
         {/* Grid for Product Cards */}
+        {/* Centering the grid content when there's only one item */}
         <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center">
 
           {/* Magari360 Product Card */}
           <Card className={cn(
                 "flex flex-col text-center items-center",
                 "glass-card-glow" // Apply glow effect
+                // Removed md:col-start-2 to allow normal grid flow if more items are added
               )}>
             <CardHeader className="pb-4 items-center">
               <div className="mb-5 p-3 bg-primary/10 rounded-full inline-flex border border-primary/30">
@@ -46,6 +49,13 @@ export default function ProductsPage() {
           </Card>
 
           {/* Add more product cards here as needed */}
+          {/* Example Placeholder:
+          <Card className={cn("flex flex-col text-center items-center glass-card-glow")}>
+             <CardHeader>...</CardHeader>
+             <CardContent>...</CardContent>
+             <CardFooter>...</CardFooter>
+          </Card>
+          */}
 
         </div>
       </div>
