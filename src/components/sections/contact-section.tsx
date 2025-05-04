@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,8 +28,8 @@ export function ContactSection() {
 
 
   return (
-    // Use secondary background (#1A1A1A in dark mode)
-    <section id="contact" className="w-full py-16 md:py-24 lg:py-32 bg-secondary">
+    // Use primary background for consistency
+    <section id="contact" className="w-full py-16 md:py-24 lg:py-32 bg-background">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-14">
           {/* Heading: Bold, tracking-wide */}
@@ -97,3 +98,4 @@ export function ContactSection() {
     </section>
   );
 }
+

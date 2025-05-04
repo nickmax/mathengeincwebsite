@@ -1,4 +1,5 @@
 
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -39,7 +40,7 @@ export default function Magari360Page() {
   return (
     <>
       {/* 1. Hero Section */}
-      <section id="hero" className="w-full py-24 md:py-32 lg:py-40 xl:py-56 relative overflow-hidden bg-gradient-to-br from-background via-background to-secondary/30">
+      <section id="hero" className="w-full py-24 md:py-32 lg:py-40 xl:py-56 relative overflow-hidden bg-background">
         {/* Optional Background Visual */}
         {/* <Image src="https://picsum.photos/1920/1080?grayscale" layout="fill" objectFit="cover" alt="Abstract background" className="absolute inset-0 -z-10 opacity-10 blur-sm" data-ai-hint="abstract futuristic background" /> */}
          <div className={cn(
@@ -64,7 +65,7 @@ export default function Magari360Page() {
       </section>
 
       {/* 2. The Story: Why Magari360? */}
-      <section id="story" className="w-full py-16 md:py-24 lg:py-32 bg-secondary">
+      <section id="story" className="w-full py-16 md:py-24 lg:py-32 bg-background">
         <div className="container px-4 md:px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-5">
@@ -137,7 +138,7 @@ export default function Magari360Page() {
       </section>
 
       {/* 4. Customizability Section */}
-      <section id="customizability" className="w-full py-16 md:py-24 lg:py-32 bg-secondary">
+      <section id="customizability" className="w-full py-16 md:py-24 lg:py-32 bg-background">
         <div className="container px-4 md:px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Placeholder for interactive elements/visuals */}
@@ -168,7 +169,7 @@ export default function Magari360Page() {
 
 
       {/* 5. Live Demo CTA Section */}
-       <section id="demo" className="w-full py-20 md:py-28 lg:py-36 relative bg-gradient-to-r from-primary/10 via-transparent to-primary/10">
+       <section id="demo" className="w-full py-20 md:py-28 lg:py-36 relative bg-background">
            <div className={cn(
              "absolute inset-0 -z-10",
              "bg-background/70 backdrop-blur-md" // Glassy overlay
@@ -212,4 +213,3 @@ export default function Magari360Page() {
   );
 }
 
-    

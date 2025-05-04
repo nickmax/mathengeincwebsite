@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge"; // Import Badge
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link"; // Import Link
 
 const pricingPlans = [
   {
@@ -106,7 +107,7 @@ export function PricingSection() {
                   variant={plan.popular ? 'default' : 'outline'} // 'default' uses the gradient
                   asChild
                   >
-                    <a href={plan.link}>{plan.cta}</a>
+                    <Link href={plan.link}>{plan.cta}</Link>
                 </Button>
               </CardContent>
                {/* No separate CardFooter needed */}
@@ -114,7 +115,7 @@ export function PricingSection() {
           ))}
         </div>
         <p className="text-center text-muted-foreground mt-10 text-sm font-normal">
-          Need a custom solution? <a href="/#contact" className="text-primary underline hover:text-primary/80 font-semibold">Contact us</a> for enterprise options.
+          Need a custom solution? <Link href="/#contact" className="text-primary underline hover:text-primary/80 font-semibold">Contact us</Link> for enterprise options.
         </p>
       </div>
     </section>

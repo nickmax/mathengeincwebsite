@@ -1,3 +1,4 @@
+
 'use client';
 
 import React from 'react';
@@ -19,7 +20,7 @@ const extendedLogos = [...logos, ...logos];
 
 export function TrustedBySection() {
   return (
-    <section className="w-full py-16 md:py-20 lg:py-24 bg-secondary"> {/* Consistent background */}
+    <section className="w-full py-16 md:py-20 lg:py-24 bg-background"> {/* Consistent background */}
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
           <h2 className="text-3xl font-bold tracking-wide sm:text-4xl text-foreground"> {/* Adjusted size */}
@@ -49,8 +50,9 @@ export function TrustedBySection() {
             ))}
           </div>
            {/* Gradient Fades for edges */}
-           <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-secondary to-transparent pointer-events-none"></div>
-           <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-secondary to-transparent pointer-events-none"></div>
+           {/* Use bg-background for the gradient fade to match the new section background */}
+           <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-background to-transparent pointer-events-none"></div>
+           <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-background to-transparent pointer-events-none"></div>
         </div>
       </div>
     </section>

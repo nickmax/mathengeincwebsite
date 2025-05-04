@@ -1,8 +1,9 @@
 
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Pencil, Palette, CodeXml, CloudCog, TerminalSquare } from "lucide-react";
+import { Pencil, Palette, CodeXml, CloudCog, SquareTerminal } from "lucide-react"; // Corrected icon import
 import { cn } from "@/lib/utils";
 import Link from "next/link"; // Import Link
 
@@ -34,15 +35,15 @@ const solutions = [
   {
     title: "Custom Software Development",
     description: "Fully tailored software solutions for unique business needs.",
-    icon: TerminalSquare,
+    icon: SquareTerminal, // Corrected icon usage
     tag: "Tailored Precision",
   },
 ];
 
 export function SolutionsSection() {
   return (
-    // Use secondary background (#1A1A1A in dark mode)
-    <section id="solutions" className="w-full py-16 md:py-24 lg:py-32 bg-secondary relative overflow-hidden">
+    // Use primary background for consistency
+    <section id="solutions" className="w-full py-16 md:py-24 lg:py-32 bg-background relative overflow-hidden">
         {/* Optional: Add subtle background effects here (e.g., gradient pulses, lines) */}
         {/* <div className="absolute inset-0 -z-10 opacity-10 animate-pulse">
              Add animated SVG or gradient elements

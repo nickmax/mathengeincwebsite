@@ -41,6 +41,10 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
+    // If asChild is true, the button is rendered as a Slot component,
+    // which merges its props onto its immediate child.
+    // React.Children.only expects a single React element child.
+    // Comments count as children, so remove any comments within <Button asChild>...</Button>.
     const Comp = asChild ? Slot : "button"
     return (
       <Comp

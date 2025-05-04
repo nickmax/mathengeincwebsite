@@ -1,4 +1,5 @@
 
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -34,8 +35,8 @@ const features = [
 
 export function Magari360Section() {
   return (
-    // Use secondary background for contrast with glass elements
-    <section id="magari360" className="w-full py-16 md:py-24 lg:py-32 bg-secondary relative overflow-hidden">
+    // Use primary background for consistency
+    <section id="magari360" className="w-full py-16 md:py-24 lg:py-32 bg-background relative overflow-hidden">
        {/* Optional: Subtle background gradient/effects */}
        {/* <div className="absolute inset-0 -z-10 bg-gradient-to-br from-background to-secondary opacity-50"></div> */}
 
@@ -56,7 +57,7 @@ export function Magari360Section() {
           </p>
           {/* Primary CTA button */}
           <Button asChild size="lg" className="font-semibold btn-primary-gradient">
-            <Link href="/#contact">Get Magari360 Today</Link>
+            <Link href="/products/magari360">Learn More about Magari360</Link>
           </Button>
         </div>
 
@@ -126,3 +127,4 @@ export function Magari360Section() {
     </section>
   );
 }
+
