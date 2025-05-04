@@ -8,17 +8,18 @@ import { GameStart } from '@/components/quickthinker/game-start';
 import { GameResults } from '@/components/quickthinker/game-results';
 // Import specific round components
 import { OddOneOutRound } from '@/components/quickthinker/odd-one-out-round';
+import { SpeedMathRound } from '@/components/quickthinker/speed-math-round'; // Import SpeedMathRound
 // Import other round components as they are created
-// import { SpeedMathRound } from '@/components/quickthinker/speed-math-round';
 // import { ColorCatchRound } from '@/components/quickthinker/color-catch-round';
 // ... etc.
 
 import type { GameState, RoundResult, GameRound, GameStatus } from '@/types/quickthinker';
 import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast'; // Import useToast
 
 // Utility to generate game rounds
-import { generateGameRounds } from '@/lib/quickthinker-rounds';
+import { generateGameRounds, generateSpeedMath } from '@/lib/quickthinker-rounds'; // Import generateSpeedMath
 
 // Metadata (Consider moving to layout or making this a Server Component if SEO is crucial)
 // Static metadata for Client Components might not be fully effective for SEO.
@@ -31,8 +32,10 @@ export const metadata: Metadata = {
 // TODO: Consider Server Component for better metadata handling
 
 const TOTAL_ROUNDS = 5; // Define the total number of rounds
+const LEVEL_2_THRESHOLD_MS = 3000; // 3 seconds threshold for Level 2
 
 export default function QuickThinkerPage() {
+  const { toast } = useToast(); // Initialize toast
   const [gameState, setGameState] = useState<GameState>({
     status: 'idle',
     currentRound: 0,
@@ -41,6 +44,7 @@ export default function QuickThinkerPage() {
     totalTimeMs: 0,
     results: [],
     startTime: null,
+    level: 1, // Initialize level
   });
   const [gameRounds, setGameRounds] = useState<GameRound[]>([]);
   const [isLoading, setIsLoading] = useState(false); // For loading state between rounds
@@ -53,6 +57,9 @@ export default function QuickThinkerPage() {
   }, [gameState.status]);
 
   const startGame = useCallback(() => {
+    // Ensure rounds are generated before starting
+     const initialRounds = generateGameRounds(TOTAL_ROUNDS);
+     setGameRounds(initialRounds);
     setGameState({
       status: 'playing',
       currentRound: 0,
@@ -61,6 +68,7 @@ export default function QuickThinkerPage() {
       totalTimeMs: 0,
       results: [],
       startTime: Date.now(), // Start timer for the first round
+      level: 1, // Reset level
     });
     setIsLoading(false);
   }, []);
@@ -77,23 +85,57 @@ export default function QuickThinkerPage() {
       timeTakenMs: timeTaken,
     };
 
-    const nextRound = gameState.currentRound + 1;
+    const nextRoundIndex = gameState.currentRound + 1;
     const newScore = gameState.score + (isCorrect ? 1 : 0);
     const newTotalTime = gameState.totalTimeMs + timeTaken;
+    let nextLevel = gameState.level;
+    let proceedToNextRound = true;
+
+    // --- Level Progression Logic ---
+    if (gameState.level === 1 && gameState.currentRound === 0) { // Check after the first round (odd-one-out)
+      if (isCorrect && timeTaken <= LEVEL_2_THRESHOLD_MS) {
+        nextLevel = 2;
+        // Replace remaining rounds with Level 2 (speed-math) rounds
+        const level2Rounds = [gameRounds[0]]; // Keep the first round result
+        for (let i = 1; i < TOTAL_ROUNDS; i++) {
+            level2Rounds.push(generateSpeedMath());
+        }
+        setGameRounds(level2Rounds);
+        toast({
+          title: "Level Up!",
+          description: "Impressive speed! Get ready for Level 2: Speed Math!",
+          // variant: "success" // Optional: Add success variant if defined
+        });
+      } else if (!isCorrect || timeTaken > LEVEL_2_THRESHOLD_MS) {
+        // Player didn't qualify for Level 2
+        toast({
+          title: "Challenge Update",
+          description: isCorrect
+            ? "Good job, but try to be faster next time to unlock Level 2!"
+            : "Keep practicing! Accuracy and speed unlock the next level.",
+          variant: "default",
+        });
+         // Continue with the originally generated Level 1 rounds
+      }
+    }
+    // --- End Level Progression Logic ---
+
 
     // Reduce delay for faster transition
     setTimeout(() => {
-       if (nextRound < gameState.totalRounds) {
+       if (proceedToNextRound && nextRoundIndex < gameState.totalRounds) {
         setGameState((prev) => ({
           ...prev,
-          currentRound: nextRound,
+          currentRound: nextRoundIndex,
           score: newScore,
           totalTimeMs: newTotalTime,
           results: [...prev.results, newResult],
           startTime: Date.now(), // Start timer for the next round
+          level: nextLevel, // Update level
         }));
         setIsLoading(false);
       } else {
+        // Game Finished
         setGameState((prev) => ({
           ...prev,
           status: 'finished',
@@ -101,12 +143,13 @@ export default function QuickThinkerPage() {
           totalTimeMs: newTotalTime,
           results: [...prev.results, newResult],
           startTime: null, // Game finished
+          level: nextLevel,
         }));
         setIsLoading(false);
       }
-    }, 200); // Reduced delay from 500ms to 200ms
+    }, 200); // Reduced delay
 
-  }, [gameState]);
+  }, [gameState, toast]); // Added toast to dependencies
 
   const restartGame = useCallback(() => {
      // Reset state and generate new rounds
@@ -118,6 +161,7 @@ export default function QuickThinkerPage() {
       totalTimeMs: 0,
       results: [],
       startTime: null,
+      level: 1, // Reset level
     });
     setIsLoading(false);
      // Regeneration of rounds is handled by the useEffect hook based on 'idle' status
@@ -136,16 +180,20 @@ export default function QuickThinkerPage() {
 
     switch (currentRoundData.type) {
       case 'odd-one-out':
+        // Ensure we pass the correct data structure
         return <OddOneOutRound roundData={currentRoundData.data} onComplete={handleRoundComplete} />;
+      case 'speed-math':
+         // Ensure we pass the correct data structure
+        return <SpeedMathRound roundData={currentRoundData.data} onComplete={handleRoundComplete} />;
       // Add cases for other round types here as they are implemented
-      // case 'speed-math':
-      //   return <SpeedMathRound roundData={currentRoundData.data} onComplete={handleRoundComplete} />;
       // case 'color-catch':
       //   return <ColorCatchRound roundData={currentRoundData.data} onComplete={handleRoundComplete} />;
       // ... etc.
       default:
          console.error("Unknown round type:", currentRoundData.type);
-        return <p className="text-destructive">Error: Unknown round type encountered.</p>;
+        // Handle unknown type gracefully, maybe skip round or show error
+         setTimeout(() => handleRoundComplete(false), 100); // Mark as incorrect and move on
+        return <p className="text-destructive">Error: Loading next challenge...</p>;
     }
   };
 
@@ -175,7 +223,7 @@ export default function QuickThinkerPage() {
                        />
                     </div>
                      <p className="text-center text-sm text-muted-foreground mt-2">
-                        Round {gameState.currentRound + 1} of {gameState.totalRounds}
+                        Level {gameState.level} - Round {gameState.currentRound + 1} of {gameState.totalRounds}
                     </p>
                 </div>
                  {/* Centered container for the round content */}

@@ -1,4 +1,6 @@
 
+import type { LucideIcon } from 'lucide-react';
+
 export type GameStatus = 'idle' | 'playing' | 'finished';
 
 export interface RoundResult {
@@ -15,6 +17,7 @@ export interface GameState {
   totalTimeMs: number; // Total time for all rounds played
   results: RoundResult[];
   startTime: number | null; // Timestamp when the current round started
+  level: number; // Current game level
 }
 
 export type ChallengeType =
@@ -26,11 +29,31 @@ export type ChallengeType =
   | 'quick-logic'
   | 'final-reflex';
 
-// Example structure for a round - specific data will vary
-export interface GameRound {
+// Specific data types for rounds
+export interface OddOneOutOption {
+  id: number;
+  icon: LucideIcon;
+  isOdd: boolean;
+}
+export interface OddOneOutData {
+  options: OddOneOutOption[];
+  title: string;
+}
+
+export interface SpeedMathData {
+    question: string;
+    options: number[];
+    answer: number;
+}
+
+
+// Generic GameRound structure using specific data types
+export type GameRoundData = OddOneOutData | SpeedMathData | any; // Add other data types as needed
+
+export interface GameRound<T extends GameRoundData = any> {
   type: ChallengeType;
-  data: any; // Data specific to the challenge type (e.g., shapes, equation, words)
+  data: T;
   correctAnswer: any; // The correct answer for validation
-  options?: any[]; // Options for multiple choice rounds
+  // Options might be part of the data structure itself, like in OddOneOutData
   timeLimitMs?: number; // Optional time limit per round
 }
