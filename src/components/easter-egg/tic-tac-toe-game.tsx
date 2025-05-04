@@ -81,10 +81,11 @@ export function TicTacToeGame() {
 
   // Effect to trigger computer's move when it's their turn in PvC mode
   useEffect(() => {
-    if (isComputerTurn && gameMode === 'pvc' && !xIsNext) { // Added checks for safety
+    // Only trigger if PvC, O's turn, not game over, and computer's turn flag is set
+    if (gameMode === 'pvc' && !xIsNext && !gameOver && isComputerTurn) {
       computerMove();
     }
-  }, [isComputerTurn, gameMode, xIsNext, computerMove]); // Added dependencies
+  }, [gameMode, xIsNext, gameOver, isComputerTurn, computerMove]); // Ensure all dependencies are listed
 
 
   // --- Handlers ---
@@ -104,12 +105,13 @@ export function TicTacToeGame() {
     // Check for winner or draw after the move
     const currentWinner = calculateWinner(newSquares);
     const boardIsFull = isBoardFull(newSquares);
+    const isGameNowOver = !!currentWinner || boardIsFull; // Recalculate game over state
 
     // Trigger computer move ONLY if PvC mode, it's now O's turn, and the game is NOT over
-    if (gameMode === 'pvc' && !nextPlayerIsX && !currentWinner && !boardIsFull) {
+    if (gameMode === 'pvc' && !nextPlayerIsX && !isGameNowOver) {
         setIsComputerTurn(true);
     } else {
-        setIsComputerTurn(false); // Ensure computer turn flag is off otherwise
+        setIsComputerTurn(false); // Ensure computer turn flag is off otherwise (PvP or game is over)
     }
 
   }, [squares, xIsNext, gameOver, gameMode, isComputerTurn]); // Updated dependencies
@@ -133,7 +135,8 @@ export function TicTacToeGame() {
   // --- Rendering ---
   const renderSquare = (i: number) => {
     const value = squares[i];
-    const isDisabled = gameOver || (gameMode === 'pvc' && isComputerTurn);
+    // Disable square if game over, square taken, OR (PvC mode AND computer's turn)
+    const isDisabled = gameOver || squares[i] || (gameMode === 'pvc' && isComputerTurn);
     return (
       <Button
         variant="outline"
@@ -141,7 +144,7 @@ export function TicTacToeGame() {
           "aspect-square h-20 w-20 md:h-24 md:w-24 text-4xl font-bold rounded-lg border-primary/30",
           // Removed specific background class like bg-background/50 to inherit the card's glass effect
           "hover:bg-primary/10 transition-colors duration-200",
-          "flex items-center justify-center glass-card", // Apply glass effect directly here
+          "flex items-center justify-center", // Removed glass-card from button itself
           value === 'X' ? 'text-primary' : 'text-foreground/80',
           isDisabled ? 'cursor-not-allowed opacity-70' : '',
         )}
@@ -199,7 +202,11 @@ export function TicTacToeGame() {
             <div className="mb-4 text-2xl font-semibold text-foreground tracking-wide h-8">
               {status}
             </div>
-            <div className="grid grid-cols-3 gap-2 md:gap-3 mb-6">
+            {/* Apply glass effect to the board container */}
+            <div className={cn(
+                "grid grid-cols-3 gap-2 md:gap-3 mb-6 p-2 rounded-lg",
+                "bg-background/50 backdrop-blur-sm border border-white/10" // Glass effect for the board area
+                 )}>
                 {renderSquare(0)}
                 {renderSquare(1)}
                 {renderSquare(2)}
@@ -227,3 +234,4 @@ export function TicTacToeGame() {
     </Card>
   );
 }
+
