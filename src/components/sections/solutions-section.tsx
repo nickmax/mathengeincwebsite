@@ -1,14 +1,12 @@
 
-'use client'; // Ensure this is a client component
 
-import { useRef } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"; // Added CardFooter
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Pencil, Palette, CodeXml, CloudCog, SquareTerminal, Car } from "lucide-react";
+import { Pencil, Palette, CodeXml, CloudCog, SquareTerminal, Car } from "lucide-react"; // Added Car icon
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { useScrollHighlight } from '@/hooks/use-scroll-highlight'; // Import the hook
+import Link from "next/link"; // Import Link
+import { ScrollHighlightCard } from '@/components/scroll-highlight-card'; // Import the wrapper
 
 const solutions = [
   {
@@ -44,85 +42,81 @@ const solutions = [
 ];
 
 export function SolutionsSection() {
-  const sectionRef = useRef<HTMLDivElement>(null); // Create a ref for the section container
-  useScrollHighlight(sectionRef, '.solution-card', 'scroll-highlighted'); // Apply the hook
-
   return (
-    <section id="solutions" ref={sectionRef} className="w-full py-16 md:py-24 lg:py-32 bg-background relative overflow-hidden">
-      {/* Optional: Add subtle background effects here */}
+    // Use primary background for consistency
+    <section id="solutions" className="w-full py-16 md:py-24 lg:py-32 bg-background relative overflow-hidden">
+        {/* Optional: Add subtle background effects here (e.g., gradient pulses, lines) */}
+        {/* <div className="absolute inset-0 -z-10 opacity-10 animate-pulse">
+             Add animated SVG or gradient elements
+        </div> */}
+
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-14">
+          {/* Heading: Bold, tracking-wide */}
           <h2 className="text-3xl font-bold tracking-wide sm:text-5xl">Our Solutions</h2>
+          {/* Subtext: Muted color, normal weight */}
           <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed font-normal">
-             Elevate your digital presence with solutions designed for scale, beauty, and performance.
+             Elevate your digital presence with solutions designed for scale, beauty, and performance. Explore our SaaS offerings too!
           </p>
+           {/* Link to Products Page */}
+           <Button asChild variant="link" className="text-primary hover:text-primary/80 font-semibold text-lg mt-2">
+             <Link href="/products">Explore Our Products →</Link>
+           </Button>
         </div>
-        {/* Use glass cards with glow effect */}
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3"> {/* Adjusted grid columns for 5+1 */}
+        {/* Use glass cards with glow effect and scroll highlighting */}
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"> {/* Adjusted grid columns for 5 */}
           {solutions.map((solution) => (
-            <Card key={solution.title} className={cn(
-                "flex flex-col text-center items-center",
-                "solution-card" // Add a common class for selection by the hook
-                // "glass-card-glow" // Keep or adjust hover glow as needed
-                 )}>
-              <CardHeader className="pb-4 items-center">
-                 <div className="mb-5 p-3 bg-primary/10 rounded-full inline-flex border border-primary/30">
-                   <solution.icon className="h-8 w-8 text-primary" />
-                 </div>
-                <CardTitle className="text-lg">{solution.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="flex-1 flex flex-col justify-between">
-                <CardDescription className="text-center font-normal text-sm mb-4">
-                    {solution.description}
-                </CardDescription>
-                 <Badge variant="secondary" className="mt-auto mx-auto">{solution.tag}</Badge>
-              </CardContent>
-            </Card>
+            // Wrap the Card with ScrollHighlightCard
+            <ScrollHighlightCard key={solution.title} threshold={0.3}>
+              <Card className={cn(
+                  "flex flex-col text-center items-center",
+                  "glass-card-glow" // Apply the glow hover effect class - highlight is now handled by wrapper
+                   )}>
+                <CardHeader className="pb-4 items-center">
+                   {/* Icon Styling */}
+                   <div className="mb-5 p-3 bg-primary/10 rounded-full inline-flex border border-primary/30">
+                     <solution.icon className="h-8 w-8 text-primary" />
+                   </div>
+                   {/* Card Title: Bold, tracking-wide */}
+                  <CardTitle className="text-lg">{solution.title}</CardTitle> {/* Slightly smaller title */}
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col justify-between">
+                  {/* Card Description: Muted color, normal weight */}
+                  <CardDescription className="text-center font-normal text-sm mb-4"> {/* Smaller description */}
+                      {solution.description}
+                  </CardDescription>
+                  {/* Tag using Badge */}
+                   <Badge variant="secondary" className="mt-auto mx-auto">{solution.tag}</Badge>
+                </CardContent>
+                 {/* Optional CTA per service */}
+                 {/* <CardFooter>
+                   <Button variant="outline" size="sm" className="w-full mt-4 text-xs">Learn More</Button>
+                 </CardFooter> */}
+              </Card>
+            </ScrollHighlightCard>
           ))}
-
-           {/* Magari360 Product Card */}
-           <Card className={cn(
-                "flex flex-col text-center items-center",
-                "solution-card" // Also apply selector class here
-                // "glass-card-glow"
-              )}>
-            <CardHeader className="pb-4 items-center">
-              <div className="mb-5 p-3 bg-primary/10 rounded-full inline-flex border border-primary/30">
-                <Car className="h-8 w-8 text-primary" />
-              </div>
-              <CardTitle className="text-lg">Magari360</CardTitle>
-              <CardDescription className="text-center font-normal text-sm pt-1">
-                Our Flagship AutoCommerce Platform.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex-1 flex flex-col justify-between">
-              <p className="text-muted-foreground font-normal text-sm mb-6">
-                Launch a sleek online showroom for your car dealership instantly. Effortless setup, powerful features.
-              </p>
-            </CardContent>
-            <CardFooter className="w-full">
-              <Button asChild variant="outline" className="w-full font-semibold">
-                 <Link href="/products/magari360">Explore Magari360</Link>
-              </Button>
-            </CardFooter>
-          </Card>
         </div>
 
         {/* Optional CTA Bar */}
         <div className="mt-20 md:mt-28 lg:mt-32">
+          {/* Wrap CTA bar with ScrollHighlightCard as well */}
+          <ScrollHighlightCard threshold={0.5}>
             <div className={cn(
-                "glass-card",
+                "glass-card", // Basic glass effect
                 "text-center",
-                "relative overflow-hidden",
-                "border-primary/30",
-                "shadow-lg shadow-primary/10"
+                "relative overflow-hidden", // For potential gradient overlay
+                "border-primary/30", // Subtle primary border
+                "shadow-lg shadow-primary/10" // Subtle primary shadow
                 )}>
+                 {/* Optional: Add gradient overlay */}
+                 {/* <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/5 to-transparent opacity-50"></div> */}
                 <h3 className="text-2xl font-bold tracking-wide mb-3">Don’t see what you need?</h3>
                 <p className="text-muted-foreground mb-6 font-normal">Let’s collaborate on something extraordinary.</p>
                  <Button asChild size="lg" className="font-semibold btn-primary-gradient">
                     <Link href="/#contact">Start a Custom Project</Link>
                  </Button>
             </div>
+          </ScrollHighlightCard>
         </div>
 
       </div>

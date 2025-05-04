@@ -7,6 +7,7 @@ import { ContactForm } from "@/components/contact-form";
 import { Mail, Phone, MapPin, Instagram } from "lucide-react"; // Removed TikTok
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { ScrollHighlightCard } from '@/components/scroll-highlight-card'; // Import the wrapper
 
 // Define a functional component named ContactSection
 export function ContactSection() {
@@ -40,16 +41,18 @@ export function ContactSection() {
           </p>
         </div>
         <div className="grid gap-12 lg:grid-cols-2">
-          {/* Glass card for the form */}
-          <Card className={cn("glass-card-glow")}> {/* Add glow effect */}
-            <CardHeader>
-              <CardTitle className="text-2xl">Contact Form</CardTitle>
-              <CardDescription className="font-normal">Fill out the form below and we'll get back to you shortly.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ContactForm />
-            </CardContent>
-          </Card>
+          {/* Wrap the Card with ScrollHighlightCard */}
+          <ScrollHighlightCard threshold={0.3}>
+            <Card className={cn("glass-card-glow")}> {/* Add glow effect */}
+              <CardHeader>
+                <CardTitle className="text-2xl">Contact Form</CardTitle>
+                <CardDescription className="font-normal">Fill out the form below and we'll get back to you shortly.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ContactForm />
+              </CardContent>
+            </Card>
+          </ScrollHighlightCard>
           <div className="space-y-8"> {/* Increased spacing */}
              {/* Heading: Bold, tracking-wide */}
             <h3 className="text-2xl font-bold tracking-wide">Contact Information</h3>

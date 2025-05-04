@@ -1,10 +1,10 @@
-
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge"; // Import Badge
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link"; // Import Link
+import { ScrollHighlightCard } from '@/components/scroll-highlight-card'; // Import the wrapper
 
 const pricingPlans = [
   {
@@ -70,50 +70,51 @@ export function PricingSection() {
         {/* Glass cards with optional glow and conditional primary border */}
         <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {pricingPlans.map((plan) => (
-            <Card key={plan.title} className={cn(
-                "flex flex-col",
-                "pricing-card", // Add selector class for scroll highlighting
-                // "glass-card-glow", // Keep or adjust hover glow
-                plan.popular ? 'border-primary ring-2 ring-primary/50' : 'border-white/10' // Highlight popular plan
-                 )}>
-              <CardHeader className="pb-4 items-center text-center"> {/* Center align header */}
-                {plan.popular && (
-                  // Use Neon Badge for popular plan
-                  <Badge variant="neon" className="mb-3">Most Popular</Badge>
-                )}
-                 {/* Title: Bold, tracking-wide */}
-                <CardTitle className="text-2xl">{plan.title}</CardTitle>
-                 {/* Description: Muted, normal */}
-                <CardDescription className="pt-2 font-normal">{plan.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1 flex flex-col justify-between">
-                <div className="mb-8"> {/* Increased spacing */}
-                   {/* Price: Bold, large */}
-                  <div className="text-4xl font-bold text-center mb-4 text-foreground">
-                    {plan.price}
-                    {plan.frequency && <span className="text-lg font-normal text-muted-foreground">{plan.frequency}</span>}
+            <ScrollHighlightCard key={plan.title} threshold={0.3}>
+              <Card className={cn(
+                  "flex flex-col h-full", // Ensure full height for consistent grid layout
+                  "glass-card-glow", // Keep glow effect on hover if desired
+                  plan.popular ? 'border-primary' : 'border-white/10' // Keep popular highlight border if needed, scroll highlight adds another layer
+                   )}>
+                <CardHeader className="pb-4 items-center text-center"> {/* Center align header */}
+                  {plan.popular && (
+                    // Use Neon Badge for popular plan
+                    <Badge variant="neon" className="mb-3">Most Popular</Badge>
+                  )}
+                   {/* Title: Bold, tracking-wide */}
+                  <CardTitle className="text-2xl">{plan.title}</CardTitle>
+                   {/* Description: Muted, normal */}
+                  <CardDescription className="pt-2 font-normal">{plan.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col justify-between">
+                  <div className="mb-8"> {/* Increased spacing */}
+                     {/* Price: Bold, large */}
+                    <div className="text-4xl font-bold text-center mb-4 text-foreground">
+                      {plan.price}
+                      {plan.frequency && <span className="text-lg font-normal text-muted-foreground">{plan.frequency}</span>}
+                    </div>
+                     {/* Features: Muted, normal */}
+                    <ul className="space-y-3 text-sm text-muted-foreground font-normal">
+                      {plan.features.map((feature) => (
+                        <li key={feature} className="flex items-center">
+                          <Check className="h-4 w-4 mr-2 text-primary flex-shrink-0" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                   {/* Features: Muted, normal */}
-                  <ul className="space-y-3 text-sm text-muted-foreground font-normal">
-                    {plan.features.map((feature) => (
-                      <li key={feature} className="flex items-center">
-                        <Check className="h-4 w-4 mr-2 text-primary flex-shrink-0" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                 {/* Button: Primary gradient for popular, outline (glassy) otherwise */}
-                <Button
-                  className="w-full mt-auto font-semibold"
-                  variant={plan.popular ? 'default' : 'outline'} // 'default' uses the gradient
-                  asChild
-                  >
-                    <Link href={plan.link}>{plan.cta}</Link>
-                </Button>
-              </CardContent>
-               {/* No separate CardFooter needed */}
-            </Card>
+                   {/* Button: Primary gradient for popular, outline (glassy) otherwise */}
+                  <Button
+                    className="w-full mt-auto font-semibold"
+                    variant={plan.popular ? 'default' : 'outline'} // 'default' uses the gradient
+                    asChild
+                    >
+                      <Link href={plan.link}>{plan.cta}</Link>
+                  </Button>
+                </CardContent>
+                 {/* No separate CardFooter needed */}
+              </Card>
+            </ScrollHighlightCard>
           ))}
         </div>
         <p className="text-center text-muted-foreground mt-10 text-sm font-normal">
