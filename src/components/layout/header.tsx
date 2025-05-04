@@ -102,25 +102,7 @@ export function Header() {
                     {item.label}
                   </Link>
                 ))}
-                  {/* Dark Mode Toggle for Mobile - Also check mounted status */}
-                  {mounted ? ( // Check if mounted
-                    <Button
-                        variant="ghost"
-                        onClick={toggleTheme}
-                        aria-label="Toggle theme"
-                        className="flex items-center justify-start space-x-2 mt-4 text-foreground hover:text-primary hover:bg-primary/10 px-2 py-1 text-lg rounded-md" // Style similar to nav links
-                    >
-                        {resolvedTheme === 'dark' ? (
-                        <Sun className="h-5 w-5" />
-                        ) : (
-                        <Moon className="h-5 w-5" />
-                        )}
-                        <span>Toggle Theme</span>
-                    </Button>
-                   ) : (
-                        // Placeholder for mobile toggle
-                        <div className="h-11 mt-4 px-2 py-1" /> // Placeholder matching button size/spacing
-                   )}
+                {/* Dark Mode Toggle removed from mobile sidebar */}
               </nav>
             </SheetContent>
           </Sheet>

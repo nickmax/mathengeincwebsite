@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +14,8 @@ export function ContactSection() {
   useEffect(() => {
     // Function to generate the WhatsApp link
     const generateWhatsAppLink = () => {
-      const phoneNumber = "+15551234567";  // Replace with your international format phone number
+      // IMPORTANT: Replace with your actual international format phone number without '+' or spaces/symbols
+      const phoneNumber = "254114744256"; // Updated phone number in international format
       const message = "Hello, I'm interested in your services!";
       const encodedMessage = encodeURIComponent(message);
       const link = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
@@ -58,7 +60,8 @@ export function ContactSection() {
                </div>
                <div className="flex items-start space-x-4">
                  <Phone className="h-6 w-6 mt-0.5 text-primary flex-shrink-0" />
-                 <span>+1 (555) 123-4567</span>
+                 {/* Display formatted number */}
+                 <span>+254 114 744 256</span>
                </div>
                <div className="flex items-start space-x-4">
                  <MapPin className="h-6 w-6 mt-0.5 text-primary flex-shrink-0" />
