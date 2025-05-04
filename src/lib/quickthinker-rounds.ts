@@ -20,7 +20,7 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 
 // --- Round Generation Functions ---
 
-// 1. Odd One Out
+// 1. Odd One Out (Level 1)
 const generateOddOneOut = (): GameRound<OddOneOutData> => {
   const icons = [Square, Circle, Triangle, Star, Heart, Cloud];
   const baseIcon = getRandomElement(icons);
@@ -45,8 +45,7 @@ const generateOddOneOut = (): GameRound<OddOneOutData> => {
   };
 };
 
-// 2. Speed Math
-// Export this function so it can be imported in page.tsx
+// 2. Speed Math (Level 2) - Exported for potential direct use
 export const generateSpeedMath = (): GameRound<SpeedMathData> => {
     const num1 = Math.floor(Math.random() * 10) + 1;
     const num2 = Math.floor(Math.random() * 10) + 1;
@@ -107,40 +106,14 @@ export const generateSpeedMath = (): GameRound<SpeedMathData> => {
 
 // --- Main Generation Function ---
 
+// Generates the initial set of rounds (Level 1 - Odd One Out)
 export const generateGameRounds = (numberOfRounds: number): GameRound[] => {
-  // Add other implemented round types here when ready
-  const availableRoundTypes: ChallengeType[] = [
-    'odd-one-out',
-    'speed-math',
-    // 'color-catch',
-    // etc.
-  ];
-
   const rounds: GameRound[] = [];
 
-  // Ensure the first round is always 'odd-one-out'
-  rounds.push(generateOddOneOut());
-
-  // Generate the remaining rounds randomly
-  for (let i = 1; i < numberOfRounds; i++) {
-    const randomType = getRandomElement(availableRoundTypes);
-    switch (randomType) {
-      case 'odd-one-out':
-        rounds.push(generateOddOneOut());
-        break;
-      case 'speed-math':
-        rounds.push(generateSpeedMath());
-        break;
-      // Add cases for other implemented types here
-      // case 'color-catch': rounds.push(generateColorCatch()); break;
-      default:
-         console.warn(`Round type "${randomType}" generation not implemented, using fallback.`);
-         rounds.push(generateOddOneOut()); // Fallback to a known type
-         break;
-    }
+  // Generate only 'odd-one-out' rounds for Level 1
+  for (let i = 0; i < numberOfRounds; i++) {
+    rounds.push(generateOddOneOut());
   }
 
-   // Note: The first round is fixed, the rest are random. No need to shuffle the whole array.
    return rounds;
 };
-

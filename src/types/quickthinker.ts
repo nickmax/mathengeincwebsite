@@ -55,5 +55,5 @@ export interface GameRound<T extends GameRoundData = any> {
   data: T;
   correctAnswer: any; // The correct answer for validation
   // Options might be part of the data structure itself, like in OddOneOutData
-  timeLimitMs?: number; // Optional time limit per round
+  timeLimitMs?: number; // Optional time limit per round - ADDED
 }
