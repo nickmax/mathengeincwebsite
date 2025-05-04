@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 export function Header() {
   const navItems = [
     { label: 'Home', href: '/' },
-    { label: 'Services', href: '/#services' },
+    { label: 'Solutions', href: '/#solutions' }, // Updated label and href
     { label: 'Products', href: '/products' },
     { label: 'Pricing', href: '/pricing' },
     { label: 'Testimonials', href: '/#testimonials' },
