@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -53,8 +54,12 @@ export function SolutionsSection() {
           <h2 className="text-3xl font-bold tracking-wide sm:text-5xl">Our Solutions</h2>
           {/* Subtext: Muted color, normal weight */}
           <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed font-normal">
-             Elevate your digital presence with solutions designed for scale, beauty, and performance.
+             Elevate your digital presence with solutions designed for scale, beauty, and performance. Explore our SaaS offerings too!
           </p>
+          {/* Add a link to the products page */}
+          <Button asChild variant="link" className="text-primary hover:text-primary/80 font-semibold text-lg mt-2">
+            <Link href="/products">Explore Our Products →</Link>
+          </Button>
         </div>
         {/* Use glass cards with glow effect */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"> {/* Adjusted grid columns */}

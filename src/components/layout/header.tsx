@@ -13,8 +13,7 @@ export function Header() {
   const navItems = [
     { label: 'Home', href: '/' },
     { label: 'Solutions', href: '/#solutions' },
-    // { label: 'Products', href: '/products' }, // Removed Products link
-    { label: 'Magari360', href: '/#magari360' }, // Link to the new section
+    { label: 'Products', href: '/products' }, // Changed from Magari360 to Products
     { label: 'Pricing', href: '/pricing' },
     { label: 'Testimonials', href: '/#testimonials' },
     { label: 'Contact', href: '/#contact' },
