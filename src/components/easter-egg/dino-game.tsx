@@ -25,6 +25,7 @@ const SPEED_INCREASE = 0.001;
 // Obstacle Spawning
 const OBSTACLE_INTERVAL_MIN = 700; // ms
 const OBSTACLE_INTERVAL_MAX = 1800; // ms
+const MIN_OBSTACLE_INTERVAL = 500; // Minimum time between obstacles regardless of speed
 
 interface Obstacle {
   id: number;
@@ -48,14 +49,8 @@ const CarIcon = () => (
 );
 
 // Simple Cone SVG for obstacles
-const ConeIcon = () => (
-    <svg viewBox="0 0 20 35" fill="hsl(var(--destructive))" className="w-full h-full opacity-80">
-        <polygon points="10,0 0,35 20,35" />
-        {/* Optional white stripes */}
-        <rect x="2" y="10" width="16" height="4" fill="white" />
-        <rect x="4" y="20" width="12" height="4" fill="white" />
-    </svg>
-);
+// Replaced with direct SVG injection in gameLoop for simplicity with dynamic elements
+// const ConeIcon = () => ( ... );
 
 
 export function DinoGame() {
@@ -101,14 +96,16 @@ export function DinoGame() {
     gameSpeed.current = INITIAL_GAME_SPEED;
     setScore(0);
     setIsGameOver(false);
-    setIsRunning(false);
+    setIsRunning(false); // Explicitly set running to false
     nextObstacleTime.current = Date.now() + Math.random() * (OBSTACLE_INTERVAL_MAX - OBSTACLE_INTERVAL_MIN) + OBSTACLE_INTERVAL_MIN;
     lastTime.current = 0;
 
     if (scoreIntervalId.current) clearInterval(scoreIntervalId.current);
+    scoreIntervalId.current = null;
     if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
     animationFrameId.current = null;
 
+    // Remove existing obstacle elements from the DOM
     if (gameContainerRef.current) {
         const obstacleElements = gameContainerRef.current.querySelectorAll('.obstacle');
         obstacleElements.forEach(el => el.remove());
@@ -119,7 +116,7 @@ export function DinoGame() {
      }
 
     console.log("Magari Dash reset complete.");
-  }, []);
+  }, []); // No dependencies needed here, it's a self-contained reset
 
 
   const jump = useCallback(() => {
@@ -130,98 +127,18 @@ export function DinoGame() {
     } else {
        console.log("Jump ignored - State:", { y: playerY.current, ground: GROUND_Y, running: isRunning, over: isGameOver });
     }
-  }, [isRunning, isGameOver]);
-
-  const startGame = useCallback(() => {
-    console.log("Start game attempt:", { isRunning, isGameOver });
-    if (isGameOver) {
-        resetGame();
-        return; // Require another interaction to start after reset
-    }
-    if (!isRunning) {
-      console.log("Starting Magari Dash...");
-      setIsRunning(true);
-      setIsGameOver(false);
-      lastTime.current = performance.now();
-      if (scoreIntervalId.current) clearInterval(scoreIntervalId.current);
-      scoreIntervalId.current = setInterval(() => {
-           if (animationFrameId.current !== null) { // Only score if game loop is active
-                setScore((s) => s + 1);
-           }
-      }, 100);
-      gameLoop(performance.now());
-    }
-  }, [isRunning, isGameOver, resetGame]);
-
-
-  const handleInput = useCallback((event: KeyboardEvent | TouchEvent) => {
-    let isJumpInput = false;
-    let eventType = 'unknown';
-
-    if (event instanceof KeyboardEvent) {
-      isJumpInput = (event.code === 'Space' || event.code === 'ArrowUp');
-      eventType = 'keydown';
-    } else if (event instanceof TouchEvent) {
-      // Check if the touch is within the game container bounds
-       if (gameContainerRef.current && event.target instanceof Node && gameContainerRef.current.contains(event.target)) {
-          isJumpInput = true;
-       }
-      eventType = 'touchstart';
-    }
-     console.log(`Input detected: ${eventType}, isJumpInput: ${isJumpInput}`);
-
-
-    if (isJumpInput) {
-      event.preventDefault();
-      if (!isRunning || isGameOver) {
-        console.log("Input -> Starting/Resetting Game");
-        startGame();
-      } else {
-         console.log("Input -> Jumping");
-        jump();
-      }
-    }
-  }, [isRunning, isGameOver, startGame, jump]);
-
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => handleInput(event);
-    window.addEventListener('keydown', handleKeyDown);
-
-    const gameEl = gameContainerRef.current;
-    const handleTouchStart = (event: TouchEvent) => handleInput(event);
-    if (gameEl) {
-       // Use capture phase for touchstart to potentially intercept taps earlier
-      gameEl.addEventListener('touchstart', handleTouchStart, { passive: false, capture: true });
-    }
-
-    return () => {
-      console.log("Cleaning up listeners and game state");
-      window.removeEventListener('keydown', handleKeyDown);
-       if (gameEl) {
-          gameEl.removeEventListener('touchstart', handleTouchStart, { capture: true });
-       }
-      if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
-      if (scoreIntervalId.current) clearInterval(scoreIntervalId.current);
-      animationFrameId.current = null;
-      scoreIntervalId.current = null;
-    };
-  }, [handleInput]); // Rerun if handleInput changes
+  }, [isRunning, isGameOver]); // Depends on isRunning and isGameOver
 
 
   const gameLoop = useCallback((currentTime: number) => {
-    if (!isRunning || isGameOver) {
-       console.log("Game loop stopped.", { isRunning, isGameOver });
-       if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
-       animationFrameId.current = null;
-       if (scoreIntervalId.current) clearInterval(scoreIntervalId.current);
-       scoreIntervalId.current = null;
-       return;
-    }
+    // Crucial: Immediately request the next frame *before* logic
+    // to ensure continuous loop unless explicitly stopped.
+    animationFrameId.current = requestAnimationFrame(gameLoop);
 
-    const deltaTime = lastTime.current > 0 ? (currentTime - lastTime.current) / 16.67 : 1;
+    // Calculate deltaTime (guard against large jumps on first frame/tab switch)
+    const timeSinceLastFrame = lastTime.current > 0 ? currentTime - lastTime.current : 16.67;
+    const deltaTime = Math.min(3, timeSinceLastFrame / 16.67); // Cap deltaTime to prevent huge jumps (e.g., max 3x normal speed)
     lastTime.current = currentTime;
-
 
     // --- Update Player ---
     playerVelocityY.current += GRAVITY * deltaTime;
@@ -242,18 +159,20 @@ export function DinoGame() {
     if (currentTime > nextObstacleTime.current) {
       // Simple cone obstacle
       obstacles.current.push({
-        id: currentTime,
+        id: currentTime, // Use timestamp as unique ID
         x: GAME_WIDTH,
         y: GROUND_Y + PLAYER_HEIGHT - OBSTACLE_HEIGHT, // Base of cone aligns with car bottom
         width: OBSTACLE_BASE_WIDTH,
         height: OBSTACLE_HEIGHT,
       });
 
+      // Calculate next interval based on current speed, but ensure a minimum interval
       const speedFactor = Math.max(0.5, gameSpeed.current / INITIAL_GAME_SPEED);
       const intervalRange = OBSTACLE_INTERVAL_MAX - OBSTACLE_INTERVAL_MIN;
-      const nextInterval = (Math.random() * intervalRange + OBSTACLE_INTERVAL_MIN) / speedFactor;
+      let nextInterval = (Math.random() * intervalRange + OBSTACLE_INTERVAL_MIN) / speedFactor;
+      nextInterval = Math.max(MIN_OBSTACLE_INTERVAL, nextInterval); // Ensure minimum time gap
       nextObstacleTime.current = currentTime + nextInterval;
-      // console.log("Spawned obstacle, next in:", nextInterval.toFixed(0) + "ms");
+      // console.log(`Spawned obstacle, next in: ${nextInterval.toFixed(0)}ms (Speed: ${gameSpeed.current.toFixed(2)})`);
     }
 
     // --- Collision Detection ---
@@ -272,16 +191,19 @@ export function DinoGame() {
             height: obstacle.height,
         };
 
-        // Simple AABB collision check
+        // Simple AABB collision check (add slight padding for visual tolerance)
+        const collisionPadding = 2;
         if (
-            playerRect.x < obstacleRect.x + obstacleRect.width &&
-            playerRect.x + playerRect.width > obstacleRect.x &&
-            playerRect.y < obstacleRect.y + obstacleRect.height &&
-            playerRect.y + playerRect.height > obstacleRect.y
+            playerRect.x < obstacleRect.x + obstacleRect.width - collisionPadding &&
+            playerRect.x + playerRect.width > obstacleRect.x + collisionPadding &&
+            playerRect.y < obstacleRect.y + obstacleRect.height - collisionPadding &&
+            playerRect.y + playerRect.height > obstacleRect.y + collisionPadding
         ) {
             console.log("Collision detected!");
             setIsGameOver(true);
-            setIsRunning(false);
+            setIsRunning(false); // Stop running state
+
+             // Stop score interval
              if (scoreIntervalId.current) clearInterval(scoreIntervalId.current);
              scoreIntervalId.current = null;
 
@@ -290,9 +212,11 @@ export function DinoGame() {
                 setHighScore(score);
                 localStorage.setItem('magariDashHighScore', score.toString());
              }
+
+             // Crucially, cancel the *next* requested animation frame
              if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
              animationFrameId.current = null;
-            return;
+            return; // Exit the loop immediately on collision
         }
     }
 
@@ -311,49 +235,126 @@ export function DinoGame() {
         const currentIds = new Set(obstacles.current.map(o => o.id.toString()));
         const existingElementsMap = new Map(obstacleElements.map(el => [el.dataset.id, el]));
 
+        // Remove obstacles that are no longer in the state
         obstacleElements.forEach(el => {
             if (!currentIds.has(el.dataset.id!)) {
                 el.remove();
             }
         });
 
+        // Update or add obstacles based on state
         obstacles.current.forEach(obstacle => {
             let element = existingElementsMap.get(obstacle.id.toString());
             if (element) {
+                // Update existing element's position
                 element.style.transform = `translateX(${obstacle.x}px)`;
             } else {
+                // Create new element for new obstacle
                 const newEl = document.createElement('div');
                 newEl.className = 'obstacle absolute'; // Base obstacle class
-                newEl.style.left = `0px`; // Base position
+                newEl.style.left = `0px`; // Base position (transform handles X)
                 newEl.style.bottom = `${GAME_HEIGHT - (obstacle.y + obstacle.height)}px`; // Position from bottom edge
-                newEl.style.transform = `translateX(${obstacle.x}px)`;
+                newEl.style.transform = `translateX(${obstacle.x}px)`; // Initial X position
                 newEl.style.width = `${obstacle.width}px`;
                 newEl.style.height = `${obstacle.height}px`;
-                newEl.dataset.id = obstacle.id.toString();
-                // Use innerHTML to inject the SVG - simpler for this context
+                newEl.dataset.id = obstacle.id.toString(); // Set ID for tracking
+                // Use innerHTML to inject the SVG - ensures correct theme colors on creation
                 newEl.innerHTML = `<svg viewBox="0 0 20 35" fill="hsl(var(--destructive))" class="w-full h-full opacity-80">
                                      <polygon points="10,0 0,35 20,35" />
                                      <rect x="2" y="10" width="16" height="4" fill="hsl(var(--background))" />
                                      <rect x="4" y="20" width="12" height="4" fill="hsl(var(--background))" />
                                    </svg>`;
-                gameContainerRef.current?.appendChild(newEl);
+                gameContainerRef.current?.appendChild(newEl); // Add to game container
             }
         });
     }
 
+  }, [isRunning, isGameOver, score, highScore]); // Include dependencies for collision/score logic
 
-    // --- Request Next Frame ---
-     if (isRunning && !isGameOver) {
-        animationFrameId.current = requestAnimationFrame(gameLoop);
-     } else {
-         if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
-         animationFrameId.current = null;
-         console.log("Game state changed, stopping frame requests.");
-     }
 
-  }, [isRunning, isGameOver, score, highScore]); // Include dependencies
+    const startGame = useCallback(() => {
+      console.log("Start game attempt:", { isRunning, isGameOver });
+      if (isGameOver) {
+          resetGame();
+          // Re-set running immediately after reset to start game on next frame
+          setIsRunning(true);
+          setIsGameOver(false);
+          lastTime.current = performance.now(); // Reset timer
+          nextObstacleTime.current = performance.now() + OBSTACLE_INTERVAL_MIN; // Spawn first obstacle quickly
+          if (scoreIntervalId.current) clearInterval(scoreIntervalId.current);
+          scoreIntervalId.current = setInterval(() => setScore((s) => s + 1), 100);
+          console.log("Restarting game loop after reset...");
+          // Directly call gameLoop to start it *now*
+          gameLoop(performance.now());
+      } else if (!isRunning) {
+          console.log("Starting Magari Dash for the first time...");
+          setIsRunning(true);
+          setIsGameOver(false);
+          lastTime.current = performance.now(); // Reset timer
+          nextObstacleTime.current = performance.now() + OBSTACLE_INTERVAL_MIN; // Spawn first obstacle quickly
+          if (scoreIntervalId.current) clearInterval(scoreIntervalId.current);
+          scoreIntervalId.current = setInterval(() => setScore((s) => s + 1), 100);
+          console.log("Starting game loop...");
+          // Directly call gameLoop to start it *now*
+          gameLoop(performance.now());
+      }
+    }, [isRunning, isGameOver, resetGame, gameLoop]); // gameLoop is now a dependency
 
-  // Initial reset
+    const handleInput = useCallback((event: KeyboardEvent | TouchEvent) => {
+      let isJumpInput = false;
+      let eventType = 'unknown';
+
+      if (event instanceof KeyboardEvent) {
+        isJumpInput = (event.code === 'Space' || event.code === 'ArrowUp');
+        eventType = 'keydown';
+      } else if (event instanceof TouchEvent) {
+         if (gameContainerRef.current && event.target instanceof Node && gameContainerRef.current.contains(event.target)) {
+            isJumpInput = true;
+         }
+        eventType = 'touchstart';
+      }
+      console.log(`Input detected: ${eventType}, isJumpInput: ${isJumpInput}, State:`, { isRunning, isGameOver });
+
+      if (isJumpInput) {
+        event.preventDefault(); // Prevent spacebar scrolling or default touch behavior
+        if (!isRunning || isGameOver) {
+          console.log("Input -> Starting/Resetting Game");
+          startGame();
+        } else if (isRunning && !isGameOver) { // Only jump if game is actively running
+          console.log("Input -> Jumping");
+          jump();
+        }
+      }
+    }, [isRunning, isGameOver, startGame, jump]); // Include dependencies
+
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => handleInput(event);
+    window.addEventListener('keydown', handleKeyDown);
+
+    const gameEl = gameContainerRef.current;
+    const handleTouchStart = (event: TouchEvent) => handleInput(event);
+    if (gameEl) {
+      gameEl.addEventListener('touchstart', handleTouchStart, { passive: false, capture: true });
+    }
+
+    // Cleanup function
+    return () => {
+      console.log("Cleaning up listeners and game state");
+      window.removeEventListener('keydown', handleKeyDown);
+      if (gameEl) {
+        gameEl.removeEventListener('touchstart', handleTouchStart, { capture: true });
+      }
+      // Crucial: Cancel any pending animation frame and interval on unmount
+      if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
+      animationFrameId.current = null;
+      if (scoreIntervalId.current) clearInterval(scoreIntervalId.current);
+      scoreIntervalId.current = null;
+    };
+  }, [handleInput]); // Rerun if handleInput changes
+
+
+  // Initial reset on mount
   useEffect(() => {
     resetGame();
     console.log("Initial Magari Dash reset on mount.");
@@ -373,12 +374,14 @@ export function DinoGame() {
       <div
         ref={gameContainerRef}
         className={cn(
-            "relative border-2 border-primary bg-background overflow-hidden shadow-lg shadow-primary/20 touch-manipulation cursor-pointer",
+            "relative border-2 border-primary bg-background overflow-hidden shadow-lg shadow-primary/20",
+            "touch-manipulation cursor-pointer", // Better mobile touch handling
             "dark:bg-gradient-to-b dark:from-gray-900 dark:to-black", // Example dark mode gradient bg
             "light:bg-gradient-to-b light:from-blue-100 light:to-white" // Example light mode gradient bg
          )}
         style={{ width: `${GAME_WIDTH}px`, height: `${GAME_HEIGHT}px` }}
-        tabIndex={0} // Make focusable, although window listener handles keys
+        tabIndex={0} // Make focusable
+        aria-label="Magari Dash game area. Press Space or Tap to Start/Jump." // Accessibility
       >
         {/* Player Car */}
         <div
@@ -386,7 +389,7 @@ export function DinoGame() {
           className="absolute transition-transform duration-50 ease-linear" // Transform for smooth Y
           style={{
             left: `${PLAYER_X_POS}px`,
-            bottom: `0px`, // Initial visual position (transform handles jump)
+            bottom: `0px`, // Base visual position (transform handles jump)
             width: `${PLAYER_WIDTH}px`,
             height: `${PLAYER_HEIGHT}px`,
             transform: 'translateY(0px)' // Initial transform
@@ -399,8 +402,8 @@ export function DinoGame() {
 
         {/* Game Over / Start Message Overlay */}
         {(!isRunning || isGameOver) && (
-          <div className="absolute inset-0 flex items-center justify-center bg-background/70 backdrop-blur-sm z-10">
-            <div className="text-center p-4 rounded-lg bg-background/80 border border-border">
+          <div className="absolute inset-0 flex items-center justify-center bg-background/70 backdrop-blur-sm z-10 pointer-events-none"> {/* pointer-events-none allows clicks through */}
+            <div className="text-center p-4 rounded-lg bg-background/80 border border-border shadow-xl">
               {isGameOver ? (
                 <>
                   <h2 className="text-3xl font-bold text-destructive mb-2">CRASHED!</h2>
@@ -420,3 +423,4 @@ export function DinoGame() {
     </div>
   );
 }
+
