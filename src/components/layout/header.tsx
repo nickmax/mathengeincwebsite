@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Moon, Sun } from 'lucide-react'; // Import Moon and Sun icons
+import { Menu, Moon, Sun } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
@@ -12,8 +12,9 @@ import { useEffect, useState } from 'react';
 export function Header() {
   const navItems = [
     { label: 'Home', href: '/' },
-    { label: 'Solutions', href: '/#solutions' }, // Updated label and href
-    { label: 'Products', href: '/products' },
+    { label: 'Solutions', href: '/#solutions' },
+    // { label: 'Products', href: '/products' }, // Removed Products link
+    { label: 'Magari360', href: '/#magari360' }, // Link to the new section
     { label: 'Pricing', href: '/pricing' },
     { label: 'Testimonials', href: '/#testimonials' },
     { label: 'Contact', href: '/#contact' },
@@ -28,7 +29,6 @@ export function Header() {
   }, []);
 
   const toggleTheme = () => {
-    // Check mounted here for safety, although button rendering is conditional
     if (!mounted) return;
     setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
   };
@@ -54,30 +54,27 @@ export function Header() {
           ))}
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-4">
-            {/* Dark Mode Toggle Button - Conditionally render only on client-side */}
-            {mounted ? ( // Check if mounted
+            {/* Dark Mode Toggle Button */}
+            {mounted ? (
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={toggleTheme}
                 aria-label="Toggle theme"
-                className="text-foreground hover:text-primary hover:bg-primary/10" // Style the button
+                className="text-foreground hover:text-primary hover:bg-primary/10"
               >
                 {resolvedTheme === 'dark' ? (
-                  <Sun className="h-5 w-5" /> // Sun icon for light mode
+                  <Sun className="h-5 w-5" />
                 ) : (
-                  <Moon className="h-5 w-5" /> // Moon icon for dark mode
+                  <Moon className="h-5 w-5" />
                 )}
               </Button>
             ) : (
-                 // Render a placeholder or nothing before mount to prevent hydration mismatch
-                 <div className="h-10 w-10" /> // Placeholder with same size as button
+                 <div className="h-10 w-10" /> // Placeholder
             )}
-           {/* Optional CTA button */}
-           {/* <Button>Get Started</Button> */}
         </div>
-        {/* Mobile Menu - Conditionally render the entire Sheet component only on client-side */}
-        {mounted && ( // Correctly conditional rendering based on mount status
+        {/* Mobile Menu */}
+        {mounted && (
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden text-foreground hover:text-primary">
@@ -102,7 +99,6 @@ export function Header() {
                     {item.label}
                   </Link>
                 ))}
-                {/* Dark Mode Toggle removed from mobile sidebar */}
               </nav>
             </SheetContent>
           </Sheet>
