@@ -39,8 +39,8 @@ const getRating = (finalScore: number): string => {
 
 // Simplified placeholder percentile based on score
 const getPercentile = (finalScore: number): number => {
-   // Map score (0-1000) to percentile (0-99) roughly
-   let percentile = Math.min(99, Math.max(0, Math.round(finalScore / 10) - Math.random() * 5)); // Add slight randomness
+   // Map score (0-1000) to percentile (0-99.9) roughly, more precise now
+   const percentile = Math.min(99.9, Math.max(0, (finalScore / 1000) * 99.9));
    return percentile;
 }
 
@@ -52,6 +52,7 @@ export const GameResults: FC<GameResultsProps> = ({ gameState, onRestart }) => {
   const averageTime = totalRounds > 0 ? (totalTimeMs / totalRounds / 1000).toFixed(1) : '0.0';
   const rating = getRating(finalScore);
   const percentile = getPercentile(finalScore);
+  const topRankPercentage = (100 - percentile).toFixed(1); // Calculate Top % and format to one decimal place
 
 
   return (
@@ -89,7 +90,8 @@ export const GameResults: FC<GameResultsProps> = ({ gameState, onRestart }) => {
          {/* Rank */}
          <div className="glass-card bg-background/30 p-4 rounded-lg border border-white/10 col-span-2 text-center">
             <p className="text-sm text-muted-foreground font-normal mb-1">Rank (Approx.)</p>
-            <p className="text-2xl font-bold text-foreground">Top {100 - percentile}%</p>
+            {/* Updated to display rank percentage to the nearest tenth */}
+            <p className="text-2xl font-bold text-foreground">Top {topRankPercentage}%</p>
              <p className="text-xs text-muted-foreground/80">compared to other players</p>
          </div>
       </div>
@@ -105,3 +107,4 @@ export const GameResults: FC<GameResultsProps> = ({ gameState, onRestart }) => {
     </div>
   );
 };
+
