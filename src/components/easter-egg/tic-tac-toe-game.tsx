@@ -112,8 +112,8 @@ export function TicTacToeGame() {
     // Add a small delay for "thinking" effect
     const timeoutId = setTimeout(() => {
       const newSquares = squares.slice();
-      // Double-check if the game is still in PvC and it's O's turn
-      if (gameMode === 'pvc' && !xIsNext && !gameOver && newSquares[bestMoveIndex] === null) {
+      // Double-check if the game is still in PvC and it's O's turn and square is still available
+      if (gameMode === 'pvc' && !xIsNext && !calculateWinner(newSquares) && !isBoardFull(newSquares) && newSquares[bestMoveIndex] === null) {
           newSquares[bestMoveIndex] = 'O';
           setSquares(newSquares);
           setXIsNext(true); // Set back to player's turn (X)
@@ -138,7 +138,7 @@ export function TicTacToeGame() {
   // --- Handlers ---
   const handleClick = useCallback((i: number) => {
     // Check if the game is over, the square is already filled, or if it's the computer's turn in PvC mode
-    if (gameOver || squares[i] || (gameMode === 'pvc' && !xIsNext)) {
+    if (gameOver || squares[i] || (gameMode === 'pvc' && !xIsNext && isComputerTurn)) {
       return; // Ignore click if game over, square filled, or computer is playing
     }
 
@@ -161,7 +161,7 @@ export function TicTacToeGame() {
         setIsComputerTurn(false); // Ensure computer turn flag is off otherwise (PvP or game is over)
     }
 
-  }, [squares, xIsNext, gameOver, gameMode]); // Removed isComputerTurn dependency as it's set within this function
+  }, [squares, xIsNext, gameOver, gameMode, isComputerTurn]); // Include isComputerTurn
 
   const handleReset = useCallback(() => {
     setSquares(Array(9).fill(null));
@@ -190,10 +190,10 @@ export function TicTacToeGame() {
         className={cn(
           "aspect-square h-20 w-20 md:h-24 md:w-24 text-4xl font-bold rounded-lg border-primary/30",
           // Use background/50 or accent for a subtle difference from card background
-          "bg-background/50",
+          "bg-background/50", // Use semi-transparent background for squares
           "hover:bg-primary/10 transition-colors duration-200",
           "flex items-center justify-center",
-          value === 'X' ? 'text-primary' : 'text-foreground/80',
+          value === 'X' ? 'text-primary' : 'text-foreground/80', // Keep player colors
           isDisabled ? 'cursor-not-allowed opacity-70' : '',
         )}
         onClick={() => handleClick(i)}
@@ -220,11 +220,10 @@ export function TicTacToeGame() {
 
   return (
     // Apply glass effect directly to the Card component
+    // Ensure card background allows underlying page background to show through
     <Card className={cn(
-        "glass-card-glow p-4 md:p-6 border border-primary/20 shadow-lg shadow-primary/10 w-full max-w-md"
-        // bg-background/70 ensures it blends with the overall theme bg
-        // backdrop-blur-xl adds the glass effect
-        // Removed explicit background color to inherit from glass-card styles
+        "glass-card-glow p-4 md:p-6 border border-primary/20 shadow-lg shadow-primary/10 w-full max-w-md",
+        "bg-background/70 backdrop-blur-xl" // Adjust transparency for glass effect
         )}>
       <CardContent className="flex flex-col items-center p-0">
 
@@ -233,17 +232,17 @@ export function TicTacToeGame() {
           <div className="mb-6 text-center w-full">
             <h2 className="text-xl font-semibold mb-4 text-foreground">Select Game Mode</h2>
              <RadioGroup defaultValue="pvp" onValueChange={(value) => handleModeSelect(value as GameMode)} className="flex justify-center gap-4">
-              {/* Removed bg-background/50, kept border and hover:bg-accent */}
-              <div className="flex items-center space-x-2 p-3 rounded-md border border-primary/20 cursor-pointer hover:bg-accent transition-colors">
+              {/* Adjusted styling for mode selection - remove explicit bg, rely on border/hover */}
+              <div className="flex items-center space-x-2 p-3 rounded-md border border-primary/30 cursor-pointer hover:bg-primary/10 transition-colors">
                 <RadioGroupItem value="pvp" id="pvp" />
-                <Label htmlFor="pvp" className="flex items-center gap-1 cursor-pointer">
+                <Label htmlFor="pvp" className="flex items-center gap-1 cursor-pointer text-foreground/90">
                     <User className="h-4 w-4"/> vs <User className="h-4 w-4"/> Player
                 </Label>
               </div>
-               {/* Removed bg-background/50, kept border and hover:bg-accent */}
-              <div className="flex items-center space-x-2 p-3 rounded-md border border-primary/20 cursor-pointer hover:bg-accent transition-colors">
+               {/* Adjusted styling for mode selection - remove explicit bg, rely on border/hover */}
+              <div className="flex items-center space-x-2 p-3 rounded-md border border-primary/30 cursor-pointer hover:bg-primary/10 transition-colors">
                 <RadioGroupItem value="pvc" id="pvc" />
-                <Label htmlFor="pvc" className="flex items-center gap-1 cursor-pointer">
+                <Label htmlFor="pvc" className="flex items-center gap-1 cursor-pointer text-foreground/90">
                     <User className="h-4 w-4"/> vs <Bot className="h-4 w-4"/> Computer
                 </Label>
               </div>
@@ -257,10 +256,10 @@ export function TicTacToeGame() {
             <div className="mb-4 text-2xl font-semibold text-foreground tracking-wide h-8">
               {status}
             </div>
-            {/* Board container styling - subtle background to differentiate */}
+            {/* Board container styling - use subtle background for the grid itself */}
             <div className={cn(
                 "grid grid-cols-3 gap-2 md:gap-3 mb-6 p-2 rounded-lg",
-                "bg-background/30 border border-white/10" // Slightly different background for the board area itself
+                "bg-background/30 border border-white/10" // Semi-transparent background for board area
                  )}>
                 {renderSquare(0)}
                 {renderSquare(1)}
@@ -289,3 +288,4 @@ export function TicTacToeGame() {
     </Card>
   );
 }
+

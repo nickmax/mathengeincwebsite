@@ -18,7 +18,7 @@ export default function TicTacToePage() {
         "flex flex-col items-center justify-center min-h-screen p-4",
         "bg-background" // Explicitly ensure theme background is applied
         )}>
-      <h1 className="text-3xl font-bold tracking-wide mb-8 text-primary">Tic Tac Toe</h1>
+      <h1 className="text-3xl font-bold tracking-wide mb-8 text-foreground">Tic Tac Toe</h1>
        {/* The game component itself will manage its width and appearance */}
       <TicTacToeGame />
       <p className="mt-8 text-muted-foreground text-xs">(An Easter Egg by Mathenge Inc.)</p>
