@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -7,7 +8,16 @@ import { cn } from "@/lib/utils"
 
 const TooltipProvider = TooltipPrimitive.Provider
 
-const Tooltip = TooltipPrimitive.Root
+// Allow controlling the open state of the Tooltip
+interface TooltipProps extends React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Root> {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+const Tooltip = ({ open, onOpenChange, ...props }: TooltipProps) => (
+    <TooltipPrimitive.Root open={open} onOpenChange={onOpenChange} {...props} />
+);
+
 
 const TooltipTrigger = TooltipPrimitive.Trigger
 
