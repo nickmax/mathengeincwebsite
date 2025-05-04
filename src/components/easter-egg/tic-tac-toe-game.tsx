@@ -37,6 +37,61 @@ const isBoardFull = (squares: SquareValue[]): boolean => {
   return squares.every(square => square !== null);
 };
 
+// Helper function to find available squares
+const getAvailableSquares = (squares: SquareValue[]): number[] => {
+  return squares
+    .map((value, index) => (value === null ? index : null))
+    .filter((index): index is number => index !== null);
+};
+
+// Basic Minimax-like AI logic for the computer
+const findBestMove = (squares: SquareValue[]): number => {
+  const availableSquares = getAvailableSquares(squares);
+  const computer = 'O';
+  const player = 'X';
+
+  // 1. Check if Computer can win in the next move
+  for (const index of availableSquares) {
+    const tempSquares = squares.slice();
+    tempSquares[index] = computer;
+    if (calculateWinner(tempSquares) === computer) {
+      return index;
+    }
+  }
+
+  // 2. Check if Player can win in the next move, and block them
+  for (const index of availableSquares) {
+    const tempSquares = squares.slice();
+    tempSquares[index] = player;
+    if (calculateWinner(tempSquares) === player) {
+      return index;
+    }
+  }
+
+  // 3. Try to take the center if it's available
+  if (squares[4] === null) {
+    return 4;
+  }
+
+  // 4. Try to take a corner if available
+  const corners = [0, 2, 6, 8];
+  const availableCorners = corners.filter(index => squares[index] === null);
+  if (availableCorners.length > 0) {
+    return availableCorners[Math.floor(Math.random() * availableCorners.length)];
+  }
+
+  // 5. Try to take a side if available (fallback)
+  const sides = [1, 3, 5, 7];
+  const availableSides = sides.filter(index => squares[index] === null);
+  if (availableSides.length > 0) {
+    return availableSides[Math.floor(Math.random() * availableSides.length)];
+  }
+
+  // Should not happen if board is not full, but fallback to random
+  return availableSquares[Math.floor(Math.random() * availableSquares.length)];
+};
+
+
 export function TicTacToeGame() {
   const [squares, setSquares] = useState<SquareValue[]>(Array(9).fill(null));
   const [xIsNext, setXIsNext] = useState<boolean>(true); // Player X always starts
@@ -52,25 +107,16 @@ export function TicTacToeGame() {
     // Ensure this only runs in PvC, when it's O's turn, game isn't over, and it's the computer's turn flag set
     if (gameMode !== 'pvc' || xIsNext || gameOver || !isComputerTurn) return;
 
-    const availableSquares = squares
-      .map((value, index) => (value === null ? index : null))
-      .filter((index): index is number => index !== null);
-
-    if (availableSquares.length === 0) {
-      setIsComputerTurn(false);
-      return;
-    }
-
-    // Simple AI: Random move
-    const randomIndex = Math.floor(Math.random() * availableSquares.length);
-    const computerSquareIndex = availableSquares[randomIndex];
+    const bestMoveIndex = findBestMove(squares); // Use the AI function
 
     // Add a small delay for "thinking" effect
     const timeoutId = setTimeout(() => {
       const newSquares = squares.slice();
-      newSquares[computerSquareIndex] = 'O';
-      setSquares(newSquares);
-      setXIsNext(true); // Set back to player's turn (X)
+      if (newSquares[bestMoveIndex] === null) { // Ensure square is still empty
+          newSquares[bestMoveIndex] = 'O';
+          setSquares(newSquares);
+          setXIsNext(true); // Set back to player's turn (X)
+      }
       setIsComputerTurn(false); // Computer finished turn
     }, 500); // 500ms delay
 
@@ -234,4 +280,3 @@ export function TicTacToeGame() {
     </Card>
   );
 }
-
