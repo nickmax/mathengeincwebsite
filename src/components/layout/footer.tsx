@@ -31,11 +31,9 @@ export function Footer() {
      // Shorten timeout to make it feel more responsive if miss-clicked
      setTimeout(() => {
         // Only reset if not exactly 5 clicks OR if already revealed
-        if (newClickCount !== 5 || showEasterEgg) {
-           // Don't reset if it just hit 5 and revealed
-           if (newClickCount > 5 || showEasterEgg) {
-               setClickCount(0);
-           }
+        // Don't reset if it just hit 5 and revealed
+        if (newClickCount > 5 || showEasterEgg) {
+           setClickCount(0);
         }
      }, 1000); // Reset after 1 second
   };
@@ -62,7 +60,7 @@ export function Footer() {
         {/* Easter Egg Link - Initially hidden */}
          {showEasterEgg && (
             <Link
-                href="/easter-egg/dino" // Link to the dino game page (keep route simple)
+                href="/easter-egg/tic-tac-toe" // Link to the Tic Tac Toe game page
                 className={cn(
                     "absolute bottom-2 right-2 md:bottom-auto md:right-4 p-2 rounded-lg bg-primary/10 border border-primary/30", // Position discreetly, add padding and visual cue
                     "text-sm font-semibold text-primary hover:text-primary/80 hover:bg-primary/20 transition-all duration-300", // Adjusted styles
@@ -70,7 +68,7 @@ export function Footer() {
                  )}
                  style={{ animation: 'fadeIn 0.5s ease-out' }} // Simple fade-in animation
             >
-                Play Magari Dash! 🚗💨
+                Play Tic Tac Toe! 🕹️ {/* Updated Link Text */}
             </Link>
          )}
 
@@ -91,4 +89,3 @@ export function Footer() {
   animation: fadeIn 0.5s ease-out forwards;
 }
 */
-

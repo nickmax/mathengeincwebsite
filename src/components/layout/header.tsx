@@ -1,26 +1,30 @@
+
 "use client";
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'; // Import useRouter
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet'; // Added SheetTitle
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, Moon, Sun } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
-import { Logo } from '@/components/logo'; // Import the Logo component
+import { useEffect, useState, useCallback } from 'react'; // Import useCallback
+import { Logo } from '@/components/logo';
 
 export function Header() {
   const navItems = [
     { label: 'Home', href: '/' },
-    { label: 'Solutions', href: '/#solutions' }, // Ensured link works from other pages
+    { label: 'Solutions', href: '/#solutions' },
     { label: 'Products', href: '/products' },
     { label: 'Pricing', href: '/pricing' },
-    { label: 'Testimonials', href: '/#testimonials' }, // Ensured link works from other pages
-    { label: 'Contact', href: '/#contact' },       // Ensured link works from other pages
+    { label: 'Testimonials', href: '/#testimonials' },
+    { label: 'Contact', href: '/#contact' },
   ];
 
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [logoClickCount, setLogoClickCount] = useState(0); // State for logo clicks
+  const router = useRouter(); // Initialize router
 
   // Ensure component is mounted before rendering theme-dependent UI
   useEffect(() => {
@@ -32,18 +36,42 @@ export function Header() {
     setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
   };
 
+  // Easter egg trigger on logo click
+  const handleLogoClick = useCallback(() => {
+    const newClickCount = logoClickCount + 1;
+    setLogoClickCount(newClickCount);
+    console.log(`Logo click count: ${newClickCount}`); // Debugging
+
+    if (newClickCount >= 5) {
+      console.log('Navigating to easter egg!'); // Debugging
+      router.push('/easter-egg/tic-tac-toe'); // Navigate to the game page
+      setLogoClickCount(0); // Reset count after navigation
+    }
+
+    // Optional: Reset count after a delay if threshold not met
+    setTimeout(() => {
+      if (newClickCount < 5) {
+        setLogoClickCount(0);
+      }
+    }, 1500); // Reset after 1.5 seconds of inactivity
+
+  }, [logoClickCount, router]); // Include dependencies
+
   return (
     <header className={cn(
         "sticky top-0 z-50 w-full border-b border-white/10",
         "bg-background/80 backdrop-blur-lg"
     )}>
       <div className="container flex h-16 items-center">
-        <Link href="/" className="mr-6 flex items-center space-x-2" aria-label="Mathenge Inc. Home">
-          {/* Use the Logo component */}
+         {/* Make the logo wrapper clickable for the easter egg */}
+        <div
+            onClick={handleLogoClick}
+            className="mr-6 flex items-center space-x-2 cursor-pointer" // Add cursor-pointer
+            aria-label="Mathenge Inc. Home (Click 5 times for a surprise!)" // Update aria-label
+            title="Click me 5 times!" // Add title hint
+        >
           <Logo className="h-7" />
-          {/* Remove the text span */}
-          {/* <span className="font-bold inline-block text-lg">Mathenge Inc</span> */}
-        </Link>
+        </div>
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
           {navItems.map((item) => (
             <Link
@@ -88,15 +116,17 @@ export function Header() {
                 "w-[300px] sm:w-[400px]",
                 "bg-background/90 backdrop-blur-xl border-l border-white/10"
                 )}>
-               {/* Add visually hidden title for accessibility */}
                <SheetTitle className="sr-only">Mobile Navigation Menu</SheetTitle>
               <nav className="flex flex-col gap-4 mt-8">
-                <Link href="/" className="mb-4 flex items-center space-x-2" aria-label="Mathenge Inc. Home">
-                   {/* Use the Logo component in mobile menu too */}
+                {/* Also make mobile logo clickable */}
+                <div
+                   onClick={handleLogoClick}
+                   className="mb-4 flex items-center space-x-2 cursor-pointer"
+                   aria-label="Mathenge Inc. Home (Click 5 times for a surprise!)"
+                   title="Click me 5 times!"
+                 >
                    <Logo className="h-8" />
-                   {/* Remove the text span */}
-                  {/* <span className="font-bold text-xl">Mathenge Inc</span> */}
-                </Link>
+                 </div>
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
