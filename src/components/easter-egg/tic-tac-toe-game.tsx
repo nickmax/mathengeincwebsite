@@ -138,8 +138,8 @@ export function TicTacToeGame() {
   // --- Handlers ---
   const handleClick = useCallback((i: number) => {
     // Check if the game is over, the square is already filled, or if it's the computer's turn in PvC mode
-    if (gameOver || squares[i] || (gameMode === 'pvc' && !xIsNext && isComputerTurn)) {
-      return; // Ignore click if game over, square filled, or computer is thinking
+    if (gameOver || squares[i] || (gameMode === 'pvc' && !xIsNext)) {
+      return; // Ignore click if game over, square filled, or computer is playing
     }
 
     const newSquares = squares.slice();
@@ -161,7 +161,7 @@ export function TicTacToeGame() {
         setIsComputerTurn(false); // Ensure computer turn flag is off otherwise (PvP or game is over)
     }
 
-  }, [squares, xIsNext, gameOver, gameMode, isComputerTurn]); // Added isComputerTurn back
+  }, [squares, xIsNext, gameOver, gameMode]); // Removed isComputerTurn dependency as it's set within this function
 
   const handleReset = useCallback(() => {
     setSquares(Array(9).fill(null));
@@ -233,13 +233,15 @@ export function TicTacToeGame() {
           <div className="mb-6 text-center w-full">
             <h2 className="text-xl font-semibold mb-4 text-foreground">Select Game Mode</h2>
              <RadioGroup defaultValue="pvp" onValueChange={(value) => handleModeSelect(value as GameMode)} className="flex justify-center gap-4">
-              <div className="flex items-center space-x-2 p-3 rounded-md bg-background/50 border border-primary/20 cursor-pointer hover:bg-accent transition-colors">
+              {/* Removed bg-background/50, kept border and hover:bg-accent */}
+              <div className="flex items-center space-x-2 p-3 rounded-md border border-primary/20 cursor-pointer hover:bg-accent transition-colors">
                 <RadioGroupItem value="pvp" id="pvp" />
                 <Label htmlFor="pvp" className="flex items-center gap-1 cursor-pointer">
                     <User className="h-4 w-4"/> vs <User className="h-4 w-4"/> Player
                 </Label>
               </div>
-              <div className="flex items-center space-x-2 p-3 rounded-md bg-background/50 border border-primary/20 cursor-pointer hover:bg-accent transition-colors">
+               {/* Removed bg-background/50, kept border and hover:bg-accent */}
+              <div className="flex items-center space-x-2 p-3 rounded-md border border-primary/20 cursor-pointer hover:bg-accent transition-colors">
                 <RadioGroupItem value="pvc" id="pvc" />
                 <Label htmlFor="pvc" className="flex items-center gap-1 cursor-pointer">
                     <User className="h-4 w-4"/> vs <Bot className="h-4 w-4"/> Computer
