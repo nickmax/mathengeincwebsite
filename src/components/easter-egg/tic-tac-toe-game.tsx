@@ -49,6 +49,7 @@ export function TicTacToeGame() {
 
   // --- Computer Move Logic (PvC) ---
   const computerMove = useCallback(() => {
+    // Ensure this only runs in PvC, when it's O's turn, game isn't over, and it's the computer's turn flag set
     if (gameMode !== 'pvc' || xIsNext || gameOver || !isComputerTurn) return;
 
     const availableSquares = squares
@@ -69,7 +70,7 @@ export function TicTacToeGame() {
       const newSquares = squares.slice();
       newSquares[computerSquareIndex] = 'O';
       setSquares(newSquares);
-      setXIsNext(true); // Set back to player's turn
+      setXIsNext(true); // Set back to player's turn (X)
       setIsComputerTurn(false); // Computer finished turn
     }, 500); // 500ms delay
 
@@ -80,16 +81,17 @@ export function TicTacToeGame() {
 
   // Effect to trigger computer's move when it's their turn in PvC mode
   useEffect(() => {
-    if (isComputerTurn) {
+    if (isComputerTurn && gameMode === 'pvc' && !xIsNext) { // Added checks for safety
       computerMove();
     }
-  }, [isComputerTurn, computerMove]);
+  }, [isComputerTurn, gameMode, xIsNext, computerMove]); // Added dependencies
 
 
   // --- Handlers ---
   const handleClick = useCallback((i: number) => {
-    if (gameOver || squares[i] || (gameMode === 'pvc' && !xIsNext)) {
-      return; // Ignore click if game over, square filled, or computer's turn
+     // Check if the game is over, the square is already filled, or if it's the computer's turn in PvC mode
+    if (gameOver || squares[i] || (gameMode === 'pvc' && isComputerTurn)) {
+      return; // Ignore click if game over, square filled, or computer is thinking
     }
 
     const newSquares = squares.slice();
@@ -97,14 +99,20 @@ export function TicTacToeGame() {
     setSquares(newSquares);
 
     const nextPlayerIsX = !xIsNext;
-    setXIsNext(nextPlayerIsX);
+    setXIsNext(nextPlayerIsX); // Toggle the player turn
 
-    // Trigger computer move if PvC mode and it's now O's turn
-    if (gameMode === 'pvc' && !nextPlayerIsX && !calculateWinner(newSquares) && !isBoardFull(newSquares)) {
+    // Check for winner or draw after the move
+    const currentWinner = calculateWinner(newSquares);
+    const boardIsFull = isBoardFull(newSquares);
+
+    // Trigger computer move ONLY if PvC mode, it's now O's turn, and the game is NOT over
+    if (gameMode === 'pvc' && !nextPlayerIsX && !currentWinner && !boardIsFull) {
         setIsComputerTurn(true);
+    } else {
+        setIsComputerTurn(false); // Ensure computer turn flag is off otherwise
     }
 
-  }, [squares, xIsNext, gameOver, gameMode]);
+  }, [squares, xIsNext, gameOver, gameMode, isComputerTurn]); // Updated dependencies
 
   const handleReset = useCallback(() => {
     setSquares(Array(9).fill(null));
@@ -131,8 +139,9 @@ export function TicTacToeGame() {
         variant="outline"
         className={cn(
           "aspect-square h-20 w-20 md:h-24 md:w-24 text-4xl font-bold rounded-lg border-primary/30",
-          "bg-background/50 hover:bg-primary/10 transition-colors duration-200",
-          "flex items-center justify-center glass-card",
+          // Removed specific background class like bg-background/50 to inherit the card's glass effect
+          "hover:bg-primary/10 transition-colors duration-200",
+          "flex items-center justify-center glass-card", // Apply glass effect directly here
           value === 'X' ? 'text-primary' : 'text-foreground/80',
           isDisabled ? 'cursor-not-allowed opacity-70' : '',
         )}
@@ -153,12 +162,13 @@ export function TicTacToeGame() {
     status = "It's a Draw!";
   } else if (gameMode === 'pvc') {
       status = xIsNext ? "Your Turn (X)" : "Computer's Turn (O)...";
-  } else {
+  } else { // PvP mode
     status = `Next player: ${xIsNext ? 'X' : 'O'}`;
   }
 
 
   return (
+    // Ensure the main card uses the glass effect and inherits the page background
     <Card className={cn("glass-card-glow p-4 md:p-6 border border-primary/20 shadow-lg shadow-primary/10 w-full max-w-md")}>
       <CardContent className="flex flex-col items-center p-0">
 
@@ -205,7 +215,7 @@ export function TicTacToeGame() {
                 variant={gameOver ? 'default' : 'outline'}
                 className={cn(
                     "font-semibold flex items-center gap-2",
-                    gameOver && "btn-primary-gradient"
+                    gameOver && "btn-primary-gradient" // Apply gradient on game over
                  )}
               >
                 <RotateCcw className="h-4 w-4" /> {gameOver ? 'Play Again' : 'Reset Game / Change Mode'}
