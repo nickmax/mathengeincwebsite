@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation'; // Import useRouter
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Moon, Sun } from 'lucide-react';
+import { Menu, Moon, Sun, Puzzle } from 'lucide-react'; // Added Puzzle icon
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
 import { useEffect, useState, useCallback } from 'react'; // Import useCallback
@@ -23,7 +23,7 @@ export function Header() {
 
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [logoClickCount, setLogoClickCount] = useState(0); // State for logo clicks
+  const [easterEggClickCount, setEasterEggClickCount] = useState(0); // State for easter egg clicks
   const router = useRouter(); // Initialize router
 
   // Ensure component is mounted before rendering theme-dependent UI
@@ -36,27 +36,31 @@ export function Header() {
     setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
   };
 
-  // Easter egg trigger on logo click
-  const handleLogoClick = useCallback(() => {
-    const newClickCount = logoClickCount + 1;
-    setLogoClickCount(newClickCount);
-    console.log(`Logo click count: ${newClickCount}`); // Debugging
+  // Easter egg trigger on dedicated button click
+  const handleEasterEggClick = useCallback(() => {
+    const newClickCount = easterEggClickCount + 1;
+    setEasterEggClickCount(newClickCount);
+    console.log(`Easter egg click count: ${newClickCount}`); // Debugging
 
     if (newClickCount >= 5) {
       console.log('Navigating to easter egg!'); // Debugging
       router.push('/easter-egg/tic-tac-toe'); // Navigate to the game page
-      setLogoClickCount(0); // Reset count after navigation
+      setEasterEggClickCount(0); // Reset count after navigation
     }
 
     // Optional: Reset count after a delay if threshold not met
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       // Only reset if count is less than 5 and hasn't just triggered navigation
       if (newClickCount < 5) {
-           setLogoClickCount(0);
+           setEasterEggClickCount(0);
+           console.log('Reset Easter egg click count'); // Debugging
       }
     }, 1500); // Reset after 1.5 seconds of inactivity
 
-  }, [logoClickCount, router]); // Include dependencies
+    // Clean up the timer if the component unmounts or the count progresses
+    return () => clearTimeout(timer);
+
+  }, [easterEggClickCount, router]); // Include dependencies
 
   return (
     <header className={cn(
@@ -64,12 +68,10 @@ export function Header() {
         "bg-background/80 backdrop-blur-lg"
     )}>
       <div className="container flex h-16 items-center">
-         {/* Make the logo wrapper clickable for the easter egg */}
+         {/* Logo is no longer clickable for easter egg */}
         <div
-            onClick={handleLogoClick}
-            className="mr-6 flex items-center space-x-2 cursor-pointer" // Add cursor-pointer
-            aria-label="Mathenge Inc. Home (Click 5 times for a surprise!)" // Update aria-label
-            title="Psst... Click me 5 times!" // Add explicit title hint
+            className="mr-6 flex items-center space-x-2"
+            aria-label="Mathenge Inc. Home"
         >
           <Logo className="h-7" />
         </div>
@@ -84,7 +86,20 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <div className="flex flex-1 items-center justify-end space-x-4">
+        <div className="flex flex-1 items-center justify-end space-x-2"> {/* Reduced space for more icons */}
+            {/* Easter Egg Trigger Button */}
+            {mounted && (
+                 <Button
+                   variant="ghost"
+                   size="icon"
+                   onClick={handleEasterEggClick}
+                   aria-label="Easter Egg Trigger (Click 5 times!)"
+                   title="Psst... Click me 5 times!"
+                   className="text-foreground hover:text-primary hover:bg-primary/10"
+                 >
+                   <Puzzle className="h-5 w-5" />
+                 </Button>
+            )}
             {/* Dark Mode Toggle Button */}
             {mounted ? (
               <Button
@@ -103,54 +118,62 @@ export function Header() {
             ) : (
                  <div className="h-10 w-10" /> // Placeholder
             )}
+             {/* Mobile Menu Trigger */}
+            {mounted && (
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" className="md:hidden text-foreground hover:text-primary">
+                    <Menu className="h-5 w-5" />
+                    <span className="sr-only">Toggle Menu</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className={cn(
+                    "w-[300px] sm:w-[400px]",
+                    "bg-background/90 backdrop-blur-xl border-l border-white/10"
+                    )}>
+                   {/* Add accessible title for the sheet */}
+                   <SheetTitle className="sr-only">Mobile Navigation Menu</SheetTitle>
+                  <nav className="flex flex-col gap-4 mt-8">
+                    {/* Mobile logo - not clickable */}
+                    <div
+                       className="mb-4 flex items-center space-x-2"
+                       aria-label="Mathenge Inc. Home"
+                     >
+                       <Logo className="h-8" />
+                     </div>
+                    {navItems.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="block px-2 py-1 text-lg hover:bg-accent rounded-md text-foreground"
+                        // Close sheet on link click
+                        onClick={() => {
+                            // Find the close button and click it programmatically
+                            const closeButton = document.querySelector('[aria-label="Close"]');
+                            if (closeButton instanceof HTMLElement) {
+                              closeButton.click();
+                            }
+                         }}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                     {/* Add Easter Egg trigger inside mobile menu too */}
+                     <Button
+                       variant="ghost"
+                       onClick={handleEasterEggClick}
+                       aria-label="Easter Egg Trigger (Click 5 times!)"
+                       title="Psst... Click me 5 times!"
+                       className="flex items-center gap-2 px-2 py-1 text-lg hover:bg-accent rounded-md text-foreground justify-start mt-4"
+                     >
+                       <Puzzle className="h-5 w-5" />
+                       <span>Surprise?</span>
+                     </Button>
+                  </nav>
+                </SheetContent>
+              </Sheet>
+            )}
         </div>
-        {/* Mobile Menu */}
-        {mounted && (
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden text-foreground hover:text-primary">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle Menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className={cn(
-                "w-[300px] sm:w-[400px]",
-                "bg-background/90 backdrop-blur-xl border-l border-white/10"
-                )}>
-               {/* Add accessible title for the sheet */}
-               <SheetTitle className="sr-only">Mobile Navigation Menu</SheetTitle>
-              <nav className="flex flex-col gap-4 mt-8">
-                {/* Also make mobile logo clickable */}
-                <div
-                   onClick={handleLogoClick}
-                   className="mb-4 flex items-center space-x-2 cursor-pointer"
-                   aria-label="Mathenge Inc. Home (Click 5 times for a surprise!)"
-                   title="Psst... Click me 5 times!" // Add explicit title hint
-                 >
-                   <Logo className="h-8" />
-                 </div>
-                {navItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="block px-2 py-1 text-lg hover:bg-accent rounded-md text-foreground"
-                    // Close sheet on link click
-                    onClick={() => {
-                        // Find the close button and click it programmatically
-                        // This is a common pattern but might need adjustment based on Sheet implementation details
-                        const closeButton = document.querySelector('[aria-label="Close"]');
-                        if (closeButton instanceof HTMLElement) {
-                          closeButton.click();
-                        }
-                     }}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-            </SheetContent>
-          </Sheet>
-        )}
       </div>
     </header>
   );
