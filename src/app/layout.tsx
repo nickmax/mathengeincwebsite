@@ -14,8 +14,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Mathenge Inc',
-  description: 'Professional Services for Your Business Needs',
+  title: {
+      default: 'Mathenge Inc.',
+      template: '%s | Mathenge Inc.', // Template for child pages
+  },
+  description: 'Mathenge Inc. offers innovative solutions including expert consulting, SaaS platforms, custom software development, and graphic design services.',
+  keywords: ['Mathenge Inc', 'Software Development', 'SaaS', 'Consulting', 'Graphic Design', 'Web Development', 'Magari360'],
 };
 
 export default function RootLayout({

@@ -1,5 +1,4 @@
-
-
+import type { Metadata } from 'next';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -8,6 +7,13 @@ import { cn } from "@/lib/utils";
 import { TestimonialsSection } from "@/components/sections/testimonials-section"; // Optional: Reuse if needed
 import { CheckCircle, Cog, LayoutDashboard, Palette, Users } from "lucide-react"; // Example icons
 import { ScrollHighlightCard } from '@/components/scroll-highlight-card'; // Import the wrapper
+
+// Specific metadata for the Magari360 page
+export const metadata: Metadata = {
+  title: 'Magari360 - AutoCommerce Platform',
+  description: 'Magari360 by Mathenge Inc: Transform your car dealership with a customizable AutoCommerce platform. Easy setup, powerful features, stunning design.',
+};
+
 
 const features = [
   {

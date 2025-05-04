@@ -1,11 +1,17 @@
-
-
+import type { Metadata } from 'next';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Car } from "lucide-react"; // Icon for Magari360
 import { ScrollHighlightCard } from '@/components/scroll-highlight-card'; // Import the wrapper
+
+// Specific metadata for the Products page
+export const metadata: Metadata = {
+  title: 'Our Products',
+  description: 'Explore innovative software products by Mathenge Inc., featuring Magari360, the ultimate AutoCommerce platform for car dealerships.',
+};
+
 
 export default function ProductsPage() {
   return (

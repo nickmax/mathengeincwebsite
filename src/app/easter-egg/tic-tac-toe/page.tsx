@@ -1,6 +1,14 @@
-
+import type { Metadata } from 'next';
 import { TicTacToeGame } from '@/components/easter-egg/tic-tac-toe-game';
 import { cn } from '@/lib/utils'; // Import cn for conditional classes if needed
+
+// Specific metadata for the Tic Tac Toe page
+export const metadata: Metadata = {
+  title: 'Tic Tac Toe - Easter Egg',
+  description: 'Play a fun game of Tic Tac Toe! An easter egg hidden within the Mathenge Inc. website. Challenge a friend or the computer.',
+  robots: 'noindex, nofollow', // Discourage search engines from indexing this page
+};
+
 
 export default function TicTacToePage() {
   return (
