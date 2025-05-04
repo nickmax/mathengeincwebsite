@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet'; // Added SheetTitle
 import { Menu, Moon, Sun } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
@@ -88,6 +88,8 @@ export function Header() {
                 "w-[300px] sm:w-[400px]",
                 "bg-background/90 backdrop-blur-xl border-l border-white/10"
                 )}>
+               {/* Add visually hidden title for accessibility */}
+               <SheetTitle className="sr-only">Mobile Navigation Menu</SheetTitle>
               <nav className="flex flex-col gap-4 mt-8">
                 <Link href="/" className="mb-4 flex items-center space-x-2" aria-label="Mathenge Inc. Home">
                    {/* Use the Logo component in mobile menu too */}

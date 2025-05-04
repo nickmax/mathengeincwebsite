@@ -135,6 +135,6 @@ export {
   SheetContent,
   SheetHeader,
   SheetFooter,
-  SheetTitle,
+  SheetTitle, // Export SheetTitle
   SheetDescription,
 }
