@@ -134,7 +134,7 @@ body {
   border-radius: var(--radius); /* Use theme radius */
   padding: 2rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Keep general transitions */
   @apply text-card-foreground; /* Ensure text color is correct */
 }
 
@@ -145,24 +145,40 @@ body {
   box-shadow: 0 8px 32px rgba(100, 100, 100, 0.15); /* Softer shadow */
 }
 
-.glass-card:hover {
-  transform: translateY(-6px);
-  /* Added subtle primary color shadow on hover */
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 8px hsla(var(--primary) / 0.4);
-}
-.light .glass-card:hover {
-  /* Added subtle primary color shadow on hover for light mode */
-  box-shadow: 0 12px 40px rgba(100, 100, 100, 0.25), 0 0 8px hsla(var(--primary) / 0.3);
+/* Ensure all cards have transition for the highlight effect */
+@layer components {
+    .card {
+        @apply card-glass-enhanced;
+        transition: transform 0.3s ease, box-shadow 0.4s ease, border-color 0.4s ease; /* Added border-color transition */
+    }
 }
 
-/* Glowing border on hover */
+/* Scroll Highlight Style */
+.scroll-highlighted {
+  /* Example: Add a glowing border and slightly lift the card */
+  border-color: hsla(var(--primary) / 0.6); /* Make border more prominent */
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 15px 2px hsla(var(--primary) / 0.5); /* Combine hover glow */
+  transform: translateY(-6px); /* Lift the card like on hover */
+}
+
+.light .scroll-highlighted {
+    /* Light mode specific highlight if needed, otherwise it inherits */
+    border-color: hsla(var(--primary) / 0.5);
+    box-shadow: 0 12px 40px rgba(100, 100, 100, 0.25), 0 0 15px 2px hsla(var(--primary) / 0.4);
+    transform: translateY(-6px);
+}
+
+
+/* Glowing border on hover - Keep hover effects distinct or similar */
 .glass-card-glow:hover {
    /* Enhanced glow effect */
    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 15px 2px hsla(var(--primary) / 0.5);
+   transform: translateY(-6px); /* Ensure transform is here too */
 }
 .light .glass-card-glow:hover {
    /* Enhanced light mode glow shadow */
    box-shadow: 0 12px 40px rgba(100, 100, 100, 0.25), 0 0 15px 2px hsla(var(--primary) / 0.4);
+   transform: translateY(-6px); /* Ensure transform is here too */
 }
 
 
@@ -185,13 +201,6 @@ body {
     @apply rounded-[var(--radius)] border bg-card text-card-foreground shadow-sm;
 }
 
-/* Make all cards use the glass effect by default */
-/* Remove this if you want to selectively apply glass */
-@layer components {
-    .card {
-        @apply card-glass-enhanced;
-    }
-}
 
 /* Specific Font classes if needed */
 .font-inter {

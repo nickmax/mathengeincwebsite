@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge"; // Import Badge
@@ -71,7 +72,8 @@ export function PricingSection() {
           {pricingPlans.map((plan) => (
             <Card key={plan.title} className={cn(
                 "flex flex-col",
-                "glass-card-glow", // Add glow effect
+                "pricing-card", // Add selector class for scroll highlighting
+                // "glass-card-glow", // Keep or adjust hover glow
                 plan.popular ? 'border-primary ring-2 ring-primary/50' : 'border-white/10' // Highlight popular plan
                  )}>
               <CardHeader className="pb-4 items-center text-center"> {/* Center align header */}
