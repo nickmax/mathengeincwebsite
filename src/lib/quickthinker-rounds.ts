@@ -1,6 +1,6 @@
 
 import type { GameRound, ChallengeType, OddOneOutData, SpeedMathData, LogicMCQData } from '@/types/quickthinker';
-import { Square, Circle, Triangle, Star, Heart, Cloud, Brain, Lightbulb, Feather } from 'lucide-react';
+import { Square, Circle, Triangle, Star, Heart, Cloud, Brain, Lightbulb, Feather, Puzzle, Calculator, Scale, Target, Anchor } from 'lucide-react';
 
 // --- Helper Functions ---
 
@@ -19,7 +19,7 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 
 // --- Master Question Pool ---
 
-// Define a pool of questions covering different types
+// Expanded pool of questions covering different types
 const questionPool: GameRound[] = [
   // --- Odd One Out (Visual) ---
   {
@@ -34,7 +34,7 @@ const questionPool: GameRound[] = [
       ]),
       title: "Which shape is different?",
     },
-    correctAnswer: 4, // The ID of the odd one out after shuffling
+    correctAnswer: 4,
     timeLimitMs: 10000
   },
   {
@@ -43,11 +43,11 @@ const questionPool: GameRound[] = [
     data: {
       options: shuffleArray([
         { id: 1, icon: Triangle, isOdd: false },
-        { id: 2, icon: Triangle, isOdd: true }, // Example: make one slightly rotated or styled differently if possible, else use different icon
+        { id: 2, icon: Star, isOdd: true }, // Star is odd one out
         { id: 3, icon: Triangle, isOdd: false },
         { id: 4, icon: Triangle, isOdd: false },
       ]),
-      title: "Which triangle is different?",
+      title: "Which shape doesn't belong?",
     },
     correctAnswer: 2,
     timeLimitMs: 10000
@@ -58,13 +58,13 @@ const questionPool: GameRound[] = [
     data: {
       options: shuffleArray([
         { id: 1, icon: Heart, isOdd: false },
-        { id: 2, icon: Star, isOdd: true },
-        { id: 3, icon: Heart, isOdd: false },
+        { id: 2, icon: Heart, isOdd: false },
+        { id: 3, icon: Puzzle, isOdd: true },
         { id: 4, icon: Heart, isOdd: false },
       ]),
       title: "Which one doesn't belong?",
     },
-    correctAnswer: 2,
+    correctAnswer: 3,
     timeLimitMs: 10000
   },
    {
@@ -82,45 +82,92 @@ const questionPool: GameRound[] = [
     correctAnswer: 3,
     timeLimitMs: 10000
   },
+  {
+    id: 5,
+    type: 'odd-one-out',
+    data: {
+      options: shuffleArray([
+        { id: 1, icon: Calculator, isOdd: true },
+        { id: 2, icon: Feather, isOdd: false },
+        { id: 3, icon: Feather, isOdd: false },
+        { id: 4, icon: Feather, isOdd: false },
+      ]),
+      title: "Spot the difference.",
+    },
+    correctAnswer: 1,
+    timeLimitMs: 10000
+  },
+   {
+    id: 6,
+    type: 'odd-one-out',
+    data: {
+      options: shuffleArray([
+        { id: 1, icon: Target, isOdd: false },
+        { id: 2, icon: Target, isOdd: false },
+        { id: 3, icon: Target, isOdd: false },
+        { id: 4, icon: Anchor, isOdd: true },
+      ]),
+      title: "Which icon is out of place?",
+    },
+    correctAnswer: 4,
+    timeLimitMs: 10000
+  },
 
   // --- Speed Math ---
   {
     id: 10,
     type: 'speed-math',
-    data: { question: "What is 5 + 8?", options: [13, 12, 14, 3], answer: 13 },
+    data: { question: "5 + 8 = ?", options: [13, 12, 14, 3], answer: 13 },
     correctAnswer: 13, timeLimitMs: 10000
   },
   {
     id: 11,
     type: 'speed-math',
-    data: { question: "What is 15 - 6?", options: [9, 11, 8, 21], answer: 9 },
+    data: { question: "15 - 6 = ?", options: [9, 11, 8, 21], answer: 9 },
     correctAnswer: 9, timeLimitMs: 10000
   },
   {
     id: 12,
     type: 'speed-math',
-    data: { question: "What is 7 × 6?", options: [42, 36, 48, 49], answer: 42 },
+    data: { question: "7 × 6 = ?", options: [42, 36, 48, 49], answer: 42 },
     correctAnswer: 42, timeLimitMs: 10000
   },
   {
     id: 13,
     type: 'speed-math',
-    data: { question: "What is 24 ÷ 4?", options: [6, 8, 4, 12], answer: 6 },
+    data: { question: "24 ÷ 4 = ?", options: [6, 8, 4, 12], answer: 6 },
     correctAnswer: 6, timeLimitMs: 10000
   },
    {
     id: 14,
     type: 'speed-math',
-    data: { question: "What is 3 + 5 x 2?", options: [13, 16, 10, 11], answer: 13 }, // Order of operations
+    data: { question: "3 + 5 x 2 = ?", options: [13, 16, 10, 11], answer: 13 }, // Order of operations
     correctAnswer: 13, timeLimitMs: 10000
   },
    {
     id: 15,
     type: 'speed-math',
-    data: { question: "What is (10 - 4) x 3?", options: [18, 30, 6, 22], answer: 18 }, // Parentheses first
+    data: { question: "(10 - 4) x 3 = ?", options: [18, 30, 6, 22], answer: 18 }, // Parentheses first
     correctAnswer: 18, timeLimitMs: 10000
   },
-
+  {
+    id: 16,
+    type: 'speed-math',
+    data: { question: "9 + 12 = ?", options: [21, 20, 22, 11], answer: 21 },
+    correctAnswer: 21, timeLimitMs: 10000
+  },
+  {
+    id: 17,
+    type: 'speed-math',
+    data: { question: "18 / 3 = ?", options: [6, 9, 5, 7], answer: 6 },
+    correctAnswer: 6, timeLimitMs: 10000
+  },
+   {
+    id: 18,
+    type: 'speed-math',
+    data: { question: "4 x 4 - 4 = ?", options: [12, 16, 0, 8], answer: 12 },
+    correctAnswer: 12, timeLimitMs: 10000
+  },
 
   // --- Logic MCQ ---
   {
@@ -150,51 +197,109 @@ const questionPool: GameRound[] = [
     type: 'logic-mcq',
     data: {
       question: "A plane crashes on the border between the USA and Canada. Where do they bury the survivors?",
-      options: ["USA", "Canada", "You don't bury survivors"],
-      answer: "You don't bury survivors",
+      options: ["USA", "Canada", "Nowhere"],
+      answer: "Nowhere", // Corrected answer
       category: 'riddle',
     },
-    correctAnswer: "You don't bury survivors", timeLimitMs: 10000
+    correctAnswer: "Nowhere", timeLimitMs: 10000
   },
+   {
+    id: 23,
+    type: 'logic-mcq',
+    data: {
+      question: "What comes next in the sequence: J, F, M, A, M, ...?",
+      options: ["J", "A", "S", "O"], // J, J, A, S, O, N, D (Months)
+      answer: "J",
+      category: 'logic',
+    },
+    correctAnswer: "J", timeLimitMs: 15000
+  },
+  {
+    id: 24,
+    type: 'logic-mcq',
+    data: {
+      question: "If you rearrange the letters 'CIFAIPC', you get the name of a what?",
+      options: ["City", "Animal", "Ocean", "Country"], // PACIFIC
+      answer: "Ocean",
+      category: 'logic',
+    },
+    correctAnswer: "Ocean", timeLimitMs: 15000
+  },
+   {
+    id: 25,
+    type: 'logic-mcq',
+    data: {
+      question: "What has an eye, but cannot see?",
+      options: ["A needle", "A potato", "A storm", "A hurricane"],
+      answer: "A needle",
+      category: 'riddle',
+    },
+    correctAnswer: "A needle", timeLimitMs: 10000
+  },
+
   // Add more questions of different types here...
-  // e.g., Memory, Pattern, Color Catch, Reaction
-  // Minimum 10 needed for the selection logic to work reliably.
 ];
 
 
 // --- Main Generation Function ---
 
-// Function to select 10 unique random rounds from the pool
+// Function to select 'numberOfRounds' unique random rounds from the pool
 export const generateGameRounds = (numberOfRounds: number = 10): GameRound[] => {
+  // Ensure the pool is large enough
   if (questionPool.length < numberOfRounds) {
-    console.warn(`Warning: Question pool has only ${questionPool.length} questions, but ${numberOfRounds} were requested. Returning all available questions.`);
-    return shuffleArray(questionPool);
+    console.warn(`Warning: Question pool has only ${questionPool.length} questions, but ${numberOfRounds} were requested. Using all available questions.`);
+    const roundsNeeded = numberOfRounds;
+    let extendedPool = [...questionPool];
+    // If still not enough, duplicate from pool until we have enough
+    while(extendedPool.length < roundsNeeded) {
+        extendedPool.push(...shuffleArray(questionPool).slice(0, Math.min(questionPool.length, roundsNeeded - extendedPool.length)));
+    }
+    // Shuffle the extended pool and take the required number
+    return shuffleArray(extendedPool).slice(0, numberOfRounds).map(round => {
+        // Re-shuffle options within each selected round for extra randomness
+        if (round.data && Array.isArray(round.data.options)) {
+            const shuffledOptions = shuffleArray(round.data.options);
+            const updatedData = { ...round.data, options: shuffledOptions };
+
+            // Update correctAnswer for OddOneOut after shuffling options
+             if (round.type === 'odd-one-out') {
+                 const correctOption = shuffledOptions.find((opt: OddOneOutOption) => opt.isOdd);
+                 return { ...round, data: updatedData, correctAnswer: correctOption ? correctOption.id : round.correctAnswer };
+             }
+             return { ...round, data: updatedData };
+        }
+        return round;
+    });
   }
 
   // Shuffle the pool and take the first 'numberOfRounds' items
   const shuffledPool = shuffleArray(questionPool);
   const selectedRounds = shuffledPool.slice(0, numberOfRounds);
 
-  // Remap correctAnswer for OddOneOut after shuffling within the pool item
+   // Re-shuffle options within each selected round and update correctAnswer for OddOneOut
    return selectedRounds.map(round => {
-        if (round.type === 'odd-one-out' && Array.isArray(round.data.options)) {
-            const correctOption = round.data.options.find(opt => opt.isOdd);
-            if (correctOption) {
-                return { ...round, correctAnswer: correctOption.id };
-            }
+        if (round.data && Array.isArray(round.data.options)) {
+            const shuffledOptions = shuffleArray(round.data.options);
+            const updatedData = { ...round.data, options: shuffledOptions };
+
+             if (round.type === 'odd-one-out') {
+                 const correctOption = shuffledOptions.find((opt: OddOneOutOption) => opt.isOdd);
+                 return { ...round, data: updatedData, correctAnswer: correctOption ? correctOption.id : round.correctAnswer };
+             }
+            return { ...round, data: updatedData };
         }
         return round;
     });
 };
 
-// --- Specific Generators (kept for potential direct use or testing) ---
+// --- Specific Generators (kept for potential direct use or testing, but not exported) ---
 
 // Odd One Out
-export const generateOddOneOut = (): GameRound<OddOneOutData> => {
-  const icons = [Square, Circle, Triangle, Star, Heart, Cloud];
+const generateOddOneOutInternal = (): GameRound<OddOneOutData> => {
+  const icons = [Square, Circle, Triangle, Star, Heart, Cloud, Puzzle, Anchor, Target];
   const baseIcon = getRandomElement(icons);
   let oddIcon = getRandomElement(icons.filter(icon => icon !== baseIcon));
-  if (!oddIcon) oddIcon = Circle; // Fallback if all icons are the same
+  if (!oddIcon) oddIcon = icons.length > 1 ? icons[1] : Circle; // Fallback
 
   const options = [
     { id: 1, icon: baseIcon, isOdd: false },
@@ -207,11 +312,11 @@ export const generateOddOneOut = (): GameRound<OddOneOutData> => {
   const correctOptionId = shuffledOptions.find(opt => opt.isOdd)?.id ?? 1; // Find correct ID after shuffling
 
   return {
-    id: Math.floor(Math.random() * 1000), // Temporary random ID for standalone generation
+    id: Math.floor(Math.random() * 1000), // Temporary random ID
     type: 'odd-one-out',
     data: {
       options: shuffledOptions,
-      title: "Which shape is different?",
+      title: "Which one is different?",
     },
     correctAnswer: correctOptionId,
     timeLimitMs: 10000
@@ -219,34 +324,48 @@ export const generateOddOneOut = (): GameRound<OddOneOutData> => {
 };
 
 // Speed Math
-export const generateSpeedMath = (): GameRound<SpeedMathData> => {
-    const num1 = Math.floor(Math.random() * 10) + 1;
-    const num2 = Math.floor(Math.random() * 10) + 1;
-    const operators = ['+', '-', '*']; // Basic operations
-    const op1 = getRandomElement(operators);
+const generateSpeedMathInternal = (): GameRound<SpeedMathData> => {
+    const num1 = Math.floor(Math.random() * 12) + 1; // Range 1-12
+    const num2 = Math.floor(Math.random() * 12) + 1; // Range 1-12
+    const operators = ['+', '-', '*', '/'];
+    let op = getRandomElement(operators);
     let question = '';
     let answer = 0;
 
-    question = `${num1} ${op1} ${num2}`;
-    switch (op1) {
-        case '+': answer = num1 + num2; break;
-        case '-': answer = num1 - num2; break;
-        case '*': answer = num1 * num2; break;
+     // Ensure division results in an integer and avoid division by zero
+    if (op === '/') {
+        // Regenerate numbers until num1 is divisible by num2
+        let tempNum1 = num1 * num2; // Ensure divisibility
+        let tempNum2 = num2;
+         if (tempNum2 === 0) tempNum2 = 1; // Avoid division by zero
+         question = `${tempNum1} ${op} ${tempNum2}`;
+         answer = tempNum1 / tempNum2;
+    } else {
+         question = `${num1} ${op} ${num2}`;
+         switch (op) {
+             case '+': answer = num1 + num2; break;
+             case '-': answer = num1 - num2; break;
+             case '*': answer = num1 * num2; break;
+         }
     }
 
      // Generate distractors
      const options = new Set<number>([answer]);
      while (options.size < 4) {
-         const offsetRange = Math.max(5, Math.abs(Math.round(answer * 0.3)));
+         const offsetRange = Math.max(3, Math.abs(Math.round(answer * 0.2)) + 1);
          const distractorOffset = Math.floor(Math.random() * (2 * offsetRange + 1)) - offsetRange;
-         const distractor = answer + distractorOffset;
-         if (distractor !== answer) {
+         let distractor = Math.round(answer + distractorOffset); // Keep distractors as integers
+
+         // Ensure distractor is different and non-negative if answer is non-negative
+         if (distractor !== answer && (answer < 0 || distractor >= 0)) {
              options.add(distractor);
+         } else if (options.size < 3) { // Add a simple offset if generation fails
+            options.add(answer + (options.size % 2 === 0 ? options.size + 1 : -(options.size + 1)));
          }
      }
 
     return {
-        id: Math.floor(Math.random() * 1000) + 100, // Temp ID
+        id: Math.floor(Math.random() * 1000) + 1000, // Temp ID
         type: 'speed-math',
         data: {
             question: `What is ${question}?`,
@@ -259,32 +378,23 @@ export const generateSpeedMath = (): GameRound<SpeedMathData> => {
 };
 
 // Logic MCQ
-export const generateLogicMCQ = (): GameRound<LogicMCQData> => {
-    // Example: Select a random logic question from the pool (or define static ones here)
+const generateLogicMCQInternal = (): GameRound<LogicMCQData> => {
      const logicQuestions = questionPool.filter(q => q.type === 'logic-mcq');
      if (logicQuestions.length === 0) {
-         // Fallback if no logic questions are defined in the pool
-         return {
-            id: 999,
+         return { // Fallback
+            id: 9999,
             type: 'logic-mcq',
             data: {
-                question: "Placeholder Logic: If A=B and B=C, does A=C?",
-                options: ["Yes", "No", "Maybe"],
-                answer: "Yes",
-                category: 'logic',
-            },
-            correctAnswer: "Yes", timeLimitMs: 10000
+                question: "Placeholder: A is B, B is C. Is A = C?",
+                options: ["Yes", "No", "Maybe"], answer: "Yes", category: 'logic',
+            }, correctAnswer: "Yes", timeLimitMs: 10000
          }
      }
      const selectedQuestion = getRandomElement(logicQuestions);
-     // Ensure data structure matches LogicMCQData
      const data = selectedQuestion.data as LogicMCQData;
 
      return {
         ...selectedQuestion,
-        data: {
-            ...data,
-            options: shuffleArray(data.options) // Shuffle options for variety
-        }
-     } as GameRound<LogicMCQData>; // Type assertion
+        data: { ...data, options: shuffleArray(data.options) }
+     } as GameRound<LogicMCQData>;
 };
