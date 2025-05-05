@@ -9,41 +9,39 @@ export function Logo({ className, ...props }: LogoProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 110 40" // Adjusted viewBox for a slightly wider logo and spacing
-      className={cn('h-8 w-auto text-foreground', className)} // Adjust size as needed, use foreground color
+      // Adjusted viewBox to be taller to accommodate text below
+      viewBox="0 0 120 60"
+      className={cn('h-10 w-auto', className)} // Adjust default size if needed
       {...props}
       aria-label="Mathenge Inc. Logo"
-      // Removed onClick, role, tabIndex, and title attributes
     >
-      {/* Geometric 'M' Shape - Two interlocking triangles/chevrons */}
+      {/* Stylized 'M' Symbol - Simplified representation */}
+      {/* Using fill instead of stroke, adjusted paths for boldness */}
       <path
-        d="M10 35 L25 5 L40 35" // First part of M (left triangle/chevron)
-        stroke="hsl(var(--primary))" // Use primary color for the stroke
-        strokeWidth="5" // Slightly thicker stroke
-        fill="none"
-        strokeLinecap="round" // Rounded caps
-        strokeLinejoin="round" // Rounded joins
+        // Simplified path for left part of M - make thicker/rounder if possible
+        d="M20 10 C 15 10, 15 35, 30 35 S 45 10, 40 10 C 50 10, 50 35, 35 35 S 25 10, 20 10 Z"
+        fill="hsl(var(--primary))" // Use primary color fill
+        stroke="none" // No stroke
       />
       <path
-        d="M35 35 L50 5 L65 35" // Second part of M (right triangle/chevron, slightly overlapping/connected)
-        stroke="hsl(var(--primary))" // Use primary color for the stroke
-        strokeWidth="5" // Slightly thicker stroke
-        fill="none"
-        strokeLinecap="round" // Rounded caps
-        strokeLinejoin="round" // Rounded joins
+        // Simplified path for right part of M - make thicker/rounder if possible
+         d="M50 10 C 45 10, 45 35, 60 35 S 75 10, 70 10 C 80 10, 80 35, 65 35 S 55 10, 50 10 Z"
+        fill="hsl(var(--primary))" // Use primary color fill
+        stroke="none" // No stroke
       />
 
-      {/* 'inc.' Text - positioned next to the 'M', using theme font */}
+      {/* 'Mathenge Inc.' Text */}
       <text
-        x="75" // Position text to the right of the 'M' with some space
-        y="29" // Vertically align text slightly lower to match base of M
-        fontFamily="var(--font-inter), sans-serif" // Use the app's font (Inter)
-        fontSize="18" // Keep font size
+        x="60" // Centered horizontally (half of viewBox width 120)
+        y="52" // Positioned below the 'M' symbol
+        fontFamily="var(--font-inter), sans-serif" // Use the app's font
+        fontSize="12" // Adjusted font size
         fontWeight="bold" // Bold text
-        fill="currentColor" // Inherit text color (foreground)
-        letterSpacing="1" // Keep letter spacing
+        fill="hsl(var(--primary))" // Use primary color fill
+        textAnchor="middle" // Center the text horizontally
+        letterSpacing="1" // Keep letter spacing consistent
       >
-        inc.
+        Mathenge Inc.
       </text>
     </svg>
   );
