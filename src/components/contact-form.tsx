@@ -1,105 +1,158 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { toast } from "../hooks/use-toast"
-import { Button } from "./ui/button"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
-import { Input } from "./ui/input"
-import { Textarea } from "./ui/textarea"
-
-const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Invalid email address." }),
-  message: z.string().min(10, { message: "Message must be at least 10 characters." }),
-})
+import React, { useState } from 'react';
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
+import { useToast } from "../hooks/use-toast"; // Import useToast
+import { CheckCircle, AlertCircle } from 'lucide-react'; // Import icons
 
 export function ContactForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      message: "",
-    },
-  })
+  const { toast } = useToast();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    phoneNumber: '',
+    message: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  // Replace with your actual Web3Forms Access Key
+  const WEB3FORMS_ACCESS_KEY = "3b386dd9-4b5d-4ac0-8511-dbfbaf63abc1"; // Replace with your key later
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Prevent default form submission
+    setIsSubmitting(true);
+
+    const formElement = e.currentTarget;
+    const data = new FormData(formElement);
+    data.append('access_key', WEB3FORMS_ACCESS_KEY);
+    // Add botcheck honeypot manually if needed, though often handled by Web3Forms
+    data.append('botcheck', ''); // Append empty value for honeypot
+
     try {
-      // Simulate an API call or any asynchronous operation that might fail.
-      const response = await fetch("/api/contact", {
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
+        body: data,
       });
 
-      if (!response.ok) {
-        // If the response status is not OK (e.g., 500, 400), throw an error.
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to submit the form. Please try again.");
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        toast({
+          title: "Success!",
+          description: result.message || "Your message has been sent.",
+          className: "border-green-500",
+          icon: <CheckCircle className="h-4 w-4 text-green-500" />,
+        });
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          phoneNumber: '',
+          message: '',
+        });
+      } else {
+        console.error("Submission failed:", result);
+        throw new Error(result.message || "An error occurred while submitting the form.");
       }
-
-      toast({
-        title: "Success!",
-        description: "Your message has been sent.",
-      });
-
-      // Reset the form after successful submission
-      form.reset();
     } catch (error: any) {
-      // Catch any errors that occur during the process (e.g., network issues, API errors).
       toast({
         title: "Uh oh! Something went wrong.",
-        description: error.message || "There was an error submitting the form. Please try again later.",
+        description: error.message || "There was an error submitting the form.",
+        className: "border-red-500",
+        icon: <AlertCircle className="h-4 w-4 text-red-500" />,
       });
+      console.error("Form submission error:", error);
+    } finally {
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="John Doe" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+    <form 
+      onSubmit={handleSubmit} 
+      className="space-y-4"
+    >
+      {/* access_key is now added via FormData in handleSubmit */}
+      {/* Honeypot is added via FormData as well */}
+      
+      <div className="space-y-2">
+        <Label htmlFor="name">Name</Label>
+        <Input 
+          id="name" 
+          type="text" 
+          name="name" 
+          placeholder="John Doe" 
+          required 
+          value={formData.name}
+          onChange={handleChange}
+          disabled={isSubmitting}
         />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="johndoe@example.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input 
+          id="email" 
+          type="email" 
+          name="email" 
+          placeholder="johndoe@example.com" 
+          required 
+          value={formData.email}
+          onChange={handleChange}
+          disabled={isSubmitting}
         />
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Message</FormLabel>
-              <FormControl>
-                <Textarea placeholder="Write your message here." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="subject">Subject</Label>
+        <Input 
+          id="subject" 
+          type="text" 
+          name="subject" 
+          placeholder="Subject" 
+          required 
+          value={formData.subject}
+          onChange={handleChange}
+          disabled={isSubmitting}
         />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
-  )
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="phoneNumber">Phone Number (Optional)</Label>
+        <Input 
+          id="phoneNumber" 
+          type="text" 
+          name="phoneNumber" 
+          placeholder="(123) 456-7890" 
+          value={formData.phoneNumber}
+          onChange={handleChange}
+          disabled={isSubmitting}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="message">Message</Label>
+        <Textarea 
+          id="message" 
+          name="message" 
+          placeholder="Write your message here." 
+          required 
+          value={formData.message}
+          onChange={handleChange}
+          disabled={isSubmitting}
+        />
+      </div>
+
+      <Button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Submitting...' : 'Submit'}
+      </Button>
+    </form>
+  );
 }
