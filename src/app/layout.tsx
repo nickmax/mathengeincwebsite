@@ -37,6 +37,7 @@ export default function RootLayout({
           // Apply base styles to body
           'min-h-screen bg-background font-sans antialiased', // font-sans uses the variable defined in globals.css/tailwind config
         )}
+        suppressHydrationWarning={true} // Add this prop to ignore extension attributes
       >
         <ThemeProvider
           attribute="class"
