@@ -107,7 +107,7 @@ export default function Magari360Page() {
               Packed with powerful tools designed for dealerships.
             </p>
           </div>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 justify-center"> {/* Added justify-center */}
             {features.map((feature) => (
               <ScrollHighlightCard key={feature.title} threshold={0.3}>
                 <Card className={cn("flex flex-col glass-card-glow h-full")}>

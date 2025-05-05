@@ -57,7 +57,7 @@ export function SolutionsSection() {
            {/* Ensure no extra whitespace/comments between Button and Link */}
            <Button asChild variant="link" className="text-primary hover:text-primary/80 font-semibold text-lg mt-2"><Link href="/products">Explore Our Products →</Link></Button>
         </div>
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 justify-center"> {/* Added justify-center */}
           {solutions.map((solution) => (
             <ScrollHighlightCard key={solution.title} threshold={0.3}>
               <Card className={cn(

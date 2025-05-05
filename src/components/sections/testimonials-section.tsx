@@ -54,7 +54,7 @@ export function TestimonialsSection() {
             Hear from businesses that have partnered with Mathenge Inc and achieved remarkable results.
           </p>
         </div>
-        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center"> {/* Added justify-center */}
           {testimonials.map((testimonial) => (
             // Use testimonial name as key assuming names are unique in this context
             <ScrollHighlightCard key={testimonial.name} threshold={0.3}>

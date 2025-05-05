@@ -70,7 +70,7 @@ export function PricingSection() {
             Choose the plan that best fits your needs. Simple, transparent pricing.
           </p>
         </div>
-        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center"> {/* Added justify-center */}
           {pricingPlans.map((plan) => (
             <ScrollHighlightCard key={plan.title} threshold={0.3}>
               <Card className={cn(
