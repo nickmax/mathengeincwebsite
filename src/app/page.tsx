@@ -5,7 +5,7 @@ import { SolutionsSection } from '@/components/sections/solutions-section';
 import { TrustedBySection } from '@/components/sections/trusted-by-section';
 import { TestimonialsSection } from '@/components/sections/testimonials-section';
 import { ContactSection } from '@/components/sections/contact-section';
-// Removed Magari360Section import
+import { Magari360Section } from '@/components/sections/magari360-section'; // Import the Magari360 section component
 
 // Specific metadata for the Home page
 export const metadata: Metadata = {
@@ -18,7 +18,7 @@ export default function Home() {
     <>
       <HeroSection />
       <SolutionsSection />
-      {/* Removed Magari360Section component usage */}
+      <Magari360Section /> {/* Add the Magari360 section here */}
       <TrustedBySection />
       <TestimonialsSection />
       <ContactSection />
