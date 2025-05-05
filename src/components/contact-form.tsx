@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  // FormDescription, // Removed if not used
   FormField,
   FormItem,
   FormLabel,
@@ -20,14 +19,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-// Import the new action
-import { generateWhatsAppLink } from "@/actions/generate-whatsapp-link";
+// Removed the previous action import
+// import { generateWhatsAppLink } from "@/actions/generate-whatsapp-link";
 
-// Schema remains the same
+// Schema for client-side validation (can be kept)
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
-  subject: z.string().optional(),
+  subject: z.string().optional(), // Web3Forms handles extra fields
   message: z.string().min(10, { message: "Message must be at least 10 characters." }),
 });
 
@@ -47,53 +46,62 @@ const defaultFormValues: ContactFormValues = {
   message: "",
 };
 
+// Web3Forms Access Key
+const WEB3FORMS_ACCESS_KEY = "3b386dd9-4b5d-4ac0-8511-dbfbaf63abc1";
+
 export function ContactForm() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: defaultFormValues, // Use memoized default values
+    defaultValues: defaultFormValues,
+    // Ensure mode is 'onSubmit' or similar if relying on RHF validation before native submit
+    mode: 'onSubmit',
   });
 
-  // Update onSubmit to generate and open WhatsApp link
-  async function onSubmit(values: ContactFormValues) {
+  // Handle RHF's onSubmit which validates before allowing native form submission
+  // Note: We don't prevent default or call a server action here.
+  // The form's action attribute handles the submission.
+  const handleValidation = async (values: ContactFormValues) => {
+    // Validation successful, native form submission will proceed.
+    // You might want to show a brief "Submitting..." state.
     setIsSubmitting(true);
+    // Optionally, add a small delay or feedback before the browser navigates
+    // or Web3Forms handles the response.
+    // setTimeout(() => setIsSubmitting(false), 3000); // Reset submitting state after a delay
+    // Consider using Web3Forms's AJAX submission for better UX if needed:
+    // https://docs.web3forms.com/how-to-guides/ajax-submit-vanilla-js
+    // For simplicity, we'll let the native form submission handle it for now.
+  };
 
-    try {
-      // Call the server action to generate the link
-      const result = await generateWhatsAppLink(values);
+  const handleValidationError = (errors: any) => {
+    console.error("Validation Error:", errors);
+    toast({
+      title: "Validation Failed",
+      description: "Please check the form fields for errors.",
+      variant: "destructive",
+    });
+    setIsSubmitting(false); // Reset submitting state on validation error
+  };
 
-      if (result.success && result.link) {
-        toast({
-          title: "Ready to Send!",
-          description: "Opening WhatsApp to send your message...",
-        });
-
-        // Open the WhatsApp link in a new tab
-        window.open(result.link, '_blank', 'noopener,noreferrer');
-
-        form.reset(); // Reset form fields after successful generation
-      } else {
-        // Throw error if link generation failed on the server
-        throw new Error(result.message || "Could not prepare WhatsApp message.");
-      }
-    } catch (error: any) {
-      console.error("Submission error:", error);
-      toast({
-        title: "Submission Failed",
-        description: error.message || "Could not prepare WhatsApp message. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
 
   return (
     <Form {...form}>
-      {/* Use onSubmit directly on the form element */}
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      {/* Use the native form element with Web3Forms action */}
+      <form
+        action="https://api.web3forms.com/submit"
+        method="POST"
+        onSubmit={form.handleSubmit(handleValidation, handleValidationError)} // Use RHF for validation
+        className="space-y-6"
+      >
+        {/* Web3Forms Access Key */}
+        <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
+        {/* Honeypot Spam Protection */}
+        <input type="checkbox" name="botcheck" className="hidden" style={{ display: 'none' }} />
+        {/* Optional: Redirect URL after submission */}
+        {/* <input type="hidden" name="redirect" value="https://yourdomain.com/thanks" /> */}
+
         <FormField
           control={form.control}
           name="name"
@@ -101,9 +109,10 @@ export function ContactForm() {
             <FormItem>
               <FormLabel className="text-foreground/80">Name</FormLabel>
               <FormControl>
-                <Input placeholder="Your Name" {...field} disabled={isSubmitting} className={inputStyle}/>
+                {/* Add required attribute for native browser validation fallback */}
+                <Input placeholder="Your Name" {...field} disabled={isSubmitting} className={inputStyle} required />
               </FormControl>
-              <FormMessage /> {/* Renders only when there's an error */}
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -114,7 +123,7 @@ export function ContactForm() {
             <FormItem>
               <FormLabel className="text-foreground/80">Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="your.email@example.com" {...field} disabled={isSubmitting} className={inputStyle}/>
+                <Input type="email" placeholder="your.email@example.com" {...field} disabled={isSubmitting} className={inputStyle} required />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -122,7 +131,7 @@ export function ContactForm() {
         />
         <FormField
           control={form.control}
-          name="subject"
+          name="subject" // Keep subject if you want it submitted
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-foreground/80">Subject (Optional)</FormLabel>
@@ -146,6 +155,7 @@ export function ContactForm() {
                   rows={5}
                   {...field}
                   disabled={isSubmitting}
+                  required // Add required attribute
                 />
               </FormControl>
               <FormMessage />
@@ -153,7 +163,7 @@ export function ContactForm() {
           )}
         />
         <Button type="submit" className="w-full font-semibold btn-primary-gradient" disabled={isSubmitting}>
-          {isSubmitting ? "Preparing..." : "Send via WhatsApp"}
+          {isSubmitting ? "Submitting..." : "Send Message"}
         </Button>
       </form>
     </Form>
