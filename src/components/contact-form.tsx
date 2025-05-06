@@ -1,28 +1,40 @@
+import { AlertCircle, CheckCircle } from 'lucide-react';
 import React, { useState } from 'react';
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Textarea } from "./ui/textarea";
-import { useToast } from "../hooks/use-toast"; // Import useToast
-import { CheckCircle, AlertCircle } from 'lucide-react'; // Import icons
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { useToast } from "@/hooks/use-toast"
+
+interface ContactFormData {
+  name: string;
+  email: string;
+  subject: string;
+  phoneNumber: string;
+  message: string;
+}
+
+interface Web3FormsSuccessResponse {
+  success: boolean;
+  message: string;
+}
+
+const WEB3FORMS_ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
 
 export function ContactForm() {
-  const { toast } = useToast();
-  const [formData, setFormData] = useState({
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
     subject: '',
     phoneNumber: '',
     message: '',
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast()
 
-  // Replace with your actual Web3Forms Access Key
-  const WEB3FORMS_ACCESS_KEY = "3b386dd9-4b5d-4ac0-8511-dbfbaf63abc1"; // Replace with your key later
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    // Check if the environment variable is set
+    if (!WEB3FORMS_ACCESS_KEY) {
+        console.error("NEXT_PUBLIC_WEB3FORMS_KEY is not set. Form submission will fail.");
+    }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent default form submission
@@ -30,7 +42,7 @@ export function ContactForm() {
 
     const formElement = e.currentTarget;
     const data = new FormData(formElement);
-    data.append('access_key', WEB3FORMS_ACCESS_KEY);
+    data.append('access_key', WEB3FORMS_ACCESS_KEY || '');
     // Add botcheck honeypot manually if needed, though often handled by Web3Forms
     data.append('botcheck', ''); // Append empty value for honeypot
 
@@ -40,7 +52,7 @@ export function ContactForm() {
         body: data,
       });
 
-      const result = await response.json();
+      const result: Web3FormsSuccessResponse = await response.json();
 
       if (response.ok && result.success) {
         toast({
@@ -75,83 +87,63 @@ export function ContactForm() {
   };
 
   return (
-    <form 
-      onSubmit={handleSubmit} 
-      className="space-y-4"
-    >
-      {/* access_key is now added via FormData in handleSubmit */}
-      {/* Honeypot is added via FormData as well */}
-      
-      <div className="space-y-2">
-        <Label htmlFor="name">Name</Label>
-        <Input 
-          id="name" 
-          type="text" 
-          name="name" 
-          placeholder="John Doe" 
-          required 
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <Input
+          id="name"
+          name="name"
+          type="text"
+          placeholder="Your Name"
           value={formData.name}
-          onChange={handleChange}
-          disabled={isSubmitting}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          required
         />
       </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
-        <Input 
-          id="email" 
-          type="email" 
-          name="email" 
-          placeholder="johndoe@example.com" 
-          required 
+      <div>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="Your Email"
           value={formData.email}
-          onChange={handleChange}
-          disabled={isSubmitting}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          required
         />
       </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="subject">Subject</Label>
-        <Input 
-          id="subject" 
-          type="text" 
-          name="subject" 
-          placeholder="Subject" 
-          required 
+      <div>
+        <Input
+          id="subject"
+          name="subject"
+          type="text"
+          placeholder="Subject"
           value={formData.subject}
-          onChange={handleChange}
-          disabled={isSubmitting}
+          onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+          required
         />
       </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="phoneNumber">Phone Number (Optional)</Label>
-        <Input 
-          id="phoneNumber" 
-          type="text" 
-          name="phoneNumber" 
-          placeholder="(123) 456-7890" 
+      <div>
+        <Input
+          id="phoneNumber"
+          name="phoneNumber"
+          type="tel"
+          placeholder="Phone Number (Optional)"
           value={formData.phoneNumber}
-          onChange={handleChange}
-          disabled={isSubmitting}
+          onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
         />
       </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="message">Message</Label>
-        <Textarea 
-          id="message" 
-          name="message" 
-          placeholder="Write your message here." 
-          required 
+      <div>
+        <Textarea
+          id="message"
+          name="message"
+          placeholder="Your Message"
+          rows={4}
           value={formData.message}
-          onChange={handleChange}
-          disabled={isSubmitting}
+          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+          required
         />
       </div>
-
       <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Submitting...' : 'Submit'}
+        {isSubmitting ? "Submitting..." : "Send Message"}
       </Button>
     </form>
   );
