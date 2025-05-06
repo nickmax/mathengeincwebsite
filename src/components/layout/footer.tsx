@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { Logo } from '@/components/logo'; // Import the Logo component
 
 export function Footer() {
   const [currentYear, setCurrentYear] = useState<number | null>(null);
@@ -18,6 +19,7 @@ export function Footer() {
         "bg-background/50 backdrop-blur-sm"
      )}>
       <div className="container flex flex-col items-center justify-center gap-4 md:h-24 md:flex-row">
+        <Logo className="h-7 opacity-75" /> {/* Add the logo here */}
         <p className="text-center text-sm leading-loose text-muted-foreground">
           ©{' '}
            <span className="font-medium px-1">
@@ -29,3 +31,4 @@ export function Footer() {
     </footer>
   );
 }
+
