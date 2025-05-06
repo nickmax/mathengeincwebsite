@@ -51,8 +51,8 @@ export function Header() {
 
     if (newClickCount === 1) {
       setShowEasterEggHint(true);
-      // Tooltip will show the message, no need for separate timer to hide it here
-      // as Tooltip visibility is controlled by `showEasterEggHint`
+      const timer = setTimeout(() => setShowEasterEggHint(false), 3000); // Hide hint after 3 seconds
+      // return () => clearTimeout(timer); // Cleanup not strictly needed here as state change will re-render
     } else if (newClickCount < 5) {
         setShowEasterEggHint(true); // Keep showing hint if clicks < 5
     }
@@ -118,10 +118,13 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between">
         <Link
           href="/"
-          className="mr-6 flex items-center space-x-2"
+          className="mr-6 flex items-center space-x-2 group"
           aria-label="Mathenge Inc. Home"
         >
-          <Logo className="h-9" /> {/* Increased logo size */}
+          <Logo className="h-10" /> {/* Increased logo size */}
+          <span className="text-xl font-bold text-primary group-hover:animate-pulse-text-glow">
+            Mathenge Inc.
+          </span>
         </Link>
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
           {staticNavItems.map((item) => (
@@ -160,10 +163,13 @@ export function Header() {
                 <SheetTitle className="sr-only">Mobile Navigation Menu</SheetTitle> {/* Added SheetTitle for accessibility */}
                 <nav className="flex flex-col gap-4 mt-8">
                   <div
-                    className="mb-4 flex items-center space-x-2 cursor-default"
+                    className="mb-4 flex items-center space-x-2 cursor-default group"
                     aria-label="Mathenge Inc. Home"
                   >
-                    <Logo className="h-10" /> {/* Increased logo size */}
+                    <Logo className="h-12" /> {/* Increased logo size */}
+                     <span className="text-2xl font-bold text-primary group-hover:animate-pulse-text-glow">
+                        Mathenge Inc.
+                     </span>
                   </div>
                   {staticNavItems.map((item) => (
                     <Link
@@ -183,7 +189,7 @@ export function Header() {
                    <Button
                     variant="ghost"
                     onClick={() => {
-                        handleEasterEggClick();
+                        handleEasterEggClick(); // Call the easter egg logic
                         const closeButton = document.querySelector('[aria-label="Close"]');
                         if (closeButton instanceof HTMLElement) {
                             closeButton.click();
@@ -206,3 +212,4 @@ export function Header() {
     </header>
   );
 }
+
