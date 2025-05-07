@@ -122,7 +122,7 @@ export function Header() {
           aria-label="Mathenge Inc. Home"
         >
           <Logo className="h-10" /> {/* Increased logo size */}
-          <span className="text-xl font-bold text-primary group-hover:animate-pulse-text-glow">
+          <span className="text-xl font-bold text-primary animate-pulse-text-glow">
             Mathenge Inc.
           </span>
         </Link>
@@ -167,7 +167,7 @@ export function Header() {
                     aria-label="Mathenge Inc. Home"
                   >
                     <Logo className="h-12" /> {/* Increased logo size */}
-                     <span className="text-2xl font-bold text-primary group-hover:animate-pulse-text-glow">
+                     <span className="text-2xl font-bold text-primary animate-pulse-text-glow">
                         Mathenge Inc.
                      </span>
                   </div>
