@@ -54,7 +54,7 @@ export function TestimonialsSection() {
             Hear from businesses that have partnered with Mathenge Inc and achieved remarkable results.
           </p>
         </div>
-        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center"> {/* Added justify-center */}
+        <div className="grid gap-6 sm:gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center"> {/* Added justify-center, reduced gap slightly */}
           {testimonials.map((testimonial) => (
             // Use testimonial name as key assuming names are unique in this context
             <ScrollHighlightCard key={testimonial.name} threshold={0.3}>
@@ -64,26 +64,26 @@ export function TestimonialsSection() {
                       "glass-card-glow flex flex-col justify-between h-full",
                   )}
               >
-                <CardContent className="p-6 space-y-5 flex flex-col flex-grow">
-                   <div className="flex items-center space-x-4">
-                     <Avatar className="h-14 w-14 border-2 border-primary/60 p-0.5 shadow-md shadow-primary/20 flex-shrink-0"> {/* Added flex-shrink-0 */}
+                <CardContent className="p-4 md:p-5 space-y-4 md:space-y-5 flex flex-col flex-grow"> {/* Reduced padding and space */}
+                   <div className="flex items-center space-x-3 md:space-x-4"> {/* Reduced space-x */}
+                     <Avatar className="h-10 w-10 md:h-12 md:w-12 border-2 border-primary/60 p-0.5 shadow-md shadow-primary/20 flex-shrink-0"> {/* Reduced avatar size */}
                        <AvatarImage src={testimonial.avatar} alt={`${testimonial.name} avatar`} data-ai-hint={testimonial.aiHint} className="rounded-full" />
-                       <AvatarFallback className="bg-primary/20 text-primary font-semibold text-lg">{testimonial.initials}</AvatarFallback>
+                       <AvatarFallback className="bg-primary/20 text-primary font-semibold text-sm md:text-base">{testimonial.initials}</AvatarFallback> {/* Reduced fallback font size */}
                      </Avatar>
                      <div className="flex-1 min-w-0"> {/* Added min-w-0 for text truncation */}
-                       <p className="font-semibold text-foreground text-base truncate">{testimonial.name}</p> {/* Added truncate */}
-                       <p className="text-xs text-muted-foreground font-normal truncate"> {/* Added truncate */}
+                       <p className="font-semibold text-foreground text-sm md:text-base truncate">{testimonial.name}</p> {/* Reduced name font size */}
+                       <p className="text-xs text-muted-foreground font-normal truncate"> {/* Kept title/company font size */}
                           {testimonial.title}, {testimonial.company}
                        </p>
                      </div>
-                     <CircleCheckBig aria-label="Verified client" className="h-5 w-5 text-primary flex-shrink-0 ml-auto" /> {/* Added aria-label */}
+                     <CircleCheckBig aria-label="Verified client" className="h-4 w-4 md:h-5 md:w-5 text-primary flex-shrink-0 ml-auto" /> {/* Adjusted icon size */}
                    </div>
 
-                  <blockquote className="text-base italic leading-relaxed text-foreground flex-grow pt-4 border-t border-white/10">
+                  <blockquote className="text-sm md:text-base italic leading-relaxed md:leading-relaxed text-foreground flex-grow pt-3 md:pt-4 border-t border-white/10"> {/* Reduced quote font size and padding-top */}
                     “{testimonial.quote}”
                   </blockquote>
 
-                   <div className="mt-auto pt-4">
+                   <div className="mt-auto pt-3 md:pt-4"> {/* Reduced padding-top */}
                      <Badge variant="secondary" className="text-xs">
                        {testimonial.tag}
                      </Badge>
@@ -97,3 +97,4 @@ export function TestimonialsSection() {
     </section>
   );
 }
+
