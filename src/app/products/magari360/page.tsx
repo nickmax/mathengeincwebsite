@@ -3,43 +3,39 @@ import type { Metadata } from 'next';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { TestimonialsSection } from "@/components/sections/testimonials-section";
-import { CheckCircle, Cog, LayoutDashboard, Palette, Users } from "lucide-react";
+import { CheckCircle, Cog, LayoutDashboard, Palette, Users, Car, Settings, Construction } from "lucide-react";
 import { ScrollHighlightCard } from '@/components/scroll-highlight-card';
+import { Badge } from '@/components/ui/badge';
 
 // Specific metadata for the Magari360 page
 export const metadata: Metadata = {
-  title: 'Magari360 - AutoCommerce Platform',
-  description: 'Magari360 by Mathenge Inc: Transform your car dealership with a customizable AutoCommerce platform. Easy setup, powerful features, stunning design.',
+  title: 'Magari360 - AutoCommerce Platform (Coming Soon)',
+  description: 'Magari360 by Mathenge Inc: (Coming Soon) Transform your car dealership with a customizable AutoCommerce platform. Easy setup, powerful features, stunning design.',
 };
 
 
 const features = [
   {
     title: "Live Inventory Management",
-    description: "Add, remove, and update listings in seconds.",
+    description: "Add, remove, and update listings in seconds. (Feature Coming Soon)",
     icon: LayoutDashboard,
-    screenshotHint: "dashboard inventory management",
   },
   {
     title: "Custom Dealer Branding",
-    description: "Apply your colors, logo, and identity with ease.",
+    description: "Apply your colors, logo, and identity with ease. (Feature Coming Soon)",
     icon: Palette,
-    screenshotHint: "website customization branding",
   },
   {
     title: "Integrated Contact & Booking",
-    description: "Capture leads straight from the car page.",
+    description: "Capture leads straight from the car page. (Feature Coming Soon)",
     icon: Users,
-    screenshotHint: "contact form lead capture",
   },
   {
     title: "Analytics Dashboard",
-    description: "Know what’s working. See sales insights instantly.",
-    icon: Cog,
-    screenshotHint: "analytics dashboard charts",
+    description: "Know what’s working. See sales insights instantly. (Feature Coming Soon)",
+    icon: Settings, // Changed from Cog to Settings to match solutions section
   },
 ];
 
@@ -55,15 +51,19 @@ export default function Magari360Page() {
              )}></div>
 
         <div className="container px-4 md:px-6 text-center relative z-10">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl xl:text-7xl/none mb-4 relative inline-block">
-            Magari360
-            <span className="absolute bottom-0 left-0 w-full h-1 bg-primary shadow-[0_2px_15px_hsl(var(--primary))] animate-pulse"></span>
-          </h1>
+          <div className="flex items-center justify-center mb-4">
+            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl xl:text-7xl/none relative inline-block mr-4">
+              Magari360
+            </h1>
+            <Badge variant="neon" className="text-lg">Coming Soon</Badge>
+          </div>
+          <span className="block w-full h-1 bg-primary shadow-[0_2px_15px_hsl(var(--primary))] animate-pulse mb-4 max-w-sm mx-auto"></span>
           <p className="max-w-[700px] mx-auto text-muted-foreground md:text-xl font-normal mb-8">
             Transform the way you sell cars online with a fully customizable AutoCommerce platform.
           </p>
-          {/* Ensure no extra whitespace/comments between Button and Link */}
-          <Button asChild size="lg" className="font-semibold btn-primary-gradient"><Link href="#demo">View Live Demo →</Link></Button>
+          <Button asChild size="lg" className="font-semibold btn-primary-gradient" disabled>
+            <Link href="#demo">View Live Demo (Coming Soon) →</Link>
+          </Button>
         </div>
       </section>
 
@@ -72,26 +72,19 @@ export default function Magari360Page() {
         <div className="container px-4 md:px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-5">
-              <h2 className="text-3xl font-bold tracking-wide sm:text-4xl">Why Magari360?</h2>
+              <h2 className="text-3xl font-bold tracking-wide sm:text-4xl">Why Magari360? <Badge variant="outline" className="ml-2">Coming Soon</Badge></h2>
               <p className="text-muted-foreground font-normal text-lg leading-relaxed">
-                Built exclusively for car dealerships, Magari360 offers modular features designed to seamlessly fit your unique sales process. Forget complex setups and expensive development – simply plug in your brand, manage your inventory, and start selling.
+                Built exclusively for car dealerships, Magari360 will offer modular features designed to seamlessly fit your unique sales process. Forget complex setups and expensive development – simply plug in your brand, manage your inventory, and start selling.
               </p>
               <p className="text-foreground font-semibold italic">
-                 “From inventory control to lead generation — everything is designed around you.”
+                 “From inventory control to lead generation — everything will be designed around you.”
               </p>
-              {/* Ensure no extra whitespace/comments between Button and Link */}
-              <Button asChild variant="outline" className="font-semibold"><Link href="#features">Explore Features</Link></Button>
+              <Button asChild variant="outline" className="font-semibold"><Link href="#features">Explore Features (Coming Soon)</Link></Button>
             </div>
             <ScrollHighlightCard threshold={0.3}>
-                <div className="relative aspect-video rounded-[var(--radius)] overflow-hidden glass-card border border-primary/20 shadow-lg shadow-primary/10">
-                   <Image
-                     src="https://picsum.photos/800/450"
-                     alt="Magari360 Interface Screenshot"
-                     width={800}
-                     height={450}
-                     className="object-cover w-full h-full"
-                     data-ai-hint="software dashboard interface screenshot"
-                   />
+                <div className="relative aspect-video rounded-[var(--radius)] overflow-hidden glass-card border border-primary/20 shadow-lg shadow-primary/10 flex items-center justify-center p-8">
+                   <Car className="h-32 w-32 text-primary opacity-60" data-ai-hint="car icon automotive platform" />
+                   <p className="absolute bottom-4 text-xs text-muted-foreground">Platform Preview Coming Soon</p>
                 </div>
             </ScrollHighlightCard>
           </div>
@@ -102,32 +95,23 @@ export default function Magari360Page() {
       <section id="features" className="w-full py-16 md:py-24 lg:py-32 bg-background">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-14">
-            <h2 className="text-3xl font-bold tracking-wide sm:text-5xl">What’s Inside</h2>
+            <h2 className="text-3xl font-bold tracking-wide sm:text-5xl">What’s Inside <Badge variant="outline" className="ml-2">Features WIP</Badge></h2>
             <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed font-normal">
-              Packed with powerful tools designed for dealerships.
+              Packed with powerful tools designed for dealerships. Many features are currently under development.
             </p>
           </div>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 justify-center"> {/* Added justify-center */}
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 justify-center">
             {features.map((feature) => (
               <ScrollHighlightCard key={feature.title} threshold={0.3}>
-                <Card className={cn("flex flex-col glass-card-glow h-full")}>
+                <Card className={cn("flex flex-col glass-card-glow h-full p-6 items-center")}> {/* Centering content */}
                   <CardHeader className="items-center text-center pb-4">
-                    <div className="mb-4 p-3 bg-primary/10 rounded-full inline-flex border border-primary/30">
-                      <feature.icon className="h-7 w-7 text-primary" />
+                    <div className="mb-4 p-4 bg-primary/10 rounded-full inline-flex border border-primary/30">
+                      <feature.icon className="h-10 w-10 text-primary" /> {/* Made icon larger */}
                     </div>
                     <CardTitle className="text-lg">{feature.title}</CardTitle>
                   </CardHeader>
-                  <CardContent className="flex-1 flex flex-col justify-between items-center text-center">
-                    <div className="relative w-full aspect-video mb-4 rounded-md overflow-hidden border border-white/10">
-                      <Image
-                        src={`https://picsum.photos/400/225?random=${Math.random()}`}
-                        alt={`${feature.title} Screenshot`}
-                        width={400}
-                        height={225}
-                        className="object-cover"
-                        data-ai-hint={feature.screenshotHint}
-                      />
-                    </div>
+                  <CardContent className="flex-1 flex flex-col justify-center items-center text-center"> {/* Ensure content is centered */}
+                    {/* Removed Image placeholder div */}
                     <p className="text-muted-foreground font-normal text-sm">
                       {feature.description}
                     </p>
@@ -144,26 +128,26 @@ export default function Magari360Page() {
         <div className="container px-4 md:px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <ScrollHighlightCard threshold={0.3}>
-               <div className="relative aspect-square rounded-[var(--radius)] overflow-hidden glass-card border border-primary/20 shadow-lg shadow-primary/10 flex items-center justify-center">
-                 <Palette className="h-24 w-24 text-primary opacity-50" />
-                  <span className="absolute text-center font-semibold text-foreground p-4">
-                      Visual Placeholder for Customization Options (Tabs/Toggles)
+               <div className="relative aspect-square rounded-[var(--radius)] overflow-hidden glass-card border border-primary/20 shadow-lg shadow-primary/10 flex flex-col items-center justify-center p-8"> {/* Changed to flex-col */}
+                 <Palette className="h-24 w-24 text-primary opacity-50" data-ai-hint="customization options color palette" />
+                  <span className="mt-4 text-center font-semibold text-foreground p-4">
+                      Customization Options <Badge variant="outline">Coming Soon</Badge>
                   </span>
                </div>
             </ScrollHighlightCard>
              <div className="space-y-5">
               <h2 className="text-3xl font-bold tracking-wide sm:text-4xl">Make It Yours</h2>
               <p className="text-muted-foreground font-normal text-lg leading-relaxed">
-                 Magari360 bends to your business — not the other way around. Easily adapt the platform with your brand colors, logo, layout preferences, and regional settings like currency and location.
+                 Magari360 will bend to your business — not the other way around. Easily adapt the platform with your brand colors, logo, layout preferences, and regional settings like currency and location. (Functionality Coming Soon)
               </p>
               <p className="text-foreground font-semibold italic">
-                 Whether you’re selling 10 or 10,000 cars, your platform scales and looks just how you want it.
+                 Whether you’re selling 10 or 10,000 cars, your platform will scale and look just how you want it.
               </p>
               <ul className="space-y-2 text-muted-foreground font-normal">
-                 <li className="flex items-center"><CheckCircle className="h-5 w-5 mr-2 text-primary"/> Brand Colors & Logo</li>
-                 <li className="flex items-center"><CheckCircle className="h-5 w-5 mr-2 text-primary"/> Customizable Home Layouts</li>
-                 <li className="flex items-center"><CheckCircle className="h-5 w-5 mr-2 text-primary"/> Advanced Filter Options</li>
-                 <li className="flex items-center"><CheckCircle className="h-5 w-5 mr-2 text-primary"/> Currency & Location Settings</li>
+                 <li className="flex items-center"><CheckCircle className="h-5 w-5 mr-2 text-primary"/> Brand Colors & Logo (Planned)</li>
+                 <li className="flex items-center"><CheckCircle className="h-5 w-5 mr-2 text-primary"/> Customizable Home Layouts (Planned)</li>
+                 <li className="flex items-center"><CheckCircle className="h-5 w-5 mr-2 text-primary"/> Advanced Filter Options (Planned)</li>
+                 <li className="flex items-center"><CheckCircle className="h-5 w-5 mr-2 text-primary"/> Currency & Location Settings (Planned)</li>
               </ul>
             </div>
           </div>
@@ -179,11 +163,13 @@ export default function Magari360Page() {
              )}></div>
            <div className="container px-4 md:px-6 text-center relative z-10">
                <h2 className="text-3xl font-bold tracking-wide sm:text-4xl mb-4">Want to See It in Action?</h2>
-               <p className="max-w-[600px] mx-auto text-muted-foreground md:text-lg font-normal mb-8">
-                   Click below to explore our interactive demo — no signup needed. Experience the ease of Magari360 firsthand.
+               <p className="max-w-[600px] mx-auto text-muted-foreground md:text-lg font-normal mb-2">
+                   Our interactive demo is currently under construction.
                </p>
-               {/* Ensure no extra whitespace/comments between Button and Link */}
-               <Button asChild size="lg" className="font-semibold btn-primary-gradient shadow-[0_0_24px_hsl(var(--primary)/0.6)]"><Link href="#" target="_blank" rel="noopener noreferrer">Launch Demo →</Link></Button>
+                <Badge variant="neon" className="mb-8">Demo Coming Soon</Badge>
+               <Button asChild size="lg" className="font-semibold btn-primary-gradient shadow-[0_0_24px_hsl(var(--primary)/0.6)]" disabled>
+                <Link href="#" target="_blank" rel="noopener noreferrer">Launch Demo (Unavailable) →</Link>
+               </Button>
            </div>
        </section>
 
@@ -199,13 +185,12 @@ export default function Magari360Page() {
                 "border-primary/40"
                 )}>
                 <div className="absolute inset-0 border-2 border-primary rounded-[var(--radius)] animate-pulse opacity-30 pointer-events-none"></div>
-
-              <h3 className="text-2xl font-bold tracking-wide mb-4 sm:text-3xl">Ready to Elevate Your Dealership?</h3>
+                 <Construction className="h-12 w-12 text-primary mx-auto mb-4" />
+              <h3 className="text-2xl font-bold tracking-wide mb-4 sm:text-3xl">Ready to Elevate Your Dealership? <Badge variant="outline">Magari360 Coming Soon</Badge></h3>
               <p className="max-w-2xl mx-auto text-muted-foreground mb-8 font-normal">
-                Your customers are already online. Isn’t it time your showroom was too? Take control of your online presence with Magari360.
+                Your customers are already online. Prepare for your showroom to be too! Take control of your online presence with Magari360, launching soon.
               </p>
-              {/* Ensure no extra whitespace/comments between Button and Link */}
-              <Button asChild size="lg" className="font-semibold btn-primary-gradient"><Link href="/#contact">Let’s Get Started</Link></Button>
+              <Button asChild size="lg" className="font-semibold btn-primary-gradient"><Link href="/#contact">Inquire About Early Access</Link></Button>
             </div>
           </ScrollHighlightCard>
         </div>

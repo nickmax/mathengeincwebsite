@@ -5,10 +5,11 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Settings, Zap, ListTree, Palette } from 'lucide-react';
+import { Settings, Zap, ListTree, Palette, Construction } from 'lucide-react'; // Added Construction
 import { cn } from '@/lib/utils';
 import { ScrollHighlightCard } from '@/components/scroll-highlight-card';
 import { useMemo } from 'react';
+import { Badge } from '@/components/ui/badge'; // Import Badge
 
 // Define features array outside the component if it's static
 const staticFeatures = [
@@ -44,11 +45,14 @@ export function Magari360Section() {
             <div className="container px-4 md:px-6">
                 {/* Section Header */}
                 <div className="flex flex-col items-center justify-center space-y-4 text-center mb-14">
-                    <h2 className="text-3xl font-bold tracking-wide sm:text-5xl">
-                        Featured Product: Magari360
-                    </h2>
+                    <div className="flex items-center justify-center space-x-3">
+                        <h2 className="text-3xl font-bold tracking-wide sm:text-5xl">
+                            Featured Product: Magari360
+                        </h2>
+                        <Badge variant="neon" className="text-base self-center">Coming Soon</Badge>
+                    </div>
                     <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed font-normal">
-                        The easiest way to sell cars online. Launch a sleek online showroom instantly.
+                        The easiest way to sell cars online. Launch a sleek online showroom instantly. (Platform under development)
                     </p>
                 </div>
 
@@ -56,21 +60,15 @@ export function Magari360Section() {
                 <div className="grid lg:grid-cols-2 gap-12 items-center">
                     {/* Image/Visual Side */}
                     <ScrollHighlightCard threshold={0.3}>
-                         <div className="relative aspect-video rounded-[var(--radius)] overflow-hidden glass-card border border-primary/20 shadow-lg shadow-primary/10">
-                           <Image
-                             src="https://picsum.photos/800/450"
-                             alt="Magari360 Platform Showcase"
-                             width={800}
-                             height={450}
-                             className="object-cover w-full h-full"
-                             data-ai-hint="software platform dashboard car dealership"
-                           />
+                         <div className="relative aspect-video rounded-[var(--radius)] overflow-hidden glass-card border border-primary/20 shadow-lg shadow-primary/10 flex flex-col items-center justify-center p-8" data-ai-hint="software platform dashboard car dealership">
+                           <Construction className="h-24 w-24 text-primary opacity-70" />
+                           <p className="mt-4 text-sm text-muted-foreground">Platform Preview Coming Soon</p>
                          </div>
                     </ScrollHighlightCard>
 
                     {/* Text/Features Side */}
                     <div className="space-y-8">
-                        <h3 className="text-2xl font-bold tracking-wide">Key Features</h3>
+                        <h3 className="text-2xl font-bold tracking-wide">Key Features (Planned)</h3>
                         <div className="grid grid-cols-2 gap-6">
                             {features.map((feature) => (
                                 <div key={feature.title} className="flex items-start space-x-3">
@@ -84,7 +82,6 @@ export function Magari360Section() {
                                 </div>
                             ))}
                         </div>
-                         {/* Ensure no extra whitespace/comments between Button and Link */}
                          <Button asChild size="lg" className="font-semibold btn-primary-gradient">
                              <Link href="/products/magari360">Learn More about Magari360</Link>
                          </Button>
