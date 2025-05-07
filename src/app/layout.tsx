@@ -20,8 +20,8 @@ export const metadata: Metadata = {
       default: 'Mathenge Inc.',
       template: '%s | Mathenge Inc.',
   },
-  description: 'Mathenge Inc. offers innovative solutions including expert consulting, SaaS platforms, custom software development, and graphic design services.',
-  keywords: ['Mathenge Inc', 'Software Development', 'SaaS', 'Consulting', 'Graphic Design', 'Web Development', 'Magari360'],
+  description: 'Mathenge Inc. offers innovative solutions including expert consulting, SaaS platforms, custom software development, and graphic design services to elevate your business.',
+  keywords: ['Mathenge Inc', 'Software Development', 'SaaS', 'Consulting', 'Graphic Design', 'Web Development', 'Magari360', 'QuickThinker', 'AutoCommerce'],
   icons: {
     icon: '/logo.png', // Use the logo as the favicon
   },

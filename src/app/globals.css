@@ -13,6 +13,15 @@ body {
     color 0.3s ease;
 }
 
+/* Container */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+
 @layer base {
   :root {
     /* Crimson Frost - Light Theme */

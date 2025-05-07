@@ -5,21 +5,18 @@ import type { FC } from 'react';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import type { OddOneOutOption } from '@/types/quickthinker'; // Import specific type
+import type { OddOneOutData, OddOneOutOption } from '@/types/quickthinker';
+import { getIconComponent } from '@/lib/quickthinker-rounds'; // Import helper
 
 interface OddOneOutRoundProps {
-  roundData: {
-    options: OddOneOutOption[];
-    title: string;
-  };
-  onComplete: (isCorrect: boolean) => void;
+  roundData: OddOneOutData;
+  onComplete: (isCorrect: boolean) => void; // Pass boolean directly
 }
 
 export const OddOneOutRound: FC<OddOneOutRoundProps> = ({ roundData, onComplete }) => {
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null); // ID is now string
   const [isAnswered, setIsAnswered] = useState(false);
 
-   // Reset state when roundData changes (new round starts)
    useEffect(() => {
     setSelectedId(null);
     setIsAnswered(false);
@@ -33,35 +30,34 @@ export const OddOneOutRound: FC<OddOneOutRoundProps> = ({ roundData, onComplete 
     setIsAnswered(true);
 
     const isCorrect = option.isOdd;
-    // Use requestAnimationFrame for smoother visual updates before calling onComplete
     requestAnimationFrame(() => {
         setTimeout(() => {
-           onComplete(isCorrect);
-        }, 250); // Slightly reduced delay
+           onComplete(isCorrect); // Pass boolean
+        }, 250); 
     });
   };
 
-  // Pre-calculate options to avoid recalculation on every render
   const optionsToRender = roundData.options;
 
   return (
-    <div className="flex flex-col items-center w-full max-w-md p-6">
-      <h3 className="text-xl font-semibold text-foreground mb-6">{roundData.title}</h3>
+    <div className="flex flex-col items-center w-full max-w-md p-4 md:p-6">
+      <h3 className="text-xl font-semibold text-foreground mb-6 text-center">{roundData.title}</h3>
       <div className="grid grid-cols-2 gap-4 md:gap-6 w-full">
         {optionsToRender.map((option) => {
-           const IconComponent = option.icon;
+           const IconComponent = getIconComponent(option.iconName); // Get icon component by name
            const isSelected = selectedId === option.id;
+           // Determine correctness based on the option's isOdd flag
            const isCorrectChoice = isSelected && option.isOdd;
            const isIncorrectChoice = isSelected && !option.isOdd;
 
+
            return (
              <Button
-                key={`${roundData.title}-${option.id}`} // More unique key
+                key={`${roundData.title}-${option.id}`} 
                 variant="outline"
                 className={cn(
                   "aspect-square h-28 w-full md:h-32 flex items-center justify-center rounded-[var(--radius)] transition-all duration-300 ease-out",
                   "bg-background/50 border-primary/20 hover:bg-primary/10",
-                  // Apply visual feedback classes conditionally
                   isAnswered ? 'cursor-not-allowed' : 'hover:scale-105 hover:shadow-primary/20',
                   isAnswered && !isSelected && "opacity-50",
                   isSelected && "scale-105 shadow-lg",
@@ -70,19 +66,17 @@ export const OddOneOutRound: FC<OddOneOutRoundProps> = ({ roundData, onComplete 
                  )}
                 onClick={() => handleSelect(option)}
                 disabled={isAnswered}
-                aria-label={`Option ${option.id}`} // Accessibility
+                aria-label={`Option ${option.id}`}
              >
-               <IconComponent className={cn(
+               {IconComponent && <IconComponent className={cn(
                     "h-12 w-12 md:h-16 md:w-16 transition-colors",
-                    // Simpler color logic
                     isSelected && isAnswered ? "text-white" : "text-primary"
-                    )} strokeWidth={2} />
+                    )} strokeWidth={1.5} /> {/* Thinner stroke for cleaner look */}
             </Button>
            );
           })}
       </div>
 
-      {/* Keep shake animation styles */}
       <style jsx>{`
         @keyframes shake {
           0%, 100% { transform: translateX(0); }

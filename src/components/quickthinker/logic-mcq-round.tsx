@@ -9,14 +9,13 @@ import type { LogicMCQData } from '@/types/quickthinker';
 
 interface LogicMCQRoundProps {
   roundData: LogicMCQData;
-  onComplete: (isCorrect: boolean) => void;
+  onComplete: (selectedAnswer: string) => void; // Pass the chosen string answer
 }
 
 export const LogicMCQRound: FC<LogicMCQRoundProps> = ({ roundData, onComplete }) => {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
 
-  // Reset state when question changes
   useEffect(() => {
     setSelectedAnswer(null);
     setIsAnswered(false);
@@ -28,38 +27,38 @@ export const LogicMCQRound: FC<LogicMCQRoundProps> = ({ roundData, onComplete })
     setSelectedAnswer(option);
     setIsAnswered(true);
 
-    const isCorrect = option === roundData.answer;
     requestAnimationFrame(() => {
       setTimeout(() => {
-        onComplete(isCorrect);
-      }, 300); // Delay for feedback
+        onComplete(option); // Pass the selected string answer
+      }, 300); 
     });
   };
 
-  const optionsToRender = roundData.options; // Already shuffled in generation if needed
+  const optionsToRender = roundData.options;
 
   return (
-    <div className="flex flex-col items-center w-full max-w-lg p-6">
+    <div className="flex flex-col items-center w-full max-w-lg p-4 md:p-6">
       <h3 className="text-xl md:text-2xl font-semibold text-foreground mb-8 text-center leading-relaxed">
         {roundData.question}
       </h3>
-      <div className="grid grid-cols-1 gap-4 w-full max-w-sm">
+      <div className="grid grid-cols-1 gap-3 md:gap-4 w-full max-w-sm">
         {optionsToRender.map((option, index) => {
           const isSelected = selectedAnswer === option;
+          // Correctness is determined by comparing the selected option with roundData.answer
           const isCorrectChoice = isSelected && option === roundData.answer;
           const isIncorrectChoice = isSelected && option !== roundData.answer;
 
           return (
             <Button
-              key={`${roundData.question}-${index}`} // More unique key
+              key={`${roundData.question}-option-${index}`}
               variant="outline"
               className={cn(
-                "h-auto min-h-[4rem] w-full text-base md:text-lg font-medium flex items-center justify-center rounded-[var(--radius)] transition-all duration-300 ease-out py-3 px-4 text-left whitespace-normal", // Allow text wrapping
+                "h-auto min-h-[3.5rem] md:min-h-[4rem] w-full text-sm md:text-base font-medium flex items-center justify-center rounded-[var(--radius)] transition-all duration-300 ease-out py-2.5 md:py-3 px-4 text-left whitespace-normal",
                 "bg-background/50 border-primary/20",
                 isAnswered ? 'cursor-not-allowed' : 'hover:bg-primary/10 hover:scale-105 hover:shadow-primary/20',
                 isAnswered && !isSelected && "opacity-50",
                 isSelected && "scale-105 shadow-lg",
-                isSelected && isAnswered && "text-white",
+                isSelected && isAnswered && "text-white", // White text for answered selected option
                 isCorrectChoice && "bg-green-500/20 border-green-500 ring-2 ring-green-500/50",
                 isIncorrectChoice && "bg-red-500/20 border-red-500 ring-2 ring-red-500/50 animate-shake"
               )}
@@ -73,7 +72,6 @@ export const LogicMCQRound: FC<LogicMCQRoundProps> = ({ roundData, onComplete })
         })}
       </div>
 
-      {/* Keep shake animation styles */}
       <style jsx>{`
         @keyframes shake {
           0%, 100% { transform: translateX(0); }
