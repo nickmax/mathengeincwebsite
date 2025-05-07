@@ -245,16 +245,16 @@ body {
   animation: fadeIn 0.5s ease-out forwards;
 }
 
-/* Pulse text glow animation */
+/* Pulse text glow animation - Enhanced */
 @keyframes pulse-text-glow {
   0%, 100% {
-    text-shadow: 0 0 5px hsla(var(--primary) / 0.5), 0 0 10px hsla(var(--primary) / 0.3);
+    text-shadow: 0 0 8px hsla(var(--primary) / 0.6), 0 0 15px hsla(var(--primary) / 0.4), 0 0 25px hsla(var(--primary) / 0.2);
   }
   50% {
-    text-shadow: 0 0 10px hsla(var(--primary) / 0.7), 0 0 20px hsla(var(--primary) / 0.5);
+    text-shadow: 0 0 15px hsla(var(--primary) / 0.8), 0 0 25px hsla(var(--primary) / 0.6), 0 0 40px hsla(var(--primary) / 0.4);
   }
 }
 
 .animate-pulse-text-glow {
-  animation: pulse-text-glow 2s infinite ease-in-out;
+  animation: pulse-text-glow 2.5s infinite ease-in-out; /* Slightly slower for a more noticeable pulse */
 }
