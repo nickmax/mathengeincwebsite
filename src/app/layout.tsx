@@ -22,6 +22,9 @@ export const metadata: Metadata = {
   },
   description: 'Mathenge Inc. offers innovative solutions including expert consulting, SaaS platforms, custom software development, and graphic design services.',
   keywords: ['Mathenge Inc', 'Software Development', 'SaaS', 'Consulting', 'Graphic Design', 'Web Development', 'Magari360'],
+  icons: {
+    icon: '/logo.png', // Use the logo as the favicon
+  },
 };
 
 export default function RootLayout({
