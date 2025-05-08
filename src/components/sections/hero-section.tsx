@@ -20,15 +20,16 @@ export function HeroSection() {
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
            <div className="relative flex justify-center lg:justify-start">
              <Image
-              src="/undraw_business-plan_wv9q.svg" // Updated image source
+              src="/undraw_business-plan_wv9q.svg" 
               alt="Abstract image representing business potential and innovation"
               width={550}
               height={550}
               className={cn(
-                  "mx-auto overflow-hidden rounded-[var(--radius)] object-cover sm:w-full shadow-2xl border border-white/5",
+                  "mx-auto overflow-hidden rounded-[var(--radius)] object-cover shadow-2xl border border-white/5",
+                  "w-full max-w-md lg:max-w-lg", // Adjusted sizing: full width up to max-w-md, or max-w-lg on large screens
                   "aspect-square"
                 )}
-              data-ai-hint="business planning illustration" // Updated hint
+              data-ai-hint="business planning illustration"
               priority
             />
            </div>
@@ -53,3 +54,4 @@ export function HeroSection() {
     </section>
   );
 }
+
