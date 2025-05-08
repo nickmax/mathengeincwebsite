@@ -17,22 +17,20 @@ export function HeroSection() {
     // Reduced py values significantly
     <section id="home" className="w-full py-16 md:py-20 lg:py-24 xl:py-32 bg-background flex justify-center">
       <div className="container px-4 md:px-6 max-w-6xl">
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-           <div className="relative flex justify-center lg:justify-start">
-             <Image
-              src="/undraw_business-plan_wv9q.svg" 
-              alt="Abstract image representing business potential and innovation"
-              width={550}
-              height={550}
-              className={cn(
-                  "mx-auto overflow-hidden rounded-[var(--radius)] object-cover shadow-2xl border border-white/5",
-                  "w-full max-w-md lg:max-w-lg", // Adjusted sizing: full width up to max-w-md, or max-w-lg on large screens
-                  "aspect-square"
-                )}
-              data-ai-hint="business planning illustration"
-              priority
-            />
-           </div>
+        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16 items-center"> {/* Added items-center for vertical alignment */}
+            <Image
+            src="/undraw_business-plan_wv9q.svg"
+            alt="Abstract image representing business potential and innovation"
+            width={550}
+            height={550}
+            className={cn(
+                "mx-auto overflow-hidden rounded-[var(--radius)] object-cover shadow-2xl border border-white/5",
+                "w-full max-w-md lg:max-w-lg", 
+                "aspect-square"
+              )}
+            data-ai-hint="business planning illustration"
+            priority
+          />
           <div className="flex flex-col justify-center space-y-6 text-center lg:text-left">
             <div className="space-y-4">
               {/* Replace static H1 with TypewriterHeading */}
