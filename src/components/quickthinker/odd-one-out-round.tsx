@@ -1,4 +1,3 @@
-
 'use client';
 
 import type { FC } from 'react';
@@ -10,7 +9,7 @@ import { getIconComponent } from '@/lib/quickthinker-rounds';
 
 interface OddOneOutRoundProps {
   roundData: OddOneOutData;
-  onComplete: (isCorrect: boolean) => void;
+  onComplete: (selectedOptionId: string) => void; // Now passes the ID of the selected option
 }
 
 export const OddOneOutRound: FC<OddOneOutRoundProps> = ({ roundData, onComplete }) => {
@@ -28,12 +27,11 @@ export const OddOneOutRound: FC<OddOneOutRoundProps> = ({ roundData, onComplete 
     setSelectedId(option.id);
     setIsAnswered(true);
 
-    const isCorrect = option.isOdd;
-    // Short delay for visual feedback before calling onComplete
+    // Pass the ID of the selected option
     requestAnimationFrame(() => {
       setTimeout(() => {
-        onComplete(isCorrect);
-      }, 250); // Adjusted to 250ms for quicker feedback
+        onComplete(option.id);
+      }, 250);
     });
   };
 
@@ -46,6 +44,7 @@ export const OddOneOutRound: FC<OddOneOutRoundProps> = ({ roundData, onComplete 
         {optionsToRender.map((option) => {
           const IconComponent = getIconComponent(option.iconName);
           const isSelected = selectedId === option.id;
+          // Visual feedback based on whether the *selected* option *is* the odd one.
           const isCorrectChoice = isSelected && option.isOdd;
           const isIncorrectChoice = isSelected && !option.isOdd;
 
@@ -64,7 +63,7 @@ export const OddOneOutRound: FC<OddOneOutRoundProps> = ({ roundData, onComplete 
               )}
               onClick={() => handleSelect(option)}
               disabled={isAnswered}
-              aria-label={`Option ${option.id}`}
+              aria-label={`Option ${option.id.replace('option-', '')}`}
             >
               {IconComponent && (
                 <IconComponent
@@ -80,7 +79,6 @@ export const OddOneOutRound: FC<OddOneOutRoundProps> = ({ roundData, onComplete 
         })}
       </div>
 
-      {/* Placed style jsx block inside the main returned div */}
       <style jsx>{`
         @keyframes shake {
           0%, 100% { transform: translateX(0); }
