@@ -20,7 +20,7 @@ export function HeroSection() {
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
            <div className="relative flex justify-center lg:justify-start">
              <Image
-              src="https://picsum.photos/600/600"
+              src="/undraw_business-plan_wv9q.svg" // Updated image source
               alt="Abstract image representing business potential and innovation"
               width={550}
               height={550}
@@ -28,7 +28,7 @@ export function HeroSection() {
                   "mx-auto overflow-hidden rounded-[var(--radius)] object-cover sm:w-full shadow-2xl border border-white/5",
                   "aspect-square"
                 )}
-              data-ai-hint="professional business meeting abstract"
+              data-ai-hint="business planning illustration" // Updated hint
               priority
             />
            </div>
