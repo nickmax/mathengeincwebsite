@@ -21,12 +21,12 @@ interface LogoInfo {
 
 const staticLogos: LogoInfo[] = [
   // Replace these with your actual company logos and paths
-  { name: 'Company Alpha', imgSrc: '/logos/placeholder-logo-1.svg' }, // Example: /logos/your-company-logo.svg
-  { name: 'Beta Corp', imgSrc: '/logos/placeholder-logo-2.svg' },
-  { name: 'Gamma Solutions', imgSrc: '/logos/placeholder-logo-3.svg' },
-  { name: 'Delta Inc.', imgSrc: '/logos/placeholder-logo-4.svg' },
-  { name: 'Epsilon LLC', imgSrc: '/logos/placeholder-logo-5.svg' },
-  { name: 'Zeta Group', imgSrc: '/logos/placeholder-logo-6.svg' },
+  { name: 'Elimux', imgSrc: '/logos/elimux.png' }, // Example: /logos/your-company-logo.svg
+  { name: 'Furaha Initiative', imgSrc: '/logos/furaha.png' },
+  { name: 'Peoples Dialogue Festival', imgSrc: '/logos/PDF.png' },
+  { name: 'Cuesmiths Ke', imgSrc: '/logos/cuesmiths.png' },
+  { name: 'Sikukuu', imgSrc: '/logos/sikukuu.png' },
+  { name: 'Animix LTD', imgSrc: '/logos/animix.png' },
   // Fallback example using an icon if no imgSrc is provided
   // { name: 'Icon Fallback', icon: Building },
 ];

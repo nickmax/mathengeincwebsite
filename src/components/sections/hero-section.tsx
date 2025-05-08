@@ -24,9 +24,8 @@ export function HeroSection() {
             width={550}
             height={550}
             className={cn(
-                "mx-auto overflow-hidden rounded-[var(--radius)] object-cover shadow-2xl border border-white/5",
-                "w-full max-w-md lg:max-w-lg", 
-                "aspect-square"
+                "mx-auto w-full h-auto max-w-md lg:max-w-lg object-contain shadow-2xl"
+
               )}
             data-ai-hint="business planning illustration"
             priority
