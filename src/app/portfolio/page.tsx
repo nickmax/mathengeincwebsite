@@ -28,7 +28,7 @@ const portfolioItems: PortfolioItem[] = [
     clientName: 'Prime Variable Covers',
     previewLink: 'https://primevariablecovers.com',
     description: `Leading supplier of HDPE Dam Liners in East Africa, offering advanced and sustainable aquaculture solutions.`,
-    imageUrl: 'https://placehold.co/400x400.png',
+    imageUrl: 'https://primevariablecovers.com/images/pvclogo.png',
     imageAiHint: 'industrial aquaculture'
   },
   {
@@ -36,7 +36,7 @@ const portfolioItems: PortfolioItem[] = [
     clientName: 'ElimuX',
     previewLink: 'https://elimux.co.ke',
     description: `Premier college admissions consultancy in Africa, guiding students to Ivy League and top U.S. colleges.`,
-    imageUrl: 'https://placehold.co/400x400.png',
+    imageUrl: 'https://elimux.co.ke/images/leadphoto.jpg',
     imageAiHint: 'education consultancy'
   },
   {
@@ -44,7 +44,7 @@ const portfolioItems: PortfolioItem[] = [
     clientName: 'Furaha Initiative',
     previewLink: 'https://furahainitiative.org',
     description: `Empowering youth for positive community impact through funding and volunteering for a brighter future.`,
-    imageUrl: 'https://placehold.co/400x400.png',
+    imageUrl: 'https://furahainitiative.org/images/furaha_group.jpeg',
     imageAiHint: 'nonprofit community'
   },
   {
@@ -52,7 +52,7 @@ const portfolioItems: PortfolioItem[] = [
     clientName: 'People Dialogue Festival',
     previewLink: 'https://peopledialoguefestival.org',
     description: `CMD-Kenya's flagship initiative promoting inclusive dialogue for Kenya's sustainable development.`,
-    imageUrl: 'https://placehold.co/400x400.png',
+    imageUrl: 'https://peopledialoguefestival.org/images/Dialogue.jpg',
     imageAiHint: 'event festival'
   }
 ];
