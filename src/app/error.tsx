@@ -55,7 +55,6 @@ export default function GlobalError({
             Try Again
           </Button>
           <Button asChild size="lg" className="font-semibold btn-primary-gradient">
-            {/* Using <a> tag for a hard navigation to reset potentially broken client-side state */}
             <a href="/"> 
               <Home className="mr-2 h-5 w-5" />
               Go to Homepage
@@ -69,3 +68,4 @@ export default function GlobalError({
     </div>
   );
 }
+
