@@ -27,9 +27,9 @@ const portfolioItems: PortfolioItem[] = [
     id: '1',
     clientName: 'Prime Variable Covers',
     previewLink: 'https://primevariablecovers.com',
-    description: 'A professional website for industrial and protective cover solutions, showcasing products and services.',
+    description: 'Your Partner in Sustainable Aquaculture. PVC is the leading Dam Liners supplier in East Africa, a one-stop-shop especially for the HDPE Dam liners polythene sector. We supply a full range of technologically advanced, scientifically proven and environmentally sustainable products. The combination of our technical, consulting and innovative products ensure customers are provided solutions specifically tailored to meet their requirements.',
     imageUrl: 'https://placehold.co/600x400.png',
-    imageAiHint: 'industrial manufacturing'
+    imageAiHint: 'industrial aquaculture'
   },
   {
     id: '2',
@@ -41,17 +41,17 @@ const portfolioItems: PortfolioItem[] = [
   },
   {
     id: '3',
-    clientName: 'Elimux Group',
-    previewLink: 'https://elimux.com',
-    description: 'A corporate website for a diversified group of companies, highlighting their various ventures.',
+    clientName: 'ElimuX',
+    previewLink: 'https://elimux.co.ke',
+    description: "ElimuX is Africa’s premier college admissions consultancy, dedicated to helping students in Kenya and across the continent gain admission to Ivy League schools and other top U.S. colleges. With a personalized approach and unmatched success rates, we equip students with the tools, strategies, and confidence to stand out in competitive application pools. Whether it’s crafting compelling essays, navigating the admissions process, or building your profile, ElimuX empowers you to rise above the ordinary and achieve the extraordinary. Your future starts here—let’s make it happen!",
     imageUrl: 'https://placehold.co/600x400.png',
-    imageAiHint: 'corporate group'
+    imageAiHint: 'education consultancy'
   },
   {
     id: '4',
     clientName: 'Furaha Initiative',
-    previewLink: 'https://furaha.netlify.app/',
-    description: 'A non-profit organization website focused on community impact, donations, and event updates.',
+    previewLink: 'https://furahainitiative.org',
+    description: 'Creating a brighter future through happiness and hope, one smile at a time. Our mission is to empower young people to make a positive impact in their communities and beyond by contributing funds and volunteering our time and resources to initiatives that promote happiness and hope. We believe that by investing in the well-being of individuals and communities, we can create a brighter, more inclusive future for all.',
     imageUrl: 'https://placehold.co/600x400.png',
     imageAiHint: 'nonprofit community'
   },
@@ -70,6 +70,14 @@ const portfolioItems: PortfolioItem[] = [
     description: 'A creative animation and multimedia studio website, showcasing their portfolio and services.',
     imageUrl: 'https://placehold.co/600x400.png',
     imageAiHint: 'animation studio'
+  },
+  {
+    id: '7',
+    clientName: 'People Dialogue Festival',
+    previewLink: 'https://peopledialoguefestival.org',
+    description: "The People Dialogue Festival (PDF) is a flagship initiative by the Centre for Multiparty Democracy (CMD- Kenya) and stands as a beacon of inclusive dialogue and transformative engagement in Kenya. This annual event unites leaders, citizens, government institutions, civil society organizations, and private sector stakeholders to discuss pressing societal challenges, promote meaningful citizen engagement, and co-create solutions for Kenya's sustainable development.\nThe inaugural PDF was successfully convened in March 2019, with subsequent editions held in 2020, 2021, 2022, 2023, and 2024. The upcoming 7th edition, themed \"Building a Collaborative Democracy for Kenya’s Sustainable Future,\" is set to take place from 5th to 8th March 2025 at Uhuru Park, Nairobi.\nTo deepen its impact, PDF has expanded beyond the four-day annual event in Nairobi, rolling out interschool dialogues engaging 18 schools since 2023 and piloting county-level editions across four counties in 2025. By bridging diverse perspectives and fostering innovation, CMD-Kenya ensures the PDF remains a dynamic space for citizens, experts, state and non-state actors to engage in meaningful dialogue and action.",
+    imageUrl: 'https://placehold.co/600x400.png',
+    imageAiHint: 'event festival'
   }
 ];
 
