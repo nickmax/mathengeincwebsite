@@ -23,6 +23,7 @@ const staticNavItems = [
   { label: 'Home', href: '/' },
   { label: 'Solutions', href: '/#solutions' },
   { label: 'Products', href: '/products' },
+  { label: 'Portfolio', href: '/portfolio' }, // Added Portfolio link
   { label: 'Testimonials', href: '/#testimonials' },
   { label: 'Contact', href: '/#contact' },
 ];
@@ -121,7 +122,7 @@ export function Header() {
           className="mr-6 flex items-center space-x-2 group"
           aria-label="Mathenge Inc. Home"
         >
-          <Logo className="h-10" /> {/* Increased logo size */}
+          <Logo className="h-10 w-auto" /> {/* Increased logo size */}
           <span className="text-xl font-bold text-primary animate-pulse-text-glow">
             Mathenge Inc.
           </span>
@@ -166,7 +167,7 @@ export function Header() {
                     className="mb-4 flex items-center space-x-2 cursor-default group"
                     aria-label="Mathenge Inc. Home"
                   >
-                    <Logo className="h-12" /> {/* Increased logo size */}
+                    <Logo className="h-12 w-auto" /> {/* Increased logo size */}
                      <span className="text-2xl font-bold text-primary animate-pulse-text-glow">
                         Mathenge Inc.
                      </span>
