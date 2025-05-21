@@ -27,7 +27,7 @@ const portfolioItems: PortfolioItem[] = [
     id: '1',
     clientName: 'Prime Variable Covers',
     previewLink: 'https://primevariablecovers.com',
-    description: `Leading supplier of HDPE Dam Liners in East Africa, providing technologically advanced and sustainable aquaculture solutions tailored to client needs.`,
+    description: `Leading supplier of HDPE Dam Liners in East Africa, offering advanced and sustainable aquaculture solutions.`,
     imageUrl: 'https://placehold.co/400x400.png',
     imageAiHint: 'industrial aquaculture'
   },
@@ -35,7 +35,7 @@ const portfolioItems: PortfolioItem[] = [
     id: '3',
     clientName: 'ElimuX',
     previewLink: 'https://elimux.co.ke',
-    description: `Premier college admissions consultancy in Africa, helping students gain admission to Ivy League and top U.S. colleges with personalized strategies.`,
+    description: `Premier college admissions consultancy in Africa, guiding students to Ivy League and top U.S. colleges.`,
     imageUrl: 'https://placehold.co/400x400.png',
     imageAiHint: 'education consultancy'
   },
@@ -43,7 +43,7 @@ const portfolioItems: PortfolioItem[] = [
     id: '4',
     clientName: 'Furaha Initiative',
     previewLink: 'https://furahainitiative.org',
-    description: `Empowering youth to create positive community impact through funding and volunteering for initiatives that promote happiness and hope for a brighter future.`,
+    description: `Empowering youth for positive community impact through funding and volunteering for a brighter future.`,
     imageUrl: 'https://placehold.co/400x400.png',
     imageAiHint: 'nonprofit community'
   },
@@ -51,13 +51,26 @@ const portfolioItems: PortfolioItem[] = [
     id: '7',
     clientName: 'People Dialogue Festival',
     previewLink: 'https://peopledialoguefestival.org',
-    description: `An annual flagship initiative by CMD-Kenya promoting inclusive dialogue by uniting stakeholders to co-create solutions for Kenya's sustainable development.`,
+    description: `CMD-Kenya's flagship initiative promoting inclusive dialogue for Kenya's sustainable development.`,
     imageUrl: 'https://placehold.co/400x400.png',
     imageAiHint: 'event festival'
   }
 ];
 
 export default function PortfolioPage() {
+  if (!portfolioItems || portfolioItems.length === 0) {
+    return (
+      <section id="portfolio" className="w-full py-16 md:py-24 lg:py-32 bg-background">
+        <div className="container px-4 md:px-6 text-center">
+          <h1 className="text-3xl font-bold tracking-wide sm:text-5xl mb-4">Our Work</h1>
+          <p className="text-muted-foreground md:text-xl/relaxed">
+            Our portfolio is currently being updated. Please check back soon!
+          </p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="portfolio" className="w-full py-16 md:py-24 lg:py-32 bg-background">
       <div className="container px-4 md:px-6">
@@ -73,30 +86,31 @@ export default function PortfolioPage() {
             <ScrollHighlightCard key={item.id} threshold={0.3}>
               <Card className={cn(
                 "flex flex-col h-full", 
-                "glass-card-glow p-4" // Reduced base padding for smaller card
+                "glass-card-glow p-4" 
               )}>
-                <CardHeader className="p-3 pb-2"> {/* Reduced padding */}
-                  <div className="relative aspect-square w-full overflow-hidden rounded-t-[var(--radius)] mb-3"> {/* Changed to aspect-square */}
+                <CardHeader className="p-3 pb-2"> 
+                  <div className="relative aspect-square w-full overflow-hidden rounded-t-[var(--radius)] mb-3"> 
                     <Image
                       src={item.imageUrl}
                       alt={`Screenshot of ${item.clientName} project`}
                       fill
                       className="object-cover"
                       data-ai-hint={item.imageAiHint}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Example sizes, adjust as needed
                     />
                   </div>
-                  <CardTitle className="text-lg text-center">{item.clientName}</CardTitle> {/* Slightly smaller title */}
+                  <CardTitle className="text-lg text-center">{item.clientName}</CardTitle> 
                 </CardHeader>
-                <CardContent className="flex-grow flex flex-col p-3 pt-0"> {/* Reduced padding */}
-                  <CardDescription className="text-xs text-muted-foreground font-normal mb-3 text-center flex-grow line-clamp-4"> {/* Smaller text, line-clamp for brevity */}
+                <CardContent className="flex-grow flex flex-col p-3 pt-0"> 
+                  <CardDescription className="text-xs text-muted-foreground font-normal mb-3 text-center flex-grow line-clamp-4"> 
                     {item.description}
                   </CardDescription>
                 </CardContent>
-                <CardFooter className="mt-auto p-3 pt-2"> {/* Reduced padding */}
-                  <Button asChild variant="outline" size="sm" className="w-full font-semibold"> {/* Smaller button */}
+                <CardFooter className="mt-auto p-3 pt-2"> 
+                  <Button asChild variant="outline" size="sm" className="w-full font-semibold"> 
                     <Link href={item.previewLink} target="_blank" rel="noopener noreferrer">
                       Live Preview
-                      <ExternalLink className="ml-2 h-3 w-3" /> {/* Smaller icon */}
+                      <ExternalLink className="ml-2 h-3 w-3" /> 
                     </Link>
                   </Button>
                 </CardFooter>
