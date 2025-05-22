@@ -23,14 +23,7 @@ interface PortfolioItem {
 }
 
 const portfolioItems: PortfolioItem[] = [
-  {
-    id: '1',
-    clientName: 'Prime Variable Covers',
-    previewLink: 'https://primevariablecovers.com',
-    description: `Leading supplier of HDPE Dam Liners in East Africa, offering advanced and sustainable aquaculture solutions.`,
-    imageUrl: 'https://primevariablecovers.com/images/pvclogo.png',
-    imageAiHint: 'industrial aquaculture'
-  },
+  
   {
     id: '3',
     clientName: 'ElimuX',
@@ -39,6 +32,8 @@ const portfolioItems: PortfolioItem[] = [
     imageUrl: 'https://elimux.co.ke/images/leadphoto.jpg',
     imageAiHint: 'education consultancy'
   },
+
+  
   {
     id: '4',
     clientName: 'Furaha Initiative',
@@ -54,6 +49,15 @@ const portfolioItems: PortfolioItem[] = [
     description: `CMD-Kenya's flagship initiative promoting inclusive dialogue for Kenya's sustainable development.`,
     imageUrl: 'https://peopledialoguefestival.org/images/Dialogue.jpg',
     imageAiHint: 'event festival'
+  },
+
+  {
+    id: '1',
+    clientName: 'Prime Variable Covers',
+    previewLink: 'https://primevariablecovers.com',
+    description: `Leading supplier of HDPE Dam Liners in East Africa, offering advanced and sustainable aquaculture solutions.`,
+    imageUrl: 'https://primevariablecovers.com/images/pvclogo.png',
+    imageAiHint: 'industrial aquaculture'
   }
 ];
 
