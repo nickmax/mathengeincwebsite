@@ -20,7 +20,7 @@ interface Web3FormsSuccessResponse {
   message: string;
 }
 
-const WEB3FORMS_ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+const WEB3FORMS_ACCESS_KEY = 3b386dd9-4b5d-4ac0-8511-dbfbaf63abc1;
 
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
